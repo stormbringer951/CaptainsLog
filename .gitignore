@@ -1,0 +1,9 @@
+# Remove working directory
+out/
+
+# Remove compiled content
+jars/
+
+# Remove project files
+.idea/
+*.iml
