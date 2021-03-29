@@ -1,11 +1,11 @@
 {
-    "masterVersionFile":"https://bitbucket.org/stormbringer951/captainslog/downloads/CaptainsLog.version",
+    "masterVersionFile":"https://raw.githubusercontent.com/stormbringer951/CaptainsLog/master/CaptainsLog.version",
     "modName":"CaptainsLog",
     "modThreadId":"",
     "modVersion":
     {
         "major":0,
-        "minor":0,
-        "patch":"1"
+        "minor":1,
+        "patch":0
     },
 }
