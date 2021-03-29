@@ -19,7 +19,7 @@ public class RuinsIntel extends BaseIntelPlugin {
     private static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
     private static final String INTEL_RUINS = "Unexplored Ruins";
     private final SectorEntityToken marketToken;
-    private final MarketConditionSpecAPI ruinsType;
+    private static final string ruinsType;
 
     private static final String IGNORE = "ignore";
 
@@ -38,7 +38,11 @@ public class RuinsIntel extends BaseIntelPlugin {
 
     public RuinsIntel(SectorEntityToken marketToken) {
         this.marketToken = marketToken;
-        this.ruinsType = marketToken.getMarket().getCondition(RuinsIntel.getRuinType(marketToken.getMarket())).getSpec();
+        this.ruinsType = marketToken.getMarket().getCondition(RuinsIntel.getRuinType(marketToken.getMarket())).getSpec().getId();
+    }
+
+    private MarketConditionSpecApi getRuinsSpec() {
+        Global.getSettings().getMarketConditionSpec(ruinsType);
     }
 
     private static boolean hasRuins(MarketAPI market) {
@@ -80,13 +84,13 @@ public class RuinsIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public String getIcon() {
-        return ruinsType.getIcon();
+    public String getIcon() {;
+        return getRuinsSpec().getIcon();
     }
 
     @Override
     public String getSmallDescriptionTitle() {
-        return ruinsType.getName() + " on " + marketToken.getName();
+        return getRuinsSpec().getName() + " on " + marketToken.getName();
     }
 
     @Override
@@ -109,7 +113,7 @@ public class RuinsIntel extends BaseIntelPlugin {
 
         bullet(info);
 
-        info.addPara(ruinsType.getName(), Misc.getRelColor(getFraction()), initPad);
+        info.addPara(getRuinsSpec().getName(), Misc.getRelColor(getFraction()), initPad);
 
         String location = marketToken.getName();
         if (marketToken.getStarSystem() != null) {
@@ -124,8 +128,8 @@ public class RuinsIntel extends BaseIntelPlugin {
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
 
-        TooltipMakerAPI text = info.beginImageWithText(ruinsType.getIcon(), 48);
-        text.addPara(Misc.getTokenReplaced(ruinsType.getDesc(), marketToken), Misc.getGrayColor(), opad);
+        TooltipMakerAPI text = info.beginImageWithText(getIcon(), 48);
+        text.addPara(Misc.getTokenReplaced(getRuinsSpec().getDesc(), marketToken), Misc.getGrayColor(), opad);
         info.addImageWithText(opad);
 
         info.addPara("Located in the " + marketToken.getStarSystem().getNameWithLowercaseType() + ".", opad,
@@ -172,7 +176,7 @@ public class RuinsIntel extends BaseIntelPlugin {
     }
 
     private int getRuinsTier() {
-        switch (ruinsType.getId()) {
+        switch (ruinsType) {
             case (Conditions.RUINS_SCATTERED):
                 return 1;
             case (Conditions.RUINS_WIDESPREAD):
