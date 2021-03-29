@@ -148,7 +148,8 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
             // at this point hopefully we are actually in the game...
             SectorAPI sector = Global.getSector();
 
-            removeFleetLogEntries(sector);
+            // TODO: run clean up on vanilla fleet log entries later
+            // removeFleetLogEntries(sector);
 
             if (notRunYet) {
                 runAtStart(sector);
