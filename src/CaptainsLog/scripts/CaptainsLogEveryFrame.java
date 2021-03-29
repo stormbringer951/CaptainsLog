@@ -237,9 +237,6 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
                     Misc.getTextColor(), Integer.toString(count), "", Misc.getHighlightColor(), Misc.getHighlightColor());
         }
 
-        sector.getCampaignUI().addMessage("Warning: Captain's Log is an DEV build. It should be stable but " +
-                "there may be save-breaking updates later.", Color.RED);
-
         interval.setInterval(5f, 5f);
         notRunYet = false;
     }
