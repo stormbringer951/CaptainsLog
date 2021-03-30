@@ -49,7 +49,10 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
         IntelManagerAPI intelManager = sector.getIntelManager();
         int count = 0;
 
-        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntel.class)) {
+        ArrayList<IntelInfoPlugin> toRemove = new ArrayList<>();
+        toRemove.addAll(intelManager.getIntel(RuinsIntel.class));
+
+        for (IntelInfoPlugin intel : toRemove) {
             // cleanly remove old instead of removing compat entirely
             intelManager.removeIntel(intel);
         }
