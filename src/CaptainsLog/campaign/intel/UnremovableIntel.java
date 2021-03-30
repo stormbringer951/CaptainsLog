@@ -74,7 +74,8 @@ public class UnremovableIntel extends BaseIntelPlugin {
         return super.getFactionForUIColors();
     }
 
-    private String getName() {
+    @Override
+    protected String getName() {
         return "Derelict Cryosleeper Location";
     }
 

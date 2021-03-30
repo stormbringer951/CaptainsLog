@@ -109,7 +109,8 @@ public class SalvageableIntel extends BaseIntelPlugin {
         return salvageObject;
     }
 
-    private String getName() {
+    @Override
+    protected String getName() {
         String name = "Unsalvaged ";
         if (isShip()) {
             name += variant.getHullSpec().getHullName();
