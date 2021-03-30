@@ -18,6 +18,7 @@ import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 import CaptainsLog.CaptainsLogModPlugin;
 import CaptainsLog.campaign.intel.RuinsIntel;
+import CaptainsLog.campaign.intel.RuinsIntelv2;
 import CaptainsLog.campaign.intel.SalvageableIntel;
 import CaptainsLog.campaign.intel.UnremovableIntel;
 
@@ -50,11 +51,16 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
         IntelManagerAPI intelManager = sector.getIntelManager();
         int count = 0;
 
+        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntel.class)) {
+            // cleanly remove old instead of removing compat entirely
+            intelManager.removeIntel(intel);
+        }
+
         for (SectorEntityToken item : sector.getEntitiesWithTag(Tags.PLANET)) {
             MarketAPI market = item.getMarket();
 
             if (item.getMarket() != null && shouldCreateUnsearchedRuinsReport(item, intelManager)) {
-                RuinsIntel report = new RuinsIntel(item);
+                RuinsIntelv2 report = new RuinsIntelv2(item);
                 report.setNew(false);
                 intelManager.addIntel(report, true);
                 log.info("Created intel report for " + market.getName() + " in "
@@ -115,12 +121,12 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
     }
 
     public static boolean shouldCreateUnsearchedRuinsReport(SectorEntityToken entity, IntelManagerAPI intelManager) {
-        if (RuinsIntel.doesNotHaveExploredRuins(entity)) {
+        if (RuinsIntelv2.doesNotHaveExploredRuins(entity)) {
             return false;
         }
 
-        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntel.class)) {
-            RuinsIntel r = (RuinsIntel) intel;
+        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntelv2.class)) {
+            RuinsIntelv2 r = (RuinsIntelv2) intel;
             if (r.getEntity() == entity) {
                 return false; // report exists
             }

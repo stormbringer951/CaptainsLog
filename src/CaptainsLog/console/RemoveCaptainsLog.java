@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import org.lazywizard.console.BaseCommand;
 import org.lazywizard.console.CommonStrings;
 import org.lazywizard.console.Console;
-import CaptainsLog.campaign.intel.RuinsIntel;
+import CaptainsLog.campaign.intel.RuinsIntelv2;
 import CaptainsLog.campaign.intel.SalvageableIntel;
 import CaptainsLog.campaign.intel.UnremovableIntel;
 
@@ -24,7 +24,7 @@ public class RemoveCaptainsLog implements BaseCommand {
 
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
         ArrayList<IntelInfoPlugin> all = new ArrayList<>();
-        all.addAll(intelManager.getIntel(RuinsIntel.class));
+        all.addAll(intelManager.getIntel(RuinsIntelv2.class));
         all.addAll(intelManager.getIntel(SalvageableIntel.class));
         all.addAll(intelManager.getIntel(UnremovableIntel.class));
         all.addAll(intelManager.getIntel(CustomMessageIntel.class));

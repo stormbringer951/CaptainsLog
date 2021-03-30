@@ -11,15 +11,16 @@ import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+import com.fs.starfarer.api.Global;
 
 import java.awt.*;
 import java.util.Set;
 
-public class RuinsIntel extends BaseIntelPlugin {
+public class RuinsIntelv2 extends BaseIntelPlugin {
     private static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
     private static final String INTEL_RUINS = "Unexplored Ruins";
     private final SectorEntityToken marketToken;
-    private final MarketConditionSpecAPI ruinsType;
+    private final String ruinsType;
 
     private static final String IGNORE = "ignore";
 
@@ -36,9 +37,13 @@ public class RuinsIntel extends BaseIntelPlugin {
     // So, to sum it up: if you're making any changes to the market and need them to stick around, call
     // setPlanetConditionMarketOnly(false), otherwise it'll get nuked on save.
 
-    public RuinsIntel(SectorEntityToken marketToken) {
+    public RuinsIntelv2(SectorEntityToken marketToken) {
         this.marketToken = marketToken;
-        this.ruinsType = marketToken.getMarket().getCondition(RuinsIntel.getRuinType(marketToken.getMarket())).getSpec();
+        this.ruinsType = marketToken.getMarket().getCondition(getRuinType(marketToken.getMarket())).getSpec().getId();
+    }
+
+    private MarketConditionSpecAPI getRuinsSpec() {
+        return Global.getSettings().getMarketConditionSpec(ruinsType);
     }
 
     private static boolean hasRuins(MarketAPI market) {
@@ -68,7 +73,7 @@ public class RuinsIntel extends BaseIntelPlugin {
     public static boolean doesNotHaveExploredRuins(SectorEntityToken token) {
         MarketAPI market = token.getMarket();
         boolean ignore = token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG);
-        return market == null || ignore || !market.isPlanetConditionMarketOnly() || !RuinsIntel.hasRuins(market)
+        return market == null || ignore || !market.isPlanetConditionMarketOnly() || !hasRuins(market)
                 || market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL
                 || market.getName().equals("Praetorium") // manually override Sylphon hardcoded world
                 || market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored");
@@ -80,13 +85,13 @@ public class RuinsIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public String getIcon() {
-        return ruinsType.getIcon();
+    public String getIcon() {;
+        return getRuinsSpec().getIcon();
     }
 
     @Override
     public String getSmallDescriptionTitle() {
-        return ruinsType.getName() + " on " + marketToken.getName();
+        return getRuinsSpec().getName() + " on " + marketToken.getName();
     }
 
     @Override
@@ -109,7 +114,7 @@ public class RuinsIntel extends BaseIntelPlugin {
 
         bullet(info);
 
-        info.addPara(ruinsType.getName(), Misc.getRelColor(getFraction()), initPad);
+        info.addPara(getRuinsSpec().getName(), Misc.getRelColor(getFraction()), initPad);
 
         String location = marketToken.getName();
         if (marketToken.getStarSystem() != null) {
@@ -124,8 +129,8 @@ public class RuinsIntel extends BaseIntelPlugin {
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
 
-        TooltipMakerAPI text = info.beginImageWithText(ruinsType.getIcon(), 48);
-        text.addPara(Misc.getTokenReplaced(ruinsType.getDesc(), marketToken), Misc.getGrayColor(), opad);
+        TooltipMakerAPI text = info.beginImageWithText(getIcon(), 48);
+        text.addPara(Misc.getTokenReplaced(getRuinsSpec().getDesc(), marketToken), Misc.getGrayColor(), opad);
         info.addImageWithText(opad);
 
         info.addPara("Located in the " + marketToken.getStarSystem().getNameWithLowercaseType() + ".", opad,
@@ -172,7 +177,7 @@ public class RuinsIntel extends BaseIntelPlugin {
     }
 
     private int getRuinsTier() {
-        switch (ruinsType.getId()) {
+        switch (ruinsType) {
             case (Conditions.RUINS_SCATTERED):
                 return 1;
             case (Conditions.RUINS_WIDESPREAD):

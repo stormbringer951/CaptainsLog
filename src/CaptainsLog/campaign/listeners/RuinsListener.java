@@ -6,7 +6,7 @@ import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.campaign.listeners.SurveyPlanetListener;
 import org.apache.log4j.Logger;
 import CaptainsLog.CaptainsLogModPlugin;
-import CaptainsLog.campaign.intel.RuinsIntel;
+import CaptainsLog.campaign.intel.RuinsIntelv2;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
 
 public class RuinsListener implements SurveyPlanetListener {
@@ -18,7 +18,7 @@ public class RuinsListener implements SurveyPlanetListener {
 
         if (CaptainsLogEveryFrame.shouldCreateUnsearchedRuinsReport(planet, intelManager)) {
 
-            intelManager.addIntel(new RuinsIntel(planet), false);
+            intelManager.addIntel(new RuinsIntelv2(planet), false);
             log.info("Listener: Created intel report for planet in");
         }
     }
