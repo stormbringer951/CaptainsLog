@@ -1,5 +1,6 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
@@ -67,11 +68,14 @@ public class RuinsIntel extends BaseIntelPlugin {
 
     public static boolean doesNotHaveExploredRuins(SectorEntityToken token) {
         MarketAPI market = token.getMarket();
-        boolean ignore = token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG);
-        return market == null || ignore || !market.isPlanetConditionMarketOnly() || !RuinsIntel.hasRuins(market)
-                || market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL
-                || market.getName().equals("Praetorium") // manually override Sylphon hardcoded world
-                || market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored");
+        return market == null ||
+                token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
+                !market.isPlanetConditionMarketOnly() ||
+                !hasRuins(market) ||
+                market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL ||
+                market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
+                market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
+                Utils.isInUnexploredSystem(token);
     }
 
     @Override

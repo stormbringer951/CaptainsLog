@@ -1,5 +1,6 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -220,7 +221,8 @@ public class SalvageableIntel extends BaseIntelPlugin {
                 token.hasTag(Tags.CRYOSLEEPER) ||
                 !token.isAlive() ||
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_SALVAGEABLE_MEM_FLAG) ||
-                token.getFullName().equals("Technology Cache");
+                token.getFullName().equals("Technology Cache") ||
+                Utils.isInUnexploredSystem(token);
     }
 
     @Override
