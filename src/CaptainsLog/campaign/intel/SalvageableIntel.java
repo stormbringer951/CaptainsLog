@@ -79,7 +79,9 @@ public class SalvageableIntel extends BaseIntelPlugin {
         if (isShip()) {
             info.addPara(variant.getHullSpec().getHullName(), Misc.getRelColor(rating / 4f), initPad);
         }
-        info.addPara(salvageObject.getStarSystem().getName(), initPad, getBulletColorForMode(mode));
+
+        info.addPara(Utils.getSystemNameOrHyperspace(salvageObject), initPad, getBulletColorForMode(mode),
+                Misc.getPositiveHighlightColor(), Utils.getSystemNameOrHyperspaceBase(salvageObject));
 
         unindent(info);
     }
@@ -98,8 +100,8 @@ public class SalvageableIntel extends BaseIntelPlugin {
             info.addPara(desc.getText1FirstPara(), Misc.getGrayColor(), opad);
         }
 
-        info.addPara("Located in the " + salvageObject.getStarSystem().getNameWithLowercaseType() + ".", opad,
-                Misc.getPositiveHighlightColor(), salvageObject.getStarSystem().getBaseName());
+        info.addPara("Location: " + Utils.getSystemNameOrHyperspace(salvageObject) + ".", opad,
+                Misc.getPositiveHighlightColor(), Utils.getSystemNameOrHyperspaceBase(salvageObject));
 
         if (!isEnding()) {
             addGenericButton(info, width, IGNORE_SALVAGEABLE_MESSAGE, REMOVE);

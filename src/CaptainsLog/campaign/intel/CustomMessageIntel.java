@@ -1,5 +1,6 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
@@ -42,20 +43,7 @@ public class CustomMessageIntel extends BaseIntelPlugin {
     }
 
     private String getLocation() {
-        if (locationCreated.getContainingLocation() instanceof StarSystemAPI) {
-            return locationCreated.getContainingLocation().getName();
-        }
-
-        float maxRangeLY = 2f;
-
-        for (StarSystemAPI system : Global.getSector().getStarSystems()) {
-            float dist = Misc.getDistanceLY(locationCreated.getLocationInHyperspace(), system.getLocation());
-            if (dist <= maxRangeLY) {
-                return "Near " + system.getName();
-            }
-        }
-
-        return "Hyperspace";
+        return Utils.getSystemNameOrHyperspace(locationCreated);
     }
 
     @Override
