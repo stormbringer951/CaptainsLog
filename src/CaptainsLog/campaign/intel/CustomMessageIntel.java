@@ -38,6 +38,7 @@ public class CustomMessageIntel extends BaseIntelPlugin {
         this.locationString = "Location: " + getLocation();
         this.message = message;
         this.showOnMap = true;
+        setImportant(true);
     }
 
     private String getLocation() {
