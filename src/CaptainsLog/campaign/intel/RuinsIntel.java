@@ -144,7 +144,6 @@ public class RuinsIntel extends BaseIntelPlugin {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(Tags.INTEL_FLEET_LOG);
         tags.add(INTEL_RUINS);
         return tags;
     }

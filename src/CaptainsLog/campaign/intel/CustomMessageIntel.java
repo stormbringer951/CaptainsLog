@@ -125,7 +125,6 @@ public class CustomMessageIntel extends BaseIntelPlugin {
 
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(Tags.INTEL_FLEET_LOG);
         tags.add(CAPTAIN_LOG_INTEL);
         return tags;
     }
