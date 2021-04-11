@@ -9,15 +9,6 @@ import CaptainsLog.scripts.CaptainsLogEveryFrame;
 
 public class CaptainsLogModPlugin extends BaseModPlugin {
     @Override
-    public void onEnabled(boolean wasEnabledBefore) {
-        if (!wasEnabledBefore) {
-            Global.getSector().getIntelManager().addIntel(new CustomMessageIntel("To create new captain's logs, " +
-                    "please open the console from the Console Commands mod, and type CaptainsLog [your message] to" +
-                    " create new log entries."));
-        }
-    }
-
-    @Override
     public void onGameLoad(boolean newGame) {
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
 
