@@ -66,7 +66,7 @@ public class RuinsIntel extends BaseIntelPlugin {
         return null;
     }
 
-    public static boolean doesNotHaveExploredRuins(SectorEntityToken token) {
+    public static boolean doesNotHaveUnexploredRuins(SectorEntityToken token) {
         MarketAPI market = token.getMarket();
         return market == null ||
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
@@ -80,7 +80,7 @@ public class RuinsIntel extends BaseIntelPlugin {
 
     @Override
     public boolean shouldRemoveIntel() {
-        return doesNotHaveExploredRuins(marketToken);
+        return doesNotHaveUnexploredRuins(marketToken);
     }
 
     @Override

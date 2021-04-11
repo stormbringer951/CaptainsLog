@@ -122,7 +122,7 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
     }
 
     public static boolean shouldCreateUnsearchedRuinsReport(SectorEntityToken entity, IntelManagerAPI intelManager) {
-        if (RuinsIntelv2.doesNotHaveExploredRuins(entity)) {
+        if (RuinsIntelv2.doesNotHaveUnexploredRuins(entity)) {
             return false;
         }
 
