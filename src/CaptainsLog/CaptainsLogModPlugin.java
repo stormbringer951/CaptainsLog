@@ -1,12 +1,12 @@
 package CaptainsLog;
 
-import CaptainsLog.campaign.intel.CustomMessageIntel;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import CaptainsLog.campaign.listeners.RemovableSalvageListener;
 import CaptainsLog.campaign.listeners.RuinsListener;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
 
+@SuppressWarnings("unused")
 public class CaptainsLogModPlugin extends BaseModPlugin {
     @Override
     public void onGameLoad(boolean newGame) {
