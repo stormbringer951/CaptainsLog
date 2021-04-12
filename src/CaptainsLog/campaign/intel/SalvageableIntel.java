@@ -208,7 +208,11 @@ public class SalvageableIntel extends BaseIntelPlugin {
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        return salvageObject.getStarSystem().getHyperspaceAnchor();
+        if (salvageObject.isInHyperspace()) {
+            return salvageObject;
+        } else {
+            return salvageObject.getStarSystem().getHyperspaceAnchor();
+        }
     }
 
     @Override
