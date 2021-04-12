@@ -217,7 +217,10 @@ public class SalvageableIntel extends BaseIntelPlugin {
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
-        return token == null || token.hasSensorProfile() || token.isDiscoverable() ||
+        return token == null ||
+                !token.hasTag(Tags.SALVAGEABLE) ||
+                token.hasSensorProfile() ||
+                token.isDiscoverable() ||
                 token.hasTag(Tags.CRYOSLEEPER) ||
                 !token.isAlive() ||
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_SALVAGEABLE_MEM_FLAG) ||
