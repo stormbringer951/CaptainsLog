@@ -225,6 +225,7 @@ public class SalvageableIntel extends BaseIntelPlugin {
                 !token.hasTag(Tags.SALVAGEABLE) ||
                 token.hasSensorProfile() ||
                 token.isDiscoverable() ||
+                token.hasTag("nex_museum_ship") ||
                 token.hasTag(Tags.CRYOSLEEPER) ||
                 !token.isAlive() ||
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_SALVAGEABLE_MEM_FLAG) ||
