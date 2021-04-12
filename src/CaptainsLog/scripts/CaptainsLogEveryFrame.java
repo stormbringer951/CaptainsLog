@@ -16,9 +16,6 @@ import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 import CaptainsLog.campaign.intel.RuinsIntel;
-import CaptainsLog.campaign.intel.RuinsIntelv2;
-import CaptainsLog.campaign.intel.SalvageableIntel;
-import CaptainsLog.campaign.intel.UnremovableIntel;
 
 import java.util.ArrayList;
 
@@ -26,114 +23,6 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
     private static final Logger log = Global.getLogger(CaptainsLogEveryFrame.class);
     private final IntervalUtil interval = new IntervalUtil(0.1f, 0.1f);
     private boolean notRunYet = true;
-
-    private static int updateCryosleepers(SectorAPI sector) {
-        IntelManagerAPI intelManager = sector.getIntelManager();
-        int count = 0;
-
-        for (SectorEntityToken sleeper : sector.getEntitiesWithTag(Tags.CRYOSLEEPER)) {
-            if (shouldCreateCryosleeperReport(sleeper, intelManager)) {
-                UnremovableIntel report = new UnremovableIntel(sleeper);
-                report.setNew(false);
-                intelManager.addIntel(report, true);
-                ++count;
-                log.info("Created intel report for cryosleeper in " + sleeper.getStarSystem());
-            }
-        }
-
-        return count;
-    }
-
-    private static int updateUnsearchedRuins(SectorAPI sector) {
-        IntelManagerAPI intelManager = sector.getIntelManager();
-        int count = 0;
-
-        ArrayList<IntelInfoPlugin> toRemove = new ArrayList<>();
-        toRemove.addAll(intelManager.getIntel(RuinsIntel.class));
-
-        for (IntelInfoPlugin intel : toRemove) {
-            // cleanly remove old instead of removing compat entirely
-            intelManager.removeIntel(intel);
-        }
-
-        for (SectorEntityToken item : sector.getEntitiesWithTag(Tags.PLANET)) {
-            MarketAPI market = item.getMarket();
-
-            if (item.getMarket() != null && shouldCreateUnsearchedRuinsReport(item, intelManager)) {
-                RuinsIntelv2 report = new RuinsIntelv2(item);
-                report.setNew(false);
-                intelManager.addIntel(report, true);
-                log.info("Created intel report for " + market.getName() + " in "
-                        + market.getStarSystem().getNameWithLowercaseType());
-                ++count;
-            }
-        }
-
-        return count;
-    }
-
-    private static int updateSalvageables(SectorAPI sector) {
-        IntelManagerAPI intelManager = sector.getIntelManager();
-        int count = 0;
-
-        for (SectorEntityToken salvageObject : sector.getEntitiesWithTag(Tags.SALVAGEABLE)) {
-            if (shouldCreateSalvageableReport(salvageObject, intelManager)) {
-                SalvageableIntel report = new SalvageableIntel(salvageObject);
-                report.setNew(false);
-                intelManager.addIntel(report, true);
-                log.info("Created report for " + salvageObject.getFullName() + " in "
-                        + (salvageObject.isInHyperspace() ? "hyperspace" : salvageObject.getStarSystem().getBaseName()));
-                ++count;
-            }
-        }
-
-        return count;
-    }
-
-    public static boolean shouldCreateSalvageableReport(SectorEntityToken salvageObject, IntelManagerAPI intelManager) {
-        if (SalvageableIntel.shouldRemoveIntelEntry(salvageObject)) {
-            return false;
-        }
-
-        for (IntelInfoPlugin i : intelManager.getIntel(SalvageableIntel.class)) {
-            SalvageableIntel rs = (SalvageableIntel) i;
-            if (rs.getEntity() == salvageObject) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean shouldCreateCryosleeperReport(SectorEntityToken cryosleeper, IntelManagerAPI intelManager) {
-        if (cryosleeper.hasSensorProfile() || cryosleeper.isDiscoverable()) {
-            return false; // is not discovered
-        }
-
-        for (IntelInfoPlugin intel : intelManager.getIntel(UnremovableIntel.class)) {
-            UnremovableIntel cs = (UnremovableIntel) intel;
-            if (cs.getEntity() == cryosleeper) {
-                return false; // report exists
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean shouldCreateUnsearchedRuinsReport(SectorEntityToken entity, IntelManagerAPI intelManager) {
-        if (RuinsIntelv2.doesNotHaveUnexploredRuins(entity)) {
-            return false;
-        }
-
-        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntelv2.class)) {
-            RuinsIntelv2 r = (RuinsIntelv2) intel;
-            if (r.getEntity() == entity) {
-                return false; // report exists
-            }
-        }
-
-        return true;
-    }
 
     @Override
     public boolean isDone() {
@@ -159,6 +48,7 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
 
             if (notRunYet) {
                 runAtStart(sector);
+                removeDefunctRuins(sector);
             }
         }
     }
@@ -233,10 +123,9 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
     }
 
     private void runAtStart(SectorAPI sector) {
-
-        int count = updateUnsearchedRuins(sector);
-        count += updateSalvageables(sector);
-        count += updateCryosleepers(sector);
+        int count =Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false) +
+                Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false) +
+                Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
 
         if (count > 0) {
             sector.getCampaignUI().addMessage("Captain's Log added " + count + " new intel entries",
@@ -245,5 +134,16 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
 
         interval.setInterval(5f, 5f);
         notRunYet = false;
+    }
+
+    private static void removeDefunctRuins(SectorAPI sector) {
+        IntelManagerAPI intelManager = sector.getIntelManager();
+
+        ArrayList<IntelInfoPlugin> toRemove = new ArrayList<>(intelManager.getIntel(RuinsIntel.class));
+
+        for (IntelInfoPlugin intel : toRemove) {
+            // cleanly remove old instead of removing compat entirely
+            intelManager.removeIntel(intel);
+        }
     }
 }
