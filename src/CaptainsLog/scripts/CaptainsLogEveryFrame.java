@@ -15,7 +15,6 @@ import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
-import CaptainsLog.CaptainsLogModPlugin;
 import CaptainsLog.campaign.intel.RuinsIntel;
 import CaptainsLog.campaign.intel.RuinsIntelv2;
 import CaptainsLog.campaign.intel.SalvageableIntel;
@@ -24,7 +23,7 @@ import CaptainsLog.campaign.intel.UnremovableIntel;
 import java.util.ArrayList;
 
 public class CaptainsLogEveryFrame implements EveryFrameScript {
-    private static final Logger log = Global.getLogger(CaptainsLogModPlugin.class);
+    private static final Logger log = Global.getLogger(CaptainsLogEveryFrame.class);
     private final IntervalUtil interval = new IntervalUtil(0.1f, 0.1f);
     private boolean notRunYet = true;
 

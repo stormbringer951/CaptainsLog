@@ -6,13 +6,12 @@ import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.campaign.listeners.DiscoverEntityListener;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import org.apache.log4j.Logger;
-import CaptainsLog.CaptainsLogModPlugin;
 import CaptainsLog.campaign.intel.SalvageableIntel;
 import CaptainsLog.campaign.intel.UnremovableIntel;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
 
 public class RemovableSalvageListener implements DiscoverEntityListener {
-    private static final Logger log = Global.getLogger(CaptainsLogModPlugin.class);
+    private static final Logger log = Global.getLogger(RemovableSalvageListener.class);
 
     @Override
     public void reportEntityDiscovered(SectorEntityToken entity) {

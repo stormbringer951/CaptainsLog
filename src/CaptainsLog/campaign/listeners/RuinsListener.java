@@ -5,12 +5,11 @@ import com.fs.starfarer.api.campaign.PlanetAPI;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.campaign.listeners.SurveyPlanetListener;
 import org.apache.log4j.Logger;
-import CaptainsLog.CaptainsLogModPlugin;
 import CaptainsLog.campaign.intel.RuinsIntelv2;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
 
 public class RuinsListener implements SurveyPlanetListener {
-    private static final Logger log = Global.getLogger(CaptainsLogModPlugin.class);
+    private static final Logger log = Global.getLogger(RuinsListener.class);
 
     @Override
     public void reportPlayerSurveyedPlanet(PlanetAPI planet) {

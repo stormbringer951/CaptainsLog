@@ -16,7 +16,6 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
-import CaptainsLog.CaptainsLogModPlugin;
 
 import java.awt.*;
 import java.util.Set;
@@ -25,7 +24,7 @@ public class SalvageableIntel extends BaseIntelPlugin {
 
     // TODO: split into derelict_ship and other?
 
-    private static final Logger log = Global.getLogger(CaptainsLogModPlugin.class);
+    private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private static final String INTEL_SALVAGEABLE = "Salvageable";
 
     private static final String REMOVE = "remove";
