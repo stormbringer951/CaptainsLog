@@ -2,9 +2,9 @@
 	"id":"CaptainsLog",
 	"name":"Captain's Log",
 	"author":"stormbringer951",
-	"version":"0.1.3",
+	"version":"0.1.4",
 	"description":"Enhances and adds various intel report features to reduce note-taking. Also features custom notes (requires Console Commands). DEV version. Thanks to Sundog and LazyWizard. Special thanks to MesoTronik.",
-	"gameVersion":"0.95a-RC10",
+	"gameVersion":"0.95a-RC12",
 	"jars":["jars/CaptainsLog.jar"],
 	"modPlugin":"CaptainsLog.CaptainsLogModPlugin"
 }
