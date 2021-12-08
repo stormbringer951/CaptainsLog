@@ -3,11 +3,11 @@ package CaptainsLog.scripts;
 import java.util.List;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
 
@@ -120,10 +120,10 @@ public final class Utils {
 
     public static int tryCreateUnsearchedRuinsReports(List<SectorEntityToken> entities, Logger log, boolean showMessage) {
         int count = 0;
-        CampaignFleetAPI fleet = Global.getSector().getPlayerFleet();
 
         for (SectorEntityToken entity : entities) {
-            if (!RuinObserver.isInRange(fleet, entity)) {
+            MarketAPI market = entity.getMarket();
+            if (market == null || market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL) {
                 continue;
             }
             if (tryCreateUnsearchedRuinsReport(entity, log, showMessage)) {

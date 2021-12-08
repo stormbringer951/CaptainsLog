@@ -77,7 +77,6 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
                 !market.isPlanetConditionMarketOnly() ||
                 !hasRuins(market) ||
-                // market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL ||
                 market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
                 market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
                 Utils.isInUnexploredSystem(token);

@@ -14,9 +14,6 @@ public class RuinObserver implements EveryFrameScript {
 
     private static final Logger log = Global.getLogger(RuinObserver.class);
 
-    public static boolean isInRange(CampaignFleetAPI fleet, SectorEntityToken token) {
-        return Misc.getDistance(fleet, token) < fleet.getSensorStrength();
-    }
     public static void register() {
         RuinObserver observer = new RuinObserver();
         Global.getSector().addTransientScript(observer);
@@ -40,7 +37,7 @@ public class RuinObserver implements EveryFrameScript {
             return;
         }
         for (PlanetAPI planet : system.getPlanets()) {
-            if (!RuinObserver.isInRange(fleet, planet)) {
+            if (!isInRange(fleet, planet)) {
                 log.debug("Skipping " + planet.getName() + " as it is too far away");
                 continue;
             }
@@ -48,4 +45,7 @@ public class RuinObserver implements EveryFrameScript {
         }
     }
     
+    private boolean isInRange(CampaignFleetAPI fleet, SectorEntityToken token) {
+        return Misc.getDistance(fleet, token) < fleet.getSensorStrength();
+    }
 }
