@@ -1,19 +1,18 @@
 package CaptainsLog.campaign.intel;
 
+import java.awt.Color;
+import java.util.Set;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.loading.Description.Type;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import java.awt.*;
-import java.util.Set;
-
-public class UnremovableIntel extends BaseIntelPlugin {
+public class UnremovableIntel extends DistanceSortedIntel {
     private static final String INTEL_CRYOSLEEPER = "Cryosleepers";
     private SectorEntityToken cryosleeper;
 
@@ -101,11 +100,6 @@ public class UnremovableIntel extends BaseIntelPlugin {
     @Override
     public IntelSortTier getSortTier() {
         return IntelSortTier.TIER_6;
-    }
-
-    @Override
-    public String getSortString() {
-        return "Cryosleeper";
     }
 }
 

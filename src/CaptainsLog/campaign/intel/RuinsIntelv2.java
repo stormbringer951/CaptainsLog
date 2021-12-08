@@ -9,7 +9,6 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.MarketConditionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Conditions;
-import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -17,7 +16,7 @@ import com.fs.starfarer.api.util.Misc;
 
 import CaptainsLog.scripts.Utils;
 
-public class RuinsIntelv2 extends BaseIntelPlugin {
+public class RuinsIntelv2 extends DistanceSortedIntel {
     private static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
     private static final String INTEL_RUINS = "Unexplored Ruins";
     private final SectorEntityToken marketToken;
@@ -195,11 +194,6 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
 
     private float getFraction() {
         return getRuinsTier() / 4f;
-    }
-
-    @Override
-    public String getSortString() {
-        return "Ruins " + getRuinsTier();
     }
 
     @Override
