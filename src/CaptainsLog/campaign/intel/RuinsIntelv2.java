@@ -6,35 +6,30 @@ import java.util.Set;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.MarketConditionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Conditions;
-import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
+import CaptainsLog.campaign.intel.button.IgnoreRuins;
 import CaptainsLog.scripts.Utils;
 
-public class RuinsIntelv2 extends DistanceSortedIntel {
-    private static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
-    private static final String INTEL_RUINS = "Unexplored Ruins";
+public class RuinsIntelv2 extends BaseIntel {
+    public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
+    public static final String INTEL_RUINS = "Unexplored Ruins";
+
     private final SectorEntityToken marketToken;
     private final String ruinsType;
 
-    private static final String IGNORE = "ignore";
-
-    private static final String ignoreButtonCaption = "Ignore intel report";
-    private static final String ignoreConfirmMessage = "Are you sure you want to ignore this intel report? It will be " +
-            "removed and no more Captain's Log intel reports will be generated for this item.";
-
     // From Alex: http://fractalsoftworks.com/forum/index.php?topic=15563.msg250898
-    // Markets on uncolonized planets are not persistent by default - they'd take up way too much space in the savefile,
-    // so the game creates a more light-weight PlanetConditionMarket to store in the save, and converts it into a
-    // regular market on load. (The market memory does persist, btw, so it's safe to put things there.) If a market is
-    // flagged as not being a condition-only market, the game should stop doing this for the market.
-    //
-    // So, to sum it up: if you're making any changes to the market and need them to stick around, call
+    // Markets on uncolonized planets are not persistent by default - they'd take up
+    // way too much space in the savefile, so the game creates a more light-weight
+    // PlanetConditionMarket to store in the save, and converts it into a regular
+    // market on load. (The market memory does persist, btw, so it's safe to put
+    // things there.) If a market is flagged as not being a condition-only market,
+    // the game should stop doing this for the market. So, to sum it up: if you're
+    // making any changes to the market and need them to stick around, call
     // setPlanetConditionMarketOnly(false), otherwise it'll get nuked on save.
 
     public RuinsIntelv2(SectorEntityToken marketToken) {
@@ -55,7 +50,7 @@ public class RuinsIntelv2 extends DistanceSortedIntel {
             return null;
         }
 
-        String[] ruinTypes = new String[]{
+        String[] ruinTypes = new String[] {
                 Conditions.RUINS_SCATTERED,
                 Conditions.RUINS_WIDESPREAD,
                 Conditions.RUINS_EXTENSIVE,
@@ -87,7 +82,7 @@ public class RuinsIntelv2 extends DistanceSortedIntel {
     }
 
     @Override
-    public String getIcon() {;
+    public String getIcon() {
         return getRuinsSpec().getIcon();
     }
 
@@ -100,7 +95,7 @@ public class RuinsIntelv2 extends DistanceSortedIntel {
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
 
-        String title = "Unexplored Ruins";
+        String title = INTEL_RUINS;
         if (isEnding()) {
             title += " - Deleted";
         }
@@ -139,9 +134,9 @@ public class RuinsIntelv2 extends DistanceSortedIntel {
                 Misc.getPositiveHighlightColor(), marketToken.getStarSystem().getBaseName());
 
         if (!isEnding()) {
-            addGenericButton(info, width, ignoreButtonCaption, IGNORE);
+            addGenericButton(info, width, new IgnoreRuins(this));
         }
-//        addGenericButton(info, width, deleteButtonCaption, IGNORE_ALL);
+        // addGenericButton(info, width, deleteButtonCaption, IGNORE_ALL);
     }
 
     @Override
@@ -194,30 +189,5 @@ public class RuinsIntelv2 extends DistanceSortedIntel {
 
     private float getFraction() {
         return getRuinsTier() / 4f;
-    }
-
-    @Override
-    public void buttonPressConfirmed(Object buttonId, IntelUIAPI ui) {
-        if (buttonId == IGNORE) {
-            MemoryAPI mem = this.marketToken.getMemory();
-            mem.set(IGNORE_RUINS_MEM_FLAG, true);
-            endImmediately();
-
-            if (ui != null) {
-                ui.recreateIntelUI();
-            }
-        }
-    }
-
-    @Override
-    public boolean doesButtonHaveConfirmDialog(Object buttonId) {
-        return true;
-    }
-
-    @Override
-    public void createConfirmationPrompt(Object buttonId, TooltipMakerAPI prompt) {
-        if (buttonId == IGNORE) {
-            prompt.addPara(ignoreConfirmMessage, 0f); // TODO
-        }
     }
 }

@@ -6,33 +6,26 @@ import java.util.Set;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.SalvageEntityGenDataSpec;
 import com.fs.starfarer.api.loading.Description;
-import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import org.apache.log4j.Logger;
 
+import CaptainsLog.campaign.intel.button.IgnoreSalvage;
 import CaptainsLog.scripts.Utils;
 
-public class SalvageableIntel extends DistanceSortedIntel {
+public class SalvageableIntel extends BaseIntel {
 
     // TODO: split into derelict_ship and other?
-
+    public static final String INTEL_SALVAGEABLE = "Salvageable";
+    public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
-    private static final String INTEL_SALVAGEABLE = "Salvageable";
-
-    private static final String REMOVE = "remove";
-    private static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
-    private static final String IGNORE_SALVAGEABLE_MESSAGE = "Ignore entity";
-    private static final String IGNORE_CONFIRMATION_MESSAGE = "Are you sure you want to ignore this salvageable item?";
-
     private final SectorEntityToken salvageObject;
     private final ShipVariantAPI variant;
     private final int rating;
@@ -40,7 +33,8 @@ public class SalvageableIntel extends DistanceSortedIntel {
     public SalvageableIntel(SectorEntityToken salvageObject) {
         this.salvageObject = salvageObject;
 
-        // entity.getCustomPlugin() instanceof DerelictShipEntityPlugin || Entities.WRECK.equals(type)
+        // entity.getCustomPlugin() instanceof DerelictShipEntityPlugin ||
+        // Entities.WRECK.equals(type)
 
         if (salvageObject.getCustomPlugin() instanceof DerelictShipEntityPlugin) {
             DerelictShipEntityPlugin p = (DerelictShipEntityPlugin) salvageObject.getCustomPlugin();
@@ -102,7 +96,7 @@ public class SalvageableIntel extends DistanceSortedIntel {
                 Misc.getPositiveHighlightColor(), Utils.getSystemNameOrHyperspaceBase(salvageObject));
 
         if (!isEnding()) {
-            addGenericButton(info, width, IGNORE_SALVAGEABLE_MESSAGE, REMOVE);
+            addGenericButton(info, width, new IgnoreSalvage(this));
         }
     }
 
@@ -112,7 +106,7 @@ public class SalvageableIntel extends DistanceSortedIntel {
 
     @Override
     protected String getName() {
-        String name = "Unsalvaged ";
+        String name = INTEL_SALVAGEABLE;
         if (isShip()) {
             name += variant.getHullSpec().getHullName();
         } else {
@@ -265,31 +259,6 @@ public class SalvageableIntel extends DistanceSortedIntel {
             } else {
                 return 0;
             }
-        }
-    }
-
-    @Override
-    public boolean doesButtonHaveConfirmDialog(Object buttonId) {
-        return true;
-    }
-
-    @Override
-    public void buttonPressConfirmed(Object buttonId, IntelUIAPI ui) {
-        if (buttonId == REMOVE) {
-            MemoryAPI mem = this.salvageObject.getMemory();
-            mem.set(IGNORE_SALVAGEABLE_MEM_FLAG, true);
-
-            endImmediately();
-            if (ui != null) {
-                ui.recreateIntelUI();
-            }
-        }
-    }
-
-    @Override
-    public void createConfirmationPrompt(Object buttonId, TooltipMakerAPI prompt) {
-        if (buttonId == REMOVE) {
-            prompt.addPara(IGNORE_CONFIRMATION_MESSAGE, 0f);
         }
     }
 }
