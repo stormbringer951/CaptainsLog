@@ -80,7 +80,7 @@ public class UnremovableIntel extends DistanceSortedIntel {
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        return cryosleeper.getStarSystem().getHyperspaceAnchor();
+        return cryosleeper;
     }
 
     @Override

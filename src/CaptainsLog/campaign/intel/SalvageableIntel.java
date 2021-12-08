@@ -207,11 +207,7 @@ public class SalvageableIntel extends DistanceSortedIntel {
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        if (salvageObject.isInHyperspace()) {
-            return salvageObject;
-        } else {
-            return salvageObject.getStarSystem().getHyperspaceAnchor();
-        }
+        return salvageObject;
     }
 
     @Override

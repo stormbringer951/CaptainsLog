@@ -124,11 +124,7 @@ public class CustomMessageIntel extends DistanceSortedIntel {
         if (!showOnMap || isEnding()) {
             return null;
         }
-        if (locationCreated.isInHyperspace()) {
-            return locationCreated;
-        } else {
-            return locationCreated.getStarSystem().getHyperspaceAnchor();
-        }
+        return locationCreated;
     }
 
     @Override
