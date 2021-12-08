@@ -4,6 +4,8 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import org.lwjgl.input.Keyboard;
+
 import CaptainsLog.campaign.intel.RuinsIntelv2;
 
 public class IgnoreRuins implements IntelButton {
@@ -40,5 +42,10 @@ public class IgnoreRuins implements IntelButton {
     @Override
     public String getName() {
         return "Ignore intel report";
+    }
+
+    @Override
+    public int getShortcut() {
+        return Keyboard.KEY_I;
     }
 }

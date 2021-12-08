@@ -13,4 +13,6 @@ public interface IntelButton {
     public boolean doesButtonHaveConfirmDialog();
 
     public String getName();
+
+    public int getShortcut();
 }

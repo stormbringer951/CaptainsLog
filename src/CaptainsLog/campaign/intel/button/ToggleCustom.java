@@ -3,6 +3,8 @@ package CaptainsLog.campaign.intel.button;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import org.lwjgl.input.Keyboard;
+
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 
 public class ToggleCustom implements IntelButton {
@@ -37,5 +39,10 @@ public class ToggleCustom implements IntelButton {
     @Override
     public String getName() {
         return showOnMap ? "Hide On Map" : "Show On Map";
+    }
+
+    @Override
+    public int getShortcut() {
+        return Keyboard.KEY_M;
     }
 }

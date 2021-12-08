@@ -3,6 +3,8 @@ package CaptainsLog.campaign.intel.button;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import org.lwjgl.input.Keyboard;
+
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 
 public class IgnoreCustom implements IntelButton {
@@ -38,4 +40,8 @@ public class IgnoreCustom implements IntelButton {
         return "Delete this message";
     }
 
+    @Override
+    public int getShortcut() {
+        return Keyboard.KEY_D;
+    }
 }
