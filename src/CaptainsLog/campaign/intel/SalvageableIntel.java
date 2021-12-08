@@ -18,6 +18,7 @@ import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 
 import CaptainsLog.campaign.intel.button.IgnoreSalvage;
+import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
 
 public class SalvageableIntel extends BaseIntel {
@@ -96,6 +97,7 @@ public class SalvageableIntel extends BaseIntel {
                 Misc.getPositiveHighlightColor(), Utils.getSystemNameOrHyperspaceBase(salvageObject));
 
         if (!isEnding()) {
+            addGenericButton(info, width, new LayInCourse(salvageObject));
             addGenericButton(info, width, new IgnoreSalvage(this));
         }
     }

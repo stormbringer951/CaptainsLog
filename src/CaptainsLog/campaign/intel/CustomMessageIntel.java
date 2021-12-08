@@ -12,6 +12,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import CaptainsLog.campaign.intel.button.IgnoreCustom;
+import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.campaign.intel.button.ToggleCustom;
 import CaptainsLog.scripts.Utils;
 
@@ -90,6 +91,7 @@ public class CustomMessageIntel extends BaseIntel {
         info.addPara(locationString, opad);
 
         if (!isEnding()) {
+            addGenericButton(info, width, new LayInCourse(locationCreated));
             addGenericButton(info, width, new ToggleCustom(showOnMap, this));
             addGenericButton(info, width, new IgnoreCustom(this));
         }

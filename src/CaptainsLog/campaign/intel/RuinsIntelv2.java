@@ -13,6 +13,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import CaptainsLog.campaign.intel.button.IgnoreRuins;
+import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
 
 public class RuinsIntelv2 extends BaseIntel {
@@ -134,6 +135,7 @@ public class RuinsIntelv2 extends BaseIntel {
                 Misc.getPositiveHighlightColor(), marketToken.getStarSystem().getBaseName());
 
         if (!isEnding()) {
+            addGenericButton(info, width, new LayInCourse(marketToken));
             addGenericButton(info, width, new IgnoreRuins(this));
         }
         // addGenericButton(info, width, deleteButtonCaption, IGNORE_ALL);
