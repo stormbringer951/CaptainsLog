@@ -1,6 +1,9 @@
 package CaptainsLog.campaign.intel;
 
-import CaptainsLog.scripts.Utils;
+import java.awt.Color;
+import java.util.Set;
+
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
@@ -11,10 +14,8 @@ import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import com.fs.starfarer.api.Global;
 
-import java.awt.*;
-import java.util.Set;
+import CaptainsLog.scripts.Utils;
 
 public class RuinsIntelv2 extends BaseIntelPlugin {
     private static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
@@ -76,7 +77,7 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
                 !market.isPlanetConditionMarketOnly() ||
                 !hasRuins(market) ||
-                market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL ||
+                // market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL ||
                 market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
                 market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
                 Utils.isInUnexploredSystem(token);
@@ -157,7 +158,7 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
         if (isEnding()) {
             return null;
         } else {
-            return marketToken.getMarket().getStarSystem().getHyperspaceAnchor();
+            return getEntity();
         }
     }
 
