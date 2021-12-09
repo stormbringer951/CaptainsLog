@@ -1,18 +1,21 @@
 package CaptainsLog.scripts;
 
-import CaptainsLog.campaign.intel.RuinsIntelv2;
-import CaptainsLog.campaign.intel.SalvageableIntel;
-import CaptainsLog.campaign.intel.UnremovableIntel;
+import java.util.List;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
+
 import org.apache.log4j.Logger;
 
-import java.util.List;
+import CaptainsLog.campaign.intel.RuinsIntelv2;
+import CaptainsLog.campaign.intel.SalvageableIntel;
+import CaptainsLog.campaign.intel.UnremovableIntel;
 
 public final class Utils {
     // This fixes a possible regression where a SectorEntityToken is not hidden but we don't have access to the map yet
@@ -119,6 +122,10 @@ public final class Utils {
         int count = 0;
 
         for (SectorEntityToken entity : entities) {
+            MarketAPI market = entity.getMarket();
+            if (market == null || market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL) {
+                continue;
+            }
             if (tryCreateUnsearchedRuinsReport(entity, log, showMessage)) {
                 ++count;
             }

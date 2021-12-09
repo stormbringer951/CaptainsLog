@@ -1,20 +1,20 @@
 package CaptainsLog.campaign.intel;
 
-import CaptainsLog.scripts.Utils;
+import java.awt.Color;
+import java.util.Set;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import java.awt.*;
-import java.util.Set;
+import CaptainsLog.scripts.Utils;
 
-public class CustomMessageIntel extends BaseIntelPlugin {
+public class CustomMessageIntel extends DistanceSortedIntel {
 
     private static final String REMOVE = "remove";
     private static final String HIDE_SHOW_TOGGLE = "hide_show";
@@ -119,20 +119,12 @@ public class CustomMessageIntel extends BaseIntelPlugin {
         return tags;
     }
 
-    public String getSortString() {
-        return "Captain's Log";
-    }
-
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
         if (!showOnMap || isEnding()) {
             return null;
         }
-        if (locationCreated.isInHyperspace()) {
-            return locationCreated;
-        } else {
-            return locationCreated.getStarSystem().getHyperspaceAnchor();
-        }
+        return locationCreated;
     }
 
     @Override

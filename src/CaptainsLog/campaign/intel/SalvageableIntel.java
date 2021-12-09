@@ -1,6 +1,8 @@
 package CaptainsLog.campaign.intel;
 
-import CaptainsLog.scripts.Utils;
+import java.awt.Color;
+import java.util.Set;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -8,19 +10,18 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
-import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.impl.campaign.procgen.SalvageEntityGenDataSpec;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+
 import org.apache.log4j.Logger;
 
-import java.awt.*;
-import java.util.Set;
+import CaptainsLog.scripts.Utils;
 
-public class SalvageableIntel extends BaseIntelPlugin {
+public class SalvageableIntel extends DistanceSortedIntel {
 
     // TODO: split into derelict_ship and other?
 
@@ -34,7 +35,6 @@ public class SalvageableIntel extends BaseIntelPlugin {
 
     private final SectorEntityToken salvageObject;
     private final ShipVariantAPI variant;
-    private final String sortString;
     private final int rating;
 
     public SalvageableIntel(SectorEntityToken salvageObject) {
@@ -51,7 +51,6 @@ public class SalvageableIntel extends BaseIntelPlugin {
 
         float salvageValue = estimateSalvageValue();
         rating = getValueRating(salvageValue);
-        sortString = "Salvageable" + rating;
 
         log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
@@ -208,11 +207,7 @@ public class SalvageableIntel extends BaseIntelPlugin {
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        if (salvageObject.isInHyperspace()) {
-            return salvageObject;
-        } else {
-            return salvageObject.getStarSystem().getHyperspaceAnchor();
-        }
+        return salvageObject;
     }
 
     @Override
@@ -296,10 +291,5 @@ public class SalvageableIntel extends BaseIntelPlugin {
         if (buttonId == REMOVE) {
             prompt.addPara(IGNORE_CONFIRMATION_MESSAGE, 0f);
         }
-    }
-
-    @Override
-    public String getSortString() {
-        return sortString;
     }
 }

@@ -1,22 +1,22 @@
 package CaptainsLog.campaign.intel;
 
-import CaptainsLog.scripts.Utils;
+import java.awt.Color;
+import java.util.Set;
+
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.MarketConditionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Conditions;
-import com.fs.starfarer.api.impl.campaign.intel.BaseIntelPlugin;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import com.fs.starfarer.api.Global;
 
-import java.awt.*;
-import java.util.Set;
+import CaptainsLog.scripts.Utils;
 
-public class RuinsIntelv2 extends BaseIntelPlugin {
+public class RuinsIntelv2 extends DistanceSortedIntel {
     private static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
     private static final String INTEL_RUINS = "Unexplored Ruins";
     private final SectorEntityToken marketToken;
@@ -76,7 +76,6 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
                 token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
                 !market.isPlanetConditionMarketOnly() ||
                 !hasRuins(market) ||
-                market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL ||
                 market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
                 market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
                 Utils.isInUnexploredSystem(token);
@@ -157,7 +156,7 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
         if (isEnding()) {
             return null;
         } else {
-            return marketToken.getMarket().getStarSystem().getHyperspaceAnchor();
+            return getEntity();
         }
     }
 
@@ -195,11 +194,6 @@ public class RuinsIntelv2 extends BaseIntelPlugin {
 
     private float getFraction() {
         return getRuinsTier() / 4f;
-    }
-
-    @Override
-    public String getSortString() {
-        return "Ruins " + getRuinsTier();
     }
 
     @Override
