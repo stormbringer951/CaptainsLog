@@ -12,7 +12,9 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-public class UnremovableIntel extends DistanceSortedIntel {
+import CaptainsLog.campaign.intel.button.LayInCourse;
+
+public class UnremovableIntel extends BaseIntel {
     private static final String INTEL_CRYOSLEEPER = "Cryosleepers";
     private SectorEntityToken cryosleeper;
 
@@ -53,6 +55,8 @@ public class UnremovableIntel extends DistanceSortedIntel {
 
         info.addPara("Located in the " + cryosleeper.getStarSystem().getNameWithLowercaseType() + ".", opad,
                 Misc.getPositiveHighlightColor(), cryosleeper.getStarSystem().getBaseName());
+
+        addGenericButton(info, width, new LayInCourse(cryosleeper));
     }
 
     @Override
@@ -102,10 +106,3 @@ public class UnremovableIntel extends DistanceSortedIntel {
         return IntelSortTier.TIER_6;
     }
 }
-
-
-
-
-
-
-

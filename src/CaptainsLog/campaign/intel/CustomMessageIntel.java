@@ -7,27 +7,19 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
+import CaptainsLog.campaign.intel.button.IgnoreCustom;
+import CaptainsLog.campaign.intel.button.LayInCourse;
+import CaptainsLog.campaign.intel.button.ToggleCustom;
 import CaptainsLog.scripts.Utils;
 
-public class CustomMessageIntel extends DistanceSortedIntel {
-
-    private static final String REMOVE = "remove";
-    private static final String HIDE_SHOW_TOGGLE = "hide_show";
+public class CustomMessageIntel extends BaseIntel {
     private final String message;
     private final String locationString;
-
     private static final String CAPTAIN_LOG_INTEL = "Captain's Log";
-
-    private static final String deleteButtonCaption = "Delete this message";
-    private static final String deleteConfirmMessage = "Are you sure you want to delete this message?";
-
-    private static final String hideMessageButtonPrompt = "Hide On Map";
-    private static final String showMessageButtonPrompt = "Show On Map";
 
     private boolean showOnMap;
     private SectorEntityToken locationCreated;
@@ -47,12 +39,16 @@ public class CustomMessageIntel extends DistanceSortedIntel {
         return Utils.getSystemNameOrHyperspace(locationCreated);
     }
 
+    public void toggleShow() {
+        showOnMap = !showOnMap;
+    }
+
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
         Color tc = Misc.getTextColor();
 
-        String title = "Captain's Log";
+        String title = CAPTAIN_LOG_INTEL;
         if (isEnding()) {
             title += " - Deleted";
         }
@@ -95,17 +91,13 @@ public class CustomMessageIntel extends DistanceSortedIntel {
         info.addPara(locationString, opad);
 
         if (!isEnding()) {
-            if (showOnMap) {
-                addGenericButton(info, width, hideMessageButtonPrompt, HIDE_SHOW_TOGGLE);
-            } else {
-                addGenericButton(info, width, showMessageButtonPrompt, HIDE_SHOW_TOGGLE);
-            }
-
-            addGenericButton(info, width, deleteButtonCaption, REMOVE);
+            addGenericButton(info, width, new LayInCourse(locationCreated));
+            addGenericButton(info, width, new ToggleCustom(showOnMap, this));
+            addGenericButton(info, width, new IgnoreCustom(this));
         }
 
-        // TODO: add generic buttons for other intel classes (Ignore this/Ignore all of this type)
-        // button.setShortcut(Keyboard.KEY_U, true);
+        // TODO: Add generic buttons for other intel classes
+        // (Ignore this/Ignore all of this type)
     }
 
     @Override
@@ -113,6 +105,7 @@ public class CustomMessageIntel extends DistanceSortedIntel {
         return Global.getSettings().getSpriteName("intel", "captains_log");
     }
 
+    @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
         tags.add(CAPTAIN_LOG_INTEL);
@@ -127,21 +120,6 @@ public class CustomMessageIntel extends DistanceSortedIntel {
         return locationCreated;
     }
 
-    @Override
-    public void buttonPressConfirmed(Object buttonId, IntelUIAPI ui) {
-        if (buttonId == REMOVE) {
-            endImmediately();
-            if (ui != null) {
-                ui.recreateIntelUI();
-            }
-        } else if (buttonId == HIDE_SHOW_TOGGLE) {
-            showOnMap = !showOnMap;
-            if (ui != null) {
-                ui.recreateIntelUI();
-            }
-        }
-    }
-
     private void addTimeStamp(TooltipMakerAPI info, float opad) {
         if (timestamp == null) {
             timestamp = Global.getSector().getClock().getTimestamp();
@@ -154,15 +132,5 @@ public class CustomMessageIntel extends DistanceSortedIntel {
     @Override
     public IntelSortTier getSortTier() {
         return IntelSortTier.TIER_2;
-    }
-
-    @Override
-    public boolean doesButtonHaveConfirmDialog(Object buttonId) {
-        return buttonId == REMOVE;
-    }
-
-    @Override
-    public void createConfirmationPrompt(Object buttonId, TooltipMakerAPI prompt) {
-        prompt.addPara(deleteConfirmMessage, 0f);
     }
 }
