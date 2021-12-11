@@ -7,6 +7,7 @@ import com.fs.starfarer.api.campaign.listeners.DiscoverEntityListener;
 import org.apache.log4j.Logger;
 
 public class RemovableSalvageListener implements DiscoverEntityListener {
+
     private static final Logger log = Global.getLogger(RemovableSalvageListener.class);
 
     @Override

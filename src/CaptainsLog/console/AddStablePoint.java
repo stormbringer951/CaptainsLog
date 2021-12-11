@@ -7,15 +7,15 @@ import com.fs.starfarer.api.impl.campaign.ids.Entities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.procgen.themes.BaseThemeGenerator;
 import com.fs.starfarer.api.util.WeightedRandomPicker;
+import java.util.LinkedHashMap;
+import java.util.Random;
 import org.lazywizard.console.BaseCommand;
 import org.lazywizard.console.CommonStrings;
 import org.lazywizard.console.Console;
 
-import java.util.LinkedHashMap;
-import java.util.Random;
-
 @SuppressWarnings("unused")
 public class AddStablePoint implements BaseCommand {
+
     @Override
     public CommandResult runCommand(String args, CommandContext context) {
         if (!context.isInCampaign()) {
@@ -39,10 +39,21 @@ public class AddStablePoint implements BaseCommand {
         weights.put(BaseThemeGenerator.LocationType.OUTER_SYSTEM, 10f);
         weights.put(BaseThemeGenerator.LocationType.L_POINT, 10f);
         weights.put(BaseThemeGenerator.LocationType.IN_SMALL_NEBULA, 2f);
-        WeightedRandomPicker<BaseThemeGenerator.EntityLocation> locs = BaseThemeGenerator.getLocations(random, system, null, 100f, weights);
+        WeightedRandomPicker<BaseThemeGenerator.EntityLocation> locs = BaseThemeGenerator.getLocations(
+            random,
+            system,
+            null,
+            100f,
+            weights
+        );
         BaseThemeGenerator.EntityLocation loc = locs.pick();
 
-        BaseThemeGenerator.AddedEntity added = BaseThemeGenerator.addNonSalvageEntity(system, loc, Entities.STABLE_LOCATION, Factions.NEUTRAL);
+        BaseThemeGenerator.AddedEntity added = BaseThemeGenerator.addNonSalvageEntity(
+            system,
+            loc,
+            Entities.STABLE_LOCATION,
+            Factions.NEUTRAL
+        );
 
         if (added != null) {
             BaseThemeGenerator.convertOrbitPointingDown(added.entity);

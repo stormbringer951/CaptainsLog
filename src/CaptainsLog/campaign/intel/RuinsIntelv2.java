@@ -1,8 +1,8 @@
 package CaptainsLog.campaign.intel;
 
-import java.awt.Color;
-import java.util.Set;
-
+import CaptainsLog.campaign.intel.button.IgnoreRuins;
+import CaptainsLog.campaign.intel.button.LayInCourse;
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -11,12 +11,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Conditions;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-
-import CaptainsLog.campaign.intel.button.IgnoreRuins;
-import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.scripts.Utils;
+import java.awt.Color;
+import java.util.Set;
 
 public class RuinsIntelv2 extends BaseIntel {
+
     public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
     public static final String INTEL_RUINS = "Unexplored Ruins";
 
@@ -52,10 +51,10 @@ public class RuinsIntelv2 extends BaseIntel {
         }
 
         String[] ruinTypes = new String[] {
-                Conditions.RUINS_SCATTERED,
-                Conditions.RUINS_WIDESPREAD,
-                Conditions.RUINS_EXTENSIVE,
-                Conditions.RUINS_VAST
+            Conditions.RUINS_SCATTERED,
+            Conditions.RUINS_WIDESPREAD,
+            Conditions.RUINS_EXTENSIVE,
+            Conditions.RUINS_VAST,
         };
 
         for (String type : ruinTypes) {
@@ -68,13 +67,15 @@ public class RuinsIntelv2 extends BaseIntel {
 
     public static boolean doesNotHaveUnexploredRuins(SectorEntityToken token) {
         MarketAPI market = token.getMarket();
-        return market == null ||
-                token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
-                !market.isPlanetConditionMarketOnly() ||
-                !hasRuins(market) ||
-                market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
-                market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
-                Utils.isInUnexploredSystem(token);
+        return (
+            market == null ||
+            token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
+            !market.isPlanetConditionMarketOnly() ||
+            !hasRuins(market) ||
+            market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
+            market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
+            Utils.isInUnexploredSystem(token)
+        );
     }
 
     @Override
@@ -131,8 +132,12 @@ public class RuinsIntelv2 extends BaseIntel {
         text.addPara(Misc.getTokenReplaced(getRuinsSpec().getDesc(), marketToken), Misc.getGrayColor(), opad);
         info.addImageWithText(opad);
 
-        info.addPara("Located in the " + marketToken.getStarSystem().getNameWithLowercaseType() + ".", opad,
-                Misc.getPositiveHighlightColor(), marketToken.getStarSystem().getBaseName());
+        info.addPara(
+            "Located in the " + marketToken.getStarSystem().getNameWithLowercaseType() + ".",
+            opad,
+            Misc.getPositiveHighlightColor(),
+            marketToken.getStarSystem().getBaseName()
+        );
 
         if (!isEnding()) {
             addGenericButton(info, width, new LayInCourse(marketToken));

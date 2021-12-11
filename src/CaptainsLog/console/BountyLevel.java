@@ -8,6 +8,7 @@ import org.lazywizard.console.Console;
 
 @SuppressWarnings("unused")
 public class BountyLevel implements BaseCommand {
+
     @Override
     public BaseCommand.CommandResult runCommand(String args, BaseCommand.CommandContext context) {
         if (!context.isInCampaign()) {

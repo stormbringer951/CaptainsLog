@@ -8,6 +8,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import org.apache.log4j.Logger;
 
 public class LocationChangeListener implements CurrentLocationChangedListener {
+
     private static final Logger log = Global.getLogger(LocationChangeListener.class);
 
     public void reportCurrentLocationChanged(LocationAPI prev, LocationAPI curr) {

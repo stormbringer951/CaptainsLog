@@ -9,6 +9,7 @@ import org.lazywizard.console.Console;
 
 @SuppressWarnings("unused")
 public class ListCryosleepers implements BaseCommand {
+
     @Override
     public CommandResult runCommand(String args, CommandContext context) {
         if (!context.isInCampaign()) {
@@ -18,9 +19,13 @@ public class ListCryosleepers implements BaseCommand {
 
         for (SectorEntityToken cryosleeper : Global.getSector().getEntitiesWithTag(Tags.CRYOSLEEPER)) {
             boolean found = !cryosleeper.hasSensorProfile() && !cryosleeper.isDiscoverable();
-            Console.showIndentedMessage(null, "Cryosleeper in the "
-                    + cryosleeper.getStarSystem().getNameWithLowercaseType()
-                    + (found ? "" : " (unknown)"), 4);
+            Console.showIndentedMessage(
+                null,
+                "Cryosleeper in the " +
+                cryosleeper.getStarSystem().getNameWithLowercaseType() +
+                (found ? "" : " (unknown)"),
+                4
+            );
         }
 
         return CommandResult.SUCCESS;

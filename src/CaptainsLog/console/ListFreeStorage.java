@@ -12,6 +12,7 @@ import org.lazywizard.console.Console;
 
 @SuppressWarnings("unused")
 public class ListFreeStorage implements BaseCommand {
+
     @Override
     public CommandResult runCommand(String args, CommandContext context) {
         if (!context.isInCampaign()) {
@@ -24,10 +25,15 @@ public class ListFreeStorage implements BaseCommand {
                 if (entity.getMarket() != null) {
                     MarketAPI market = entity.getMarket();
 
-                    if (market.hasCondition(Conditions.ABANDONED_STATION) &&
-                            market.hasSubmarket(Submarkets.SUBMARKET_STORAGE)) {
-                        Console.showIndentedMessage(null, entity.getName() + ", "
-                                + entity.getStarSystem().getBaseName(), 4);
+                    if (
+                        market.hasCondition(Conditions.ABANDONED_STATION) &&
+                        market.hasSubmarket(Submarkets.SUBMARKET_STORAGE)
+                    ) {
+                        Console.showIndentedMessage(
+                            null,
+                            entity.getName() + ", " + entity.getStarSystem().getBaseName(),
+                            4
+                        );
                     }
                 }
             }

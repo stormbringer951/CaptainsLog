@@ -1,5 +1,6 @@
 package CaptainsLog.scripts;
 
+import CaptainsLog.campaign.intel.RuinsIntel;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.PlanetAPI;
@@ -14,12 +15,11 @@ import com.fs.starfarer.api.impl.campaign.intel.misc.BreadcrumbIntel;
 import com.fs.starfarer.api.impl.campaign.terrain.DebrisFieldTerrainPlugin;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
-import org.apache.log4j.Logger;
-import CaptainsLog.campaign.intel.RuinsIntel;
-
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 
 public class CaptainsLogEveryFrame implements EveryFrameScript {
+
     private static final Logger log = Global.getLogger(CaptainsLogEveryFrame.class);
     private final IntervalUtil interval = new IntervalUtil(0.1f, 0.1f);
     private boolean notRunYet = true;
@@ -37,9 +37,12 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
     @Override
     public void advance(float amount) {
         interval.advance(amount);
-        if (!Global.getSector().isInNewGameAdvance() && !Global.getSector().getCampaignUI().isShowingMenu() &&
-                !Global.getSector().getCampaignUI().isShowingDialog() && interval.intervalElapsed()) {
-
+        if (
+            !Global.getSector().isInNewGameAdvance() &&
+            !Global.getSector().getCampaignUI().isShowingMenu() &&
+            !Global.getSector().getCampaignUI().isShowingDialog() &&
+            interval.intervalElapsed()
+        ) {
             // at this point hopefully we are actually in the game...
             SectorAPI sector = Global.getSector();
 
@@ -70,8 +73,12 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
                 // BreadcrumbSpecial.initEntityLocation()
                 //     "Location: " + [something]"
 
-                if (entity instanceof PlanetAPI && entity.getMarket() != null && intel.getDaysSincePlayerVisible() > 7f
-                        && entity.getMarket().getSurveyLevel() == MarketAPI.SurveyLevel.FULL) {
+                if (
+                    entity instanceof PlanetAPI &&
+                    entity.getMarket() != null &&
+                    intel.getDaysSincePlayerVisible() > 7f &&
+                    entity.getMarket().getSurveyLevel() == MarketAPI.SurveyLevel.FULL
+                ) {
                     // should catch "[Resource] Location", "Habitable Planet" fleet logs created by
                     // SurveyDataSpecial.initInterestingProperty()
                     //     "Habitable World" OR MarketConditionSpecAPI.getName() + " Location"
@@ -84,7 +91,7 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
                     } else {
                         intel.setTitle(intel.getTitle() + " - Completed");
                     }
-                     toRemove.add(intel);
+                    toRemove.add(intel);
                 }
 
                 if (entity instanceof StarSystemAPI && intel.getDaysSincePlayerVisible() > 30f) {
@@ -101,7 +108,6 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
                 if (entity instanceof DebrisFieldTerrainPlugin && intel.getDaysSincePlayerVisible() > 30f) {
                     log.info("Removing " + intel.getTitle() + " from updateDefaultFleetLot()");
                 }
-
                 // TODO: "Location: Debris Field"
                 // TODO: "Location: Orbital Habitat"
 
@@ -116,20 +122,36 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
         }
 
         if (notRunYet && toRemove.size() > 0) {
-            sector.getCampaignUI().addMessage("Captain's Log removed " + toRemove.size() + " completed vanilla " +
-                            "fleet log entries",
-                    Misc.getTextColor(), Integer.toString(toRemove.size()), "", Misc.getHighlightColor(), Misc.getHighlightColor());
+            sector
+                .getCampaignUI()
+                .addMessage(
+                    "Captain's Log removed " + toRemove.size() + " completed vanilla " + "fleet log entries",
+                    Misc.getTextColor(),
+                    Integer.toString(toRemove.size()),
+                    "",
+                    Misc.getHighlightColor(),
+                    Misc.getHighlightColor()
+                );
         }
     }
 
     private void runAtStart(SectorAPI sector) {
-        int count =Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false) +
-                Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false) +
-                Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
+        int count =
+            Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false) +
+            Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false) +
+            Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
 
         if (count > 0) {
-            sector.getCampaignUI().addMessage("Captain's Log added " + count + " new intel entries",
-                    Misc.getTextColor(), Integer.toString(count), "", Misc.getHighlightColor(), Misc.getHighlightColor());
+            sector
+                .getCampaignUI()
+                .addMessage(
+                    "Captain's Log added " + count + " new intel entries",
+                    Misc.getTextColor(),
+                    Integer.toString(count),
+                    "",
+                    Misc.getHighlightColor(),
+                    Misc.getHighlightColor()
+                );
         }
 
         interval.setInterval(5f, 5f);
