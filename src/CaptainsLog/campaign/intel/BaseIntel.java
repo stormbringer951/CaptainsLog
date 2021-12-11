@@ -13,6 +13,9 @@ public abstract class BaseIntel extends BaseIntelPlugin {
     @Override
     public String getSortString() {
         SectorEntityToken mapLocation = getMapLocation(null);
+        if (mapLocation == null) {
+            return "";
+        }
         return String.format("%07.0f", Misc.getDistanceToPlayerLY(mapLocation));
     }
 

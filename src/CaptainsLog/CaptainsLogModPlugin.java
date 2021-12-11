@@ -1,5 +1,6 @@
 package CaptainsLog;
 
+import CaptainsLog.campaign.intel.FleetLogIntel;
 import CaptainsLog.campaign.listeners.LocationChangeListener;
 import CaptainsLog.campaign.listeners.RemovableSalvageListener;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
@@ -16,6 +17,8 @@ public class CaptainsLogModPlugin extends BaseModPlugin {
 
     @Override
     public void onGameLoad(boolean newGame) {
+        FleetLogIntel.getInstance();
+
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
         Global.getSector().addTransientScript(new RuinObserver());
 
