@@ -1,7 +1,5 @@
 package CaptainsLog.campaign.intel;
 
-import CaptainsLog.Constants;
-import CaptainsLog.ui.ButtonRow;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.button.ClearAll;
 import CaptainsLog.ui.button.CreateLogEntry;
@@ -94,6 +92,12 @@ public class FleetLogIntel extends BaseIntel {
     @Override
     public boolean hasSmallDescription() {
         return false;
+    }
+
+    @Override
+    public boolean isImportant() {
+        // for now, so it's always accessible
+        return true;
     }
 
     @Override
