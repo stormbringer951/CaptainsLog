@@ -93,10 +93,4 @@ public class FleetLogIntel extends BaseIntel {
     public boolean hasSmallDescription() {
         return false;
     }
-
-    @Override
-    public boolean isImportant() {
-        // for now, so it's always accessible
-        return true;
-    }
 }
