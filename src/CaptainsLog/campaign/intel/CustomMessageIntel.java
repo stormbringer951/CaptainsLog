@@ -78,7 +78,7 @@ public class CustomMessageIntel extends BaseIntel {
         String dateOrLegacy = "%s " + getDaysString(days) + " ago";
         if (timeCreated != 0) {
             CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
-            dateOrLegacy = "Added " + clock.getDateString() + " (" + dateOrLegacy + ")";
+            dateOrLegacy = clock.getDateString() + " (" + dateOrLegacy + ")";
         }
 
         bullet(info);
@@ -147,8 +147,7 @@ public class CustomMessageIntel extends BaseIntel {
         }
 
         CampaignClockAPI clock = Global.getSector().getClock().createClock(timestamp);
-        float days = Math.max(1, getDaysSincePlayerVisible());
-        info.addPara(clock.getDateString() + " (" + (int) days + " " + getDaysString(days) + " ago)", opad);
+        info.addPara(clock.getDateString() + " (" + (int) getDaysSincePlayerVisible() + " days ago)", opad);
     }
 
     @Override
