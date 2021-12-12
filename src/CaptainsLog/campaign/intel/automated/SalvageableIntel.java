@@ -2,9 +2,9 @@ package CaptainsLog.campaign.intel.automated;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
-import CaptainsLog.campaign.intel.button.IgnoreSalvage;
-import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
+import CaptainsLog.ui.button.IgnoreSalvage;
+import CaptainsLog.ui.button.LayInCourse;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.combat.ShipVariantAPI;

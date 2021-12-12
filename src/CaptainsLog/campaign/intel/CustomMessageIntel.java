@@ -2,10 +2,10 @@ package CaptainsLog.campaign.intel;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
-import CaptainsLog.campaign.intel.button.IgnoreCustom;
-import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.campaign.intel.button.ToggleCustom;
 import CaptainsLog.scripts.Utils;
+import CaptainsLog.ui.button.IgnoreCustom;
+import CaptainsLog.ui.button.LayInCourse;
+import CaptainsLog.ui.button.ToggleCustom;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;

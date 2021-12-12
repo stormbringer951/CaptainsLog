@@ -8,6 +8,6 @@
         "minor":1,
         "patch":6
     },
-	"directDownloadURL":"https://github.com/stormbringer951/CaptainsLog/releases/download/0.1.5/CaptainsLog.zip",
-	"changelogURL":"https://raw.githubusercontent.com/stormbringer951/CaptainsLog/master/assets/changelog.txt"
+    "directDownloadURL":"https://github.com/stormbringer951/CaptainsLog/releases/download/0.1.5/CaptainsLog.zip",
+    "changelogURL":"https://raw.githubusercontent.com/stormbringer951/CaptainsLog/master/assets/changelog.txt"
 }

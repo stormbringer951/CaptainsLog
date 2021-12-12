@@ -1,13 +1,15 @@
-package CaptainsLog.campaign.intel.button;
+package CaptainsLog.ui.button;
 
+import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
 import org.lwjgl.input.Keyboard;
 
-public class LayInCourse implements IntelButton {
+public class LayInCourse implements Button {
 
     private final SectorEntityToken target;
 
@@ -47,4 +49,7 @@ public class LayInCourse implements IntelButton {
         // prevents user from repeatedly salvaging already salvaged content
         return !target.hasTag(Tags.FADING_OUT_AND_EXPIRING) && target.hasTag(Tags.NON_CLICKABLE);
     }
+
+    @Override
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {}
 }
