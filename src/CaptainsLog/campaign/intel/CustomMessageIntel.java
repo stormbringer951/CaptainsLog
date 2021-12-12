@@ -22,12 +22,14 @@ public class CustomMessageIntel extends BaseIntel {
 
     private boolean showOnMap;
     private SectorEntityToken locationCreated;
+    private long timeCreated;
 
     public CustomMessageIntel(String message) {
         // todo: handle newlines
         LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
 
         this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
+        this.timeCreated = Global.getSector().getClock().getTimestamp();
         this.locationString = "Location: " + getLocation();
         this.message = message;
         this.showOnMap = true;
@@ -45,7 +47,7 @@ public class CustomMessageIntel extends BaseIntel {
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
-        Color tc = Misc.getTextColor();
+        Color tc = getBulletColorForMode(mode);
 
         String title = CAPTAIN_LOG_INTEL;
         if (isEnding()) {
@@ -61,11 +63,17 @@ public class CustomMessageIntel extends BaseIntel {
             initPad = 3f;
         }
 
+        float days = Math.max(1, getDaysSincePlayerVisible());
+        String dateOrLegacy = "%s " + getDaysString(days) + " ago";
+        if (timeCreated != 0) {
+            CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
+            dateOrLegacy = clock.getDateString() + " (" + dateOrLegacy + ")";
+        }
+
         bullet(info);
-        addDays(info, "ago.", getDaysSincePlayerVisible(), tc, initPad + 10);
-        info.addPara(locationString, initPad, getBulletColorForMode(mode));
+        info.addPara(dateOrLegacy, initPad, tc, Misc.getHighlightColor(), getDays(days));
+        info.addPara(locationString, tc, initPad);
         unindent(info);
-        // TODO: format
         // Captain's Log
         // -- [date] ([number] days ago)
         // -- location
