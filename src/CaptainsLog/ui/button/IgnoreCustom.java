@@ -51,4 +51,7 @@ public class IgnoreCustom implements Button {
     public boolean shouldCreateButton() {
         return true;
     }
+
+    @Override
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {}
 }
