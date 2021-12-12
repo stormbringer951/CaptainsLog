@@ -49,6 +49,6 @@ public class CreateLogEntry implements Button {
 
     @Override
     public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {
-        thisElement.getPosition().inBL(10, 20);
+        thisElement.getPosition().inBL(10, 10);
     }
 }

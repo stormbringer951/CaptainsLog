@@ -78,7 +78,7 @@ public class CustomMessageIntel extends BaseIntel {
         String dateOrLegacy = "%s " + getDaysString(days) + " ago";
         if (timeCreated != 0) {
             CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
-            dateOrLegacy = clock.getDateString() + " (" + dateOrLegacy + ")";
+            dateOrLegacy = "Added " + clock.getDateString() + " (" + dateOrLegacy + ")";
         }
 
         bullet(info);
