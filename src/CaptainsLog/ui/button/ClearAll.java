@@ -44,6 +44,6 @@ public class ClearAll implements Button {
 
     @Override
     public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {
-        thisElement.getPosition().inBR(10, 20);
+        thisElement.getPosition().inBR(10, 10);
     }
 }

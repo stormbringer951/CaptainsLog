@@ -49,10 +49,10 @@ public class FleetLogIntel extends BaseIntel {
     @Override
     public void createLargeDescription(CustomPanelAPI panel, float width, float height) {
         width -= 10; // give 10px padding on the right
-        float pad = 2;
+        float pad = 5;
         float titleHeight = 28;
-        float buttonRowHeight = 20;
-        float bodyHeight = height - titleHeight - 2 * pad - buttonRowHeight - 2 * pad;
+        float buttonRowHeight = 30;
+        float bodyHeight = height - titleHeight - pad - buttonRowHeight - pad;
         TextArea title = new TextArea(width, titleHeight, pad);
         TextArea body = new TextArea(width, bodyHeight, pad, new FleetLogPanelPlugin());
         title.setFont(Fonts.ORBITRON_16);
@@ -64,7 +64,7 @@ public class FleetLogIntel extends BaseIntel {
             new CreateLogEntry(titleField, bodyField),
             new ClearAll(titleField, bodyField)
         );
-        buttonRow.render(panel, 0, height - buttonRow.getHeight());
+        buttonRow.render(panel, 0, height - buttonRow.getHeight() - 4 * pad);
     }
 
     @Override
