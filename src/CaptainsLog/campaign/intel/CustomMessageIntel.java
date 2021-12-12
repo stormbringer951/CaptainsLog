@@ -43,6 +43,10 @@ public class CustomMessageIntel extends BaseIntel {
         this(null, message);
     }
 
+    public CustomMessageIntel(String message) {
+        this(null, message);
+    }
+
     private String getLocation() {
         return Utils.getSystemNameOrHyperspace(locationCreated);
     }
