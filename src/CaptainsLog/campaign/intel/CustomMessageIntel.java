@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class CustomMessageIntel extends BaseIntel {
 
+    private final String title;
     private final String message;
     private final String locationString;
 
@@ -25,16 +26,21 @@ public class CustomMessageIntel extends BaseIntel {
     private final SectorEntityToken locationCreated;
     private long timeCreated;
 
-    public CustomMessageIntel(String message) {
+    public CustomMessageIntel(String title, String message) {
         // todo: handle newlines
         LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
 
         this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
         this.timeCreated = Global.getSector().getClock().getTimestamp();
         this.locationString = "Location: " + getLocation();
+        this.title = title;
         this.message = message;
         this.showOnMap = true;
         setImportant(SettingsUtils.markCustomMessagesAsImportant());
+    }
+
+    public CustomMessageIntel(String message) {
+        this(null, message);
     }
 
     private String getLocation() {
@@ -50,7 +56,11 @@ public class CustomMessageIntel extends BaseIntel {
         Color c = getTitleColor(mode);
         Color tc = getBulletColorForMode(mode);
 
-        String title = "Captain's Log";
+        String title = this.title;
+        if (title == null) {
+            title = Constants.CUSTOM_MESSAGE_INTEL_TAG;
+        }
+
         if (isEnding()) {
             title += " - Deleted";
         }
@@ -68,7 +78,7 @@ public class CustomMessageIntel extends BaseIntel {
         String dateOrLegacy = "%s " + getDaysString(days) + " ago";
         if (timeCreated != 0) {
             CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
-            dateOrLegacy = clock.getDateString() + " (" + dateOrLegacy + ")";
+            dateOrLegacy = "Added " + clock.getDateString() + " (" + dateOrLegacy + ")";
         }
 
         bullet(info);

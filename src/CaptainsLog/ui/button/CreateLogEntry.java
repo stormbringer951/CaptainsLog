@@ -25,11 +25,7 @@ public class CreateLogEntry implements Button {
     public void buttonPressConfirmed(IntelUIAPI ui) {
         String titleText = title.getText().trim();
         String bodyText = body.getText().trim();
-        String message = titleText;
-        if (!bodyText.isEmpty()) {
-            message += "\n\n\n" + bodyText;
-        }
-        Global.getSector().getIntelManager().addIntel(new CustomMessageIntel(message));
+        Global.getSector().getIntelManager().addIntel(new CustomMessageIntel(titleText, bodyText));
         ui.recreateIntelUI();
     }
 
@@ -53,6 +49,6 @@ public class CreateLogEntry implements Button {
 
     @Override
     public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {
-        thisElement.getPosition().inBL(10, 20);
+        thisElement.getPosition().inBL(10, 10);
     }
 }
