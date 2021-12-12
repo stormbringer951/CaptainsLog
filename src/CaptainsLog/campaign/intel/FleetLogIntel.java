@@ -13,6 +13,7 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+import java.text.MessageFormat;
 import java.util.Set;
 
 public class FleetLogIntel extends BaseIntel {
@@ -34,12 +35,14 @@ public class FleetLogIntel extends BaseIntel {
         int numberOfEntries = Global.getSector().getIntelManager().getIntel(CustomMessageIntel.class).size();
         info.addTitle("Fleet Logbook", getTitleColor(mode));
         info.addPara(
-            "There are %s %s in the logbook",
+            MessageFormat.format(
+                "There {0, choice, 0#are 0 entries|1#is 1 entry|1<are {0, number, integer} entries} in the logbook",
+                numberOfEntries
+            ),
             4,
             getBulletColorForMode(mode),
             Misc.getHighlightColor(),
-            String.valueOf(numberOfEntries),
-            numberOfEntries == 1 ? "entry" : "entries"
+            String.valueOf(numberOfEntries)
         );
     }
 
