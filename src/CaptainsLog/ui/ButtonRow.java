@@ -12,7 +12,7 @@ public class ButtonRow {
     private final float pad;
 
     public ButtonRow(float width, float height, Button... buttons) {
-        this(width, height, 0, buttons);
+        this(width, height, 2, buttons);
     }
 
     public ButtonRow(float width, float height, float pad, Button... buttons) {
@@ -23,13 +23,12 @@ public class ButtonRow {
     }
 
     public float getHeight() {
-        return height + pad;
+        return height + pad * 2;
     }
 
     public void render(TooltipMakerAPI tooltip) {
         UIComponentAPI lastElement = tooltip.addSpacer(0);
         UIComponentAPI currentElement;
-        tooltip.setButtonFontVictor14();
         for (Button button : buttons) {
             tooltip.addButton(button.getName(), button, 40 + tooltip.computeStringWidth(button.getName()), height, pad);
             currentElement = tooltip.getPrev();

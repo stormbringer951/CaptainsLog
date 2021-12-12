@@ -44,11 +44,6 @@ public class ClearAll implements Button {
 
     @Override
     public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {
-        thisElement.getPosition().inBR(10, 10);
-    }
-
-    @Override
-    public boolean shouldCreateButton() {
-        return true;
+        thisElement.getPosition().inBR(10, 20);
     }
 }
