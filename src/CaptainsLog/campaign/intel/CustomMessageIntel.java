@@ -1,8 +1,9 @@
 package CaptainsLog.campaign.intel;
 
-import java.awt.Color;
-import java.util.Set;
-
+import CaptainsLog.campaign.intel.button.IgnoreCustom;
+import CaptainsLog.campaign.intel.button.LayInCourse;
+import CaptainsLog.campaign.intel.button.ToggleCustom;
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
@@ -10,13 +11,11 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-
-import CaptainsLog.campaign.intel.button.IgnoreCustom;
-import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.campaign.intel.button.ToggleCustom;
-import CaptainsLog.scripts.Utils;
+import java.awt.Color;
+import java.util.Set;
 
 public class CustomMessageIntel extends BaseIntel {
+
     private final String message;
     private final String locationString;
     private static final String CAPTAIN_LOG_INTEL = "Captain's Log";
@@ -66,7 +65,6 @@ public class CustomMessageIntel extends BaseIntel {
         addDays(info, "ago.", getDaysSincePlayerVisible(), tc, initPad + 10);
         info.addPara(locationString, initPad, getBulletColorForMode(mode));
         unindent(info);
-
         // TODO: format
         // Captain's Log
         // -- [date] ([number] days ago)
@@ -95,7 +93,6 @@ public class CustomMessageIntel extends BaseIntel {
             addGenericButton(info, width, new ToggleCustom(showOnMap, this));
             addGenericButton(info, width, new IgnoreCustom(this));
         }
-
         // TODO: Add generic buttons for other intel classes
         // (Ignore this/Ignore all of this type)
     }

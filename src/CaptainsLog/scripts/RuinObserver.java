@@ -7,7 +7,6 @@ import com.fs.starfarer.api.campaign.PlanetAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.util.Misc;
-
 import org.apache.log4j.Logger;
 
 public class RuinObserver implements EveryFrameScript {
@@ -44,7 +43,7 @@ public class RuinObserver implements EveryFrameScript {
             Utils.tryCreateUnsearchedRuinsReport(planet, log, true);
         }
     }
-    
+
     private boolean isInRange(CampaignFleetAPI fleet, SectorEntityToken token) {
         return Misc.getDistance(fleet, token) < fleet.getSensorStrength();
     }

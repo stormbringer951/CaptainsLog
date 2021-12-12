@@ -4,7 +4,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-
 import org.lwjgl.input.Keyboard;
 
 public class LayInCourse implements IntelButton {
@@ -16,8 +15,7 @@ public class LayInCourse implements IntelButton {
     }
 
     @Override
-    public void buttonPressCancelled(IntelUIAPI ui) {
-    }
+    public void buttonPressCancelled(IntelUIAPI ui) {}
 
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
@@ -25,8 +23,7 @@ public class LayInCourse implements IntelButton {
     }
 
     @Override
-    public void createConfirmationPrompt(TooltipMakerAPI tooltip) {
-    }
+    public void createConfirmationPrompt(TooltipMakerAPI tooltip) {}
 
     @Override
     public boolean doesButtonHaveConfirmDialog() {

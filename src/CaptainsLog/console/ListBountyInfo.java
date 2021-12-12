@@ -9,6 +9,7 @@ import org.lazywizard.console.Console;
 
 @SuppressWarnings("unused")
 public class ListBountyInfo implements BaseCommand {
+
     @Override
     public BaseCommand.CommandResult runCommand(String args, BaseCommand.CommandContext context) {
         if (!context.isInCampaign()) {
@@ -18,8 +19,11 @@ public class ListBountyInfo implements BaseCommand {
 
         for (EveryFrameScript s : PersonBountyManager.getInstance().getActive()) {
             PersonBountyIntel bounty = (PersonBountyIntel) s;
-            Console.showIndentedMessage(null, bounty.getName() + " - " + bounty.getLevel()
-                    + (bounty.isPlayerVisible() ? "" : " (hidden)"), 4);
+            Console.showIndentedMessage(
+                null,
+                bounty.getName() + " - " + bounty.getLevel() + (bounty.isPlayerVisible() ? "" : " (hidden)"),
+                4
+            );
         }
 
         return BaseCommand.CommandResult.SUCCESS;

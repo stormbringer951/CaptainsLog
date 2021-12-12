@@ -1,11 +1,9 @@
 package CaptainsLog.campaign.intel.button;
 
+import CaptainsLog.campaign.intel.CustomMessageIntel;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-
 import org.lwjgl.input.Keyboard;
-
-import CaptainsLog.campaign.intel.CustomMessageIntel;
 
 public class ToggleCustom implements IntelButton {
 
@@ -18,8 +16,7 @@ public class ToggleCustom implements IntelButton {
     }
 
     @Override
-    public void buttonPressCancelled(IntelUIAPI ui) {
-    }
+    public void buttonPressCancelled(IntelUIAPI ui) {}
 
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
@@ -28,8 +25,7 @@ public class ToggleCustom implements IntelButton {
     }
 
     @Override
-    public void createConfirmationPrompt(TooltipMakerAPI tooltip) {
-    }
+    public void createConfirmationPrompt(TooltipMakerAPI tooltip) {}
 
     @Override
     public boolean doesButtonHaveConfirmDialog() {

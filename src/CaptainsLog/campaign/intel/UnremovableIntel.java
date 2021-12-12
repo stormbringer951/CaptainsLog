@@ -1,8 +1,6 @@
 package CaptainsLog.campaign.intel;
 
-import java.awt.Color;
-import java.util.Set;
-
+import CaptainsLog.campaign.intel.button.LayInCourse;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -11,10 +9,11 @@ import com.fs.starfarer.api.loading.Description.Type;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-
-import CaptainsLog.campaign.intel.button.LayInCourse;
+import java.awt.Color;
+import java.util.Set;
 
 public class UnremovableIntel extends BaseIntel {
+
     private static final String INTEL_CRYOSLEEPER = "Cryosleepers";
     private SectorEntityToken cryosleeper;
 
@@ -53,8 +52,12 @@ public class UnremovableIntel extends BaseIntel {
         text.addPara(desc.getText1FirstPara(), Misc.getGrayColor(), opad);
         info.addImageWithText(opad);
 
-        info.addPara("Located in the " + cryosleeper.getStarSystem().getNameWithLowercaseType() + ".", opad,
-                Misc.getPositiveHighlightColor(), cryosleeper.getStarSystem().getBaseName());
+        info.addPara(
+            "Located in the " + cryosleeper.getStarSystem().getNameWithLowercaseType() + ".",
+            opad,
+            Misc.getPositiveHighlightColor(),
+            cryosleeper.getStarSystem().getBaseName()
+        );
 
         addGenericButton(info, width, new LayInCourse(cryosleeper));
     }

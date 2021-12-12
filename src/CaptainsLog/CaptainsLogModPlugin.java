@@ -1,15 +1,19 @@
 package CaptainsLog;
 
-import com.fs.starfarer.api.BaseModPlugin;
-import com.fs.starfarer.api.Global;
-
 import CaptainsLog.campaign.listeners.LocationChangeListener;
 import CaptainsLog.campaign.listeners.RemovableSalvageListener;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
 import CaptainsLog.scripts.RuinObserver;
+import com.fs.starfarer.api.BaseModPlugin;
+import com.fs.starfarer.api.Global;
 
-@SuppressWarnings("unused")
 public class CaptainsLogModPlugin extends BaseModPlugin {
+
+    @Override
+    public void onNewGame() {
+        onGameLoad(true);
+    }
+
     @Override
     public void onGameLoad(boolean newGame) {
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());

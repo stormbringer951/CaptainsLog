@@ -1,12 +1,10 @@
 package CaptainsLog.campaign.intel.button;
 
+import CaptainsLog.campaign.intel.RuinsIntelv2;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-
 import org.lwjgl.input.Keyboard;
-
-import CaptainsLog.campaign.intel.RuinsIntelv2;
 
 public class IgnoreRuins implements IntelButton {
 
@@ -17,8 +15,7 @@ public class IgnoreRuins implements IntelButton {
     }
 
     @Override
-    public void buttonPressCancelled(IntelUIAPI ui) {
-    }
+    public void buttonPressCancelled(IntelUIAPI ui) {}
 
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
@@ -30,8 +27,11 @@ public class IgnoreRuins implements IntelButton {
 
     @Override
     public void createConfirmationPrompt(TooltipMakerAPI tooltip) {
-        tooltip.addPara("Are you sure you want to ignore this intel report? It will be removed and no more Captain's "
-                + "Log intel reports will be generated for this item.", 0);
+        tooltip.addPara(
+            "Are you sure you want to ignore this intel report? It will be removed and no more Captain's " +
+            "Log intel reports will be generated for this item.",
+            0
+        );
     }
 
     @Override

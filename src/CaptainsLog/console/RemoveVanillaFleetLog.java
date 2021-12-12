@@ -4,14 +4,14 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.impl.campaign.intel.misc.BreadcrumbIntel;
+import java.util.ArrayList;
 import org.lazywizard.console.BaseCommand;
 import org.lazywizard.console.CommonStrings;
 import org.lazywizard.console.Console;
 
-import java.util.ArrayList;
-
 @SuppressWarnings("unused")
 public class RemoveVanillaFleetLog implements BaseCommand {
+
     @Override
     public CommandResult runCommand(String args, CommandContext context) {
         if (!context.isInCampaign()) {

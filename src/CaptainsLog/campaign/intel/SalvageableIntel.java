@@ -1,8 +1,8 @@
 package CaptainsLog.campaign.intel;
 
-import java.awt.Color;
-import java.util.Set;
-
+import CaptainsLog.campaign.intel.button.IgnoreSalvage;
+import CaptainsLog.campaign.intel.button.LayInCourse;
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -14,12 +14,9 @@ import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-
+import java.awt.Color;
+import java.util.Set;
 import org.apache.log4j.Logger;
-
-import CaptainsLog.campaign.intel.button.IgnoreSalvage;
-import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.scripts.Utils;
 
 public class SalvageableIntel extends BaseIntel {
 
@@ -73,8 +70,13 @@ public class SalvageableIntel extends BaseIntel {
             info.addPara(variant.getHullSpec().getHullName(), Misc.getRelColor(rating / 4f), initPad);
         }
 
-        info.addPara(Utils.getSystemNameOrHyperspace(salvageObject), initPad, getBulletColorForMode(mode),
-                Misc.getPositiveHighlightColor(), Utils.getSystemNameOrHyperspaceBase(salvageObject));
+        info.addPara(
+            Utils.getSystemNameOrHyperspace(salvageObject),
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getPositiveHighlightColor(),
+            Utils.getSystemNameOrHyperspaceBase(salvageObject)
+        );
 
         unindent(info);
     }
@@ -93,8 +95,12 @@ public class SalvageableIntel extends BaseIntel {
             info.addPara(desc.getText1FirstPara(), Misc.getGrayColor(), opad);
         }
 
-        info.addPara("Location: " + Utils.getSystemNameOrHyperspace(salvageObject) + ".", opad,
-                Misc.getPositiveHighlightColor(), Utils.getSystemNameOrHyperspaceBase(salvageObject));
+        info.addPara(
+            "Location: " + Utils.getSystemNameOrHyperspace(salvageObject) + ".",
+            opad,
+            Misc.getPositiveHighlightColor(),
+            Utils.getSystemNameOrHyperspaceBase(salvageObject)
+        );
 
         if (!isEnding()) {
             addGenericButton(info, width, new LayInCourse(salvageObject));
@@ -136,8 +142,9 @@ public class SalvageableIntel extends BaseIntel {
     private float estimateSalvageValue() {
         float value = 0;
 
-        SalvageEntityGenDataSpec salvageSpec = (SalvageEntityGenDataSpec) Global.getSettings()
-                .getSpec(SalvageEntityGenDataSpec.class, salvageObject.getCustomEntityType(), true);
+        SalvageEntityGenDataSpec salvageSpec = (SalvageEntityGenDataSpec) Global
+            .getSettings()
+            .getSpec(SalvageEntityGenDataSpec.class, salvageObject.getCustomEntityType(), true);
 
         if (salvageSpec != null) {
             for (SalvageEntityGenDataSpec.DropData data : salvageSpec.getDropValue()) {
@@ -212,16 +219,18 @@ public class SalvageableIntel extends BaseIntel {
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
-        return token == null ||
-                !token.hasTag(Tags.SALVAGEABLE) ||
-                token.hasSensorProfile() ||
-                token.isDiscoverable() ||
-                token.hasTag("nex_museum_ship") ||
-                token.hasTag(Tags.CRYOSLEEPER) ||
-                !token.isAlive() ||
-                token.getMemoryWithoutUpdate().getBoolean(IGNORE_SALVAGEABLE_MEM_FLAG) ||
-                token.getFullName().equals("Technology Cache") ||
-                Utils.isInUnexploredSystem(token);
+        return (
+            token == null ||
+            !token.hasTag(Tags.SALVAGEABLE) ||
+            token.hasSensorProfile() ||
+            token.isDiscoverable() ||
+            token.hasTag("nex_museum_ship") ||
+            token.hasTag(Tags.CRYOSLEEPER) ||
+            !token.isAlive() ||
+            token.getMemoryWithoutUpdate().getBoolean(IGNORE_SALVAGEABLE_MEM_FLAG) ||
+            token.getFullName().equals("Technology Cache") ||
+            Utils.isInUnexploredSystem(token)
+        );
     }
 
     @Override
