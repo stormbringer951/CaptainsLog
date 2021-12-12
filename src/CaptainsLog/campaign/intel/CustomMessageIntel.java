@@ -1,9 +1,9 @@
 package CaptainsLog.campaign.intel;
 
-import CaptainsLog.campaign.intel.button.IgnoreCustom;
-import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.campaign.intel.button.ToggleCustom;
 import CaptainsLog.scripts.Utils;
+import CaptainsLog.ui.button.IgnoreCustom;
+import CaptainsLog.ui.button.LayInCourse;
+import CaptainsLog.ui.button.ToggleCustom;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
@@ -18,7 +18,7 @@ public class CustomMessageIntel extends BaseIntel {
 
     private final String message;
     private final String locationString;
-    private static final String CAPTAIN_LOG_INTEL = "Captain's Log";
+    public static final String CAPTAIN_LOG_INTEL = "Captain's Log";
 
     private boolean showOnMap;
     private SectorEntityToken locationCreated;

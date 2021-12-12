@@ -1,9 +1,10 @@
-package CaptainsLog.campaign.intel.button;
+package CaptainsLog.ui;
 
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
 
-public interface IntelButton {
+public interface Button {
     public void buttonPressCancelled(IntelUIAPI ui);
 
     public void buttonPressConfirmed(IntelUIAPI ui);
@@ -15,4 +16,6 @@ public interface IntelButton {
     public String getName();
 
     public int getShortcut();
+
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement);
 }

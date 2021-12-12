@@ -10,15 +10,20 @@ public class TextArea {
     private final float width;
     private final float height;
     private final float pad;
+    private final FieldAwarePanelPlugin plugin;
 
     private String font = Fonts.DEFAULT_SMALL;
     private String initialText = "";
-    private FieldAwarePanelPlugin plugin = null;
 
     public TextArea(float width, float height, float pad) {
+        this(width, height, pad, null);
+    }
+
+    public TextArea(float width, float height, float pad, FieldAwarePanelPlugin plugin) {
         this.width = width;
         this.height = height;
         this.pad = pad;
+        this.plugin = plugin;
     }
 
     public TextFieldAPI render(CustomPanelAPI panel, float x, float y) {
@@ -47,9 +52,5 @@ public class TextArea {
 
     public void setInitialText(String initialText) {
         this.initialText = initialText;
-    }
-
-    public void setPlugin(FieldAwarePanelPlugin plugin) {
-        this.plugin = plugin;
     }
 }

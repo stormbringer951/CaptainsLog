@@ -1,11 +1,13 @@
-package CaptainsLog.campaign.intel.button;
+package CaptainsLog.ui.button;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
+import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
 import org.lwjgl.input.Keyboard;
 
-public class ToggleCustom implements IntelButton {
+public class ToggleCustom implements Button {
 
     private final boolean showOnMap;
     private final CustomMessageIntel intel;
@@ -41,4 +43,7 @@ public class ToggleCustom implements IntelButton {
     public int getShortcut() {
         return Keyboard.KEY_M;
     }
+
+    @Override
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {}
 }

@@ -1,12 +1,14 @@
-package CaptainsLog.campaign.intel.button;
+package CaptainsLog.ui.button;
 
 import CaptainsLog.campaign.intel.RuinsIntelv2;
+import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
 import org.lwjgl.input.Keyboard;
 
-public class IgnoreRuins implements IntelButton {
+public class IgnoreRuins implements Button {
 
     private final RuinsIntelv2 intel;
 
@@ -48,4 +50,7 @@ public class IgnoreRuins implements IntelButton {
     public int getShortcut() {
         return Keyboard.KEY_I;
     }
+
+    @Override
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {}
 }
