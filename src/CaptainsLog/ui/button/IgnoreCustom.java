@@ -1,11 +1,13 @@
-package CaptainsLog.campaign.intel.button;
+package CaptainsLog.ui.button;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
+import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
 import org.lwjgl.input.Keyboard;
 
-public class IgnoreCustom implements IntelButton {
+public class IgnoreCustom implements Button {
 
     private final CustomMessageIntel intel;
 
@@ -41,4 +43,7 @@ public class IgnoreCustom implements IntelButton {
     public int getShortcut() {
         return Keyboard.KEY_D;
     }
+
+    @Override
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {}
 }

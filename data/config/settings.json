@@ -1,7 +1,8 @@
 {
-  "graphics": {
-    "intel": {
-      "captains_log":"graphics/icons/intel/fleet_log2.png" # placeholder
+    "graphics": {
+        "intel": {
+            "captains_log": "graphics/icons/intel/fleet_log2.png",
+            "fleet_log": "graphics/icons/intel/stars.png"
+        }
     }
-  }
 }
