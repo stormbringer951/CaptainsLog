@@ -10,11 +10,6 @@ import com.fs.starfarer.api.Global;
 public class CaptainsLogModPlugin extends BaseModPlugin {
 
     @Override
-    public void onNewGame() {
-        onGameLoad(true);
-    }
-
-    @Override
     public void onGameLoad(boolean newGame) {
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
         Global.getSector().addTransientScript(new RuinObserver());
