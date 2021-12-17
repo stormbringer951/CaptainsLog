@@ -141,7 +141,8 @@ public class CustomMessageIntel extends BaseIntel {
         }
 
         CampaignClockAPI clock = Global.getSector().getClock().createClock(timestamp);
-        info.addPara(clock.getDateString() + " (" + (int) getDaysSincePlayerVisible() + " days ago)", opad);
+        float days = Math.max(1, getDaysSincePlayerVisible());
+        info.addPara(clock.getDateString() + " (" + (int) days + " " + getDaysString(days) + " ago)", opad);
     }
 
     @Override
