@@ -35,6 +35,7 @@ public class TextArea {
             // multi-lines break cursor display
             field.hideCursor();
         }
+        field.setUndoOnEscape(false);
         inner.addUIElement(tooltip);
         panel.addComponent(inner).inTL(x, y);
         return field;
