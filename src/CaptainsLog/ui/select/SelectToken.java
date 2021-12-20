@@ -3,6 +3,7 @@ package CaptainsLog.ui.select;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 
 public class SelectToken implements Selection<SectorEntityToken> {
+
     SectorEntityToken token;
 
     public SelectToken(SectorEntityToken token) {

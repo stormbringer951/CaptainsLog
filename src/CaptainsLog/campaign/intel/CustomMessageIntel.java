@@ -27,10 +27,18 @@ public class CustomMessageIntel extends BaseIntel {
     private long timeCreated;
 
     public CustomMessageIntel(String title, String message) {
+        this(title, message, null);
+    }
+
+    public CustomMessageIntel(String title, String message, SectorEntityToken locationToken) {
         // todo: handle newlines
         LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
 
-        this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
+        if (locationToken != null) {
+            this.locationCreated = locationToken;
+        } else {
+            this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
+        }
         this.timeCreated = Global.getSector().getClock().getTimestamp();
         this.locationString = "Location: " + getLocation();
         this.title = title;

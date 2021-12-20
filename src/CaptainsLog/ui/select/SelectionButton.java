@@ -5,7 +5,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import java.awt.*;
 
-public interface SelectionButton<T>  {
+public interface SelectionButton<T> {
     boolean isChecked();
 
     boolean isClicked(InputEventAPI event);
@@ -14,7 +14,7 @@ public interface SelectionButton<T>  {
 
     void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement);
 
-    void render(TooltipMakerAPI tooltip, Color base, Color dark, Color bright, float height, float pad);
+    void render(TooltipMakerAPI tooltip, Color base, Color dark, Color bright, float width, float height, float pad);
 
     String getName();
 

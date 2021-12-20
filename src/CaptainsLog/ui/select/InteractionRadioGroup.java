@@ -13,9 +13,14 @@ import java.util.List;
 public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
 
     private final List<SelectionButton<T>> buttons;
+    private final boolean[] rememberedSelection;
 
     public InteractionRadioGroup(List<SelectionButton<T>> buttons) {
         this.buttons = buttons;
+        rememberedSelection = new boolean[buttons.size()];
+        for (int i = 0; i < buttons.size(); i++) {
+            rememberedSelection[i] = buttons.get(i).isChecked();
+        }
     }
 
     public void render(
@@ -31,6 +36,7 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
         Color bright = Global.getSettings().getBrightPlayerColor();
         Color dark = Global.getSettings().getDarkPlayerColor();
         float buttonHeight = 30;
+        float horizonalPad = 20;
 
         TooltipMakerAPI tooltip = panel.createUIElement(width, height, withScroller);
         tooltip.setButtonFontVictor14();
@@ -39,7 +45,7 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
         UIComponentAPI currentElement;
 
         for (SelectionButton<T> button : buttons) {
-            button.render(tooltip, base, dark, bright, buttonHeight, pad);
+            button.render(tooltip, base, dark, bright, width - horizonalPad, buttonHeight, pad);
             currentElement = tooltip.getPrev();
             button.setPosition(lastElement, currentElement);
             lastElement = currentElement;
@@ -66,13 +72,13 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
             if (!event.isLMBEvent()) {
                 continue;
             }
-            for (SelectionButton<T> button : buttons) {
-                if (button.isClicked(event)) {
-                    // Note: we only get the MouseUp event because MouseDown is consumed
-                    // recalculate to use selection moused over when MouseUp event is sent. Prevents multiple selection
-                    // using (consumed) MouseDown event and then programmatically setting a second with MouseUp
-                    redrawButtonSelection(event);
-                    break;
+            // mouse up event cannot accurately keep track of things that are left-clicked (mouse down event consumed)
+            // and then dragged so mouse up event occurs outside getPosition().containsEvent()
+            // especially with a scroller where you must check getPosition().containsEvent() to make sure you are only
+            // selecting visible elements
+            for (int i = 0; i < buttons.size(); ++i) {
+                if (buttons.get(i).isChecked() && rememberedSelection[i] != buttons.get(i).isChecked()) {
+                    redrawButtonSelection(i);
                 }
             }
         }
@@ -87,9 +93,10 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
         return null;
     }
 
-    private void redrawButtonSelection(InputEventAPI event) {
-        for (SelectionButton<T> button : buttons) {
-            button.setChecked(button.isClicked(event));
+    private void redrawButtonSelection(int selectedIndex) {
+        for (int i = 0; i < buttons.size(); ++i) {
+            buttons.get(i).setChecked(i == selectedIndex);
+            rememberedSelection[i] = i == selectedIndex;
         }
     }
 }

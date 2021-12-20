@@ -30,12 +30,24 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     TextFieldAPI bodyField;
     SectorEntityToken selectedObject = null;
 
+    String initialTitle;
+    String initialBodyText;
+
+    LogCreatorInteractionDialog() {
+        this("Captain's Log", "");
+    }
+
+    LogCreatorInteractionDialog(String title, String text) {
+        this.initialTitle = title;
+        this.initialBodyText = text;
+    }
+
     @Override
     public void init(InteractionDialogAPI dialog) {
         this.dialog = dialog;
 
         float width = 640f; // TODO: deduce possible width
-        float height = 300f; // TODO: deduce possible height
+        float height = 500f; // TODO: deduce possible height
         initVisualPanel(dialog.getVisualPanel(), width, height);
 
         OptionPanelAPI options = dialog.getOptionPanel();
@@ -74,7 +86,9 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         float titleHeight = 28;
         float bodyHeight = height - titleHeight - pad;
         TextArea title = new TextArea(width, titleHeight, pad);
+        title.setInitialText(initialTitle);
         TextArea body = new TextArea(width, bodyHeight, pad, new FleetLogPanelPlugin());
+        body.setInitialText(initialBodyText);
         title.setFont(Fonts.ORBITRON_16);
         titleField = title.render(panel, 0, 0);
         bodyField = body.render(panel, 0, titleHeight + pad);
@@ -90,7 +104,10 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
             case CREATE:
                 String titleText = titleField.getText().trim();
                 String bodyText = bodyField.getText().trim();
-                Global.getSector().getIntelManager().addIntel(new CustomMessageIntel(titleText, bodyText));
+                Global
+                    .getSector()
+                    .getIntelManager()
+                    .addIntel(new CustomMessageIntel(titleText, bodyText, selectedObject));
                 dialog.dismiss();
                 break;
             case PICK_TARGET:
@@ -101,20 +118,24 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
 
     // TODO finish this logic
     private boolean isValidCaptainsLogTarget(SectorEntityToken entity) {
-        return !entity.hasSensorProfile() &&
-                !entity.hasDiscoveryXP() &&
-                entity.isVisibleToPlayerFleet() &&
-                !entity.hasTag(Tags.ORBITAL_JUNK) &&
-                !entity.hasTag(Tags.TERRAIN) &&
-                !entity.getName().equals("Null") &&
-                !(entity instanceof AsteroidAPI) &&
-                isPrimaryEntity(entity);
+        return (
+            !entity.hasSensorProfile() &&
+            !entity.hasDiscoveryXP() &&
+            entity.isVisibleToPlayerFleet() &&
+            !entity.hasTag(Tags.ORBITAL_JUNK) &&
+            !entity.hasTag(Tags.TERRAIN) &&
+            !entity.getName().equals("Null") &&
+            !(entity instanceof AsteroidAPI) &&
+            isPrimaryEntity(entity)
+        );
     }
 
     private boolean isPrimaryEntity(SectorEntityToken entity) {
-        return entity.getMarket() == null ||
-                entity.getMarket().getPrimaryEntity() == null ||
-                entity.getMarket().getPrimaryEntity() == entity;
+        return (
+            entity.getMarket() == null ||
+            entity.getMarket().getPrimaryEntity() == null ||
+            entity.getMarket().getPrimaryEntity() == entity
+        );
     }
 
     private void pickTarget() {
@@ -132,7 +153,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
             }
         }
 
-        float height = 600;
+        float height = 400;
         float width = 400;
         dialog.showCustomDialog(width, height, new TokenSelectorMenu(this, shortList, selectedObject));
     }
@@ -146,9 +167,18 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         TextPanelAPI panel = dialog.getTextPanel();
         panel.clear();
         panel.addPara("Log metadata");
+        String selected = "None";
         if (selectedObject != null) {
-            panel.addPara(selectedObject.getName());
+            selected = selectedObject.getName();
         }
+        panel.addPara("Log attached to: " + selected);
+        panel.highlightInLastPara(selected);
+        CampaignClockAPI clock = Global
+            .getSector()
+            .getClock()
+            .createClock(Global.getSector().getClock().getTimestamp());
+        panel.addPara("Date: " + clock.getDateString());
+        panel.highlightInLastPara(clock.getDateString());
     }
 
     @Override

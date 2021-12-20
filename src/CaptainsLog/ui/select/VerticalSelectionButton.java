@@ -48,19 +48,17 @@ public class VerticalSelectionButton<V, T extends Selection<V>> implements Selec
     }
 
     @Override
-    public void render(TooltipMakerAPI tooltip, Color base, Color dark, Color bright, float height, float pad) {
+    public void render(
+        TooltipMakerAPI tooltip,
+        Color base,
+        Color dark,
+        Color bright,
+        float width,
+        float height,
+        float pad
+    ) {
         // TODO make prettier
-        button =
-            tooltip.addAreaCheckbox(
-                getName(),
-                new Object(),
-                base,
-                dark,
-                bright,
-                40 + tooltip.computeStringWidth(getName()),
-                height,
-                pad
-            );
+        button = tooltip.addAreaCheckbox(getName(), new Object(), base, dark, bright, width, height, pad);
         button.setChecked(startSelected);
     }
 }
