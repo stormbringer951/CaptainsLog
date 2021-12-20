@@ -1,4 +1,4 @@
-package CaptainsLog.ui;
+package CaptainsLog.ui.select;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CustomUIPanelPlugin;
@@ -10,11 +10,11 @@ import com.fs.starfarer.api.ui.UIComponentAPI;
 import java.awt.*;
 import java.util.List;
 
-public class InteractionRadioGroup implements CustomUIPanelPlugin {
+public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
 
-    private final InteractionButton[] buttons;
+    private final List<SelectionButton<T>> buttons;
 
-    public InteractionRadioGroup(InteractionButton... buttons) {
+    public InteractionRadioGroup(List<SelectionButton<T>> buttons) {
         this.buttons = buttons;
     }
 
@@ -38,7 +38,7 @@ public class InteractionRadioGroup implements CustomUIPanelPlugin {
         UIComponentAPI lastElement = tooltip.addSpacer(0);
         UIComponentAPI currentElement;
 
-        for (InteractionButton button : buttons) {
+        for (SelectionButton<T> button : buttons) {
             button.render(tooltip, base, dark, bright, buttonHeight, pad);
             currentElement = tooltip.getPrev();
             button.setPosition(lastElement, currentElement);
@@ -66,10 +66,9 @@ public class InteractionRadioGroup implements CustomUIPanelPlugin {
             if (!event.isLMBEvent()) {
                 continue;
             }
-            // TODO do stuff
-            for (InteractionButton button : buttons) {
+            for (SelectionButton<T> button : buttons) {
                 if (button.isClicked(event)) {
-                    if (button.isSelected()) {
+                    if (button.isChecked()) {
                         redrawButtonSelection(event);
                     } else {
                         // TODO: possibly error check in case no other buttons are selected
@@ -81,8 +80,17 @@ public class InteractionRadioGroup implements CustomUIPanelPlugin {
         }
     }
 
+    public T getSelected() {
+        for (SelectionButton<T> button : buttons) {
+            if (button.isChecked()) {
+                return button.getValue();
+            }
+        }
+        return null;
+    }
+
     private void redrawButtonSelection(InputEventAPI event) {
-        for (InteractionButton button : buttons) {
+        for (SelectionButton<T> button : buttons) {
             button.setChecked(button.isClicked(event));
         }
     }

@@ -3,12 +3,10 @@ package CaptainsLog.scripts;
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.campaign.intel.FleetLogPanelPlugin;
 import CaptainsLog.ui.TextArea;
-import CaptainsLog.ui.TokenSelectorMenu;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.Fonts;
@@ -45,7 +43,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         options.addOption("Attach log to nearby object", OptionId.PICK_TARGET);
         dialog.setOptionOnEscape(null, OptionId.CANCEL);
 
-        dialog.hideTextPanel();
+        redrawTextPanel();
     }
 
     void initVisualPanel(VisualPanelAPI visual, float width, float height) {
@@ -100,6 +98,14 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         }
     }
 
+    // TODO finish this logic
+    private boolean isValidCaptainsLogTarget(SectorEntityToken entity) {
+        return !entity.hasSensorProfile() &&
+                !entity.hasDiscoveryXP() &&
+                entity.isVisibleToPlayerFleet() &&
+                !entity.getName().equals("Null");
+    }
+
     private void pickTarget() {
         LocationAPI location = Global.getSector().getCurrentLocation();
 
@@ -110,19 +116,29 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         }
 
         for (SectorEntityToken entity : location.getAllEntities()) {
-            if (
-                !entity.hasSensorProfile() &&
-                !entity.hasDiscoveryXP() &&
-                entity.isVisibleToPlayerFleet() &&
-                !entity.getName().equals("Null")
-            ) {
+            if (isValidCaptainsLogTarget(entity)) {
                 shortList.add(entity);
             }
         }
 
-        float height = 300;
+        float height = 600;
         float width = 400;
         dialog.showCustomDialog(width, height, new TokenSelectorMenu(this, shortList));
+    }
+
+    public void setToken(SectorEntityToken token) {
+        selectedObject = token;
+        redrawTextPanel();
+        // TODO: trigger redraw
+    }
+
+    public void redrawTextPanel() {
+        TextPanelAPI panel = dialog.getTextPanel();
+        panel.clear();
+        panel.addPara("Log metadata");
+        if (selectedObject != null) {
+            panel.addPara(selectedObject.getName());
+        }
     }
 
     @Override

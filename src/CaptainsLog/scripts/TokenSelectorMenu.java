@@ -1,6 +1,9 @@
-package CaptainsLog.ui;
+package CaptainsLog.scripts;
 
-import CaptainsLog.ui.button.radio.TokenSelectionRadioButton;
+import CaptainsLog.ui.select.InteractionRadioGroup;
+import CaptainsLog.ui.select.SelectToken;
+import CaptainsLog.ui.select.SelectionButton;
+import CaptainsLog.ui.select.VerticalSelectionButton;
 import com.fs.starfarer.api.campaign.CustomDialogDelegate;
 import com.fs.starfarer.api.campaign.CustomUIPanelPlugin;
 import com.fs.starfarer.api.campaign.InteractionDialogPlugin;
@@ -11,16 +14,16 @@ import java.util.List;
 
 public class TokenSelectorMenu implements CustomDialogDelegate {
 
-    InteractionDialogPlugin plugin;
-    InteractionRadioGroup radioGroup;
+    LogCreatorInteractionDialog plugin;
+    InteractionRadioGroup<SectorEntityToken> radioGroup;
 
-    public TokenSelectorMenu(InteractionDialogPlugin plugin, List<SectorEntityToken> tokens) {
+    public TokenSelectorMenu(LogCreatorInteractionDialog plugin, List<SectorEntityToken> tokens) {
         this.plugin = plugin;
-        List<InteractionButton> tokenButtons = new ArrayList<>();
+        List<SelectionButton<SectorEntityToken>> buttons = new ArrayList<>();
         for (SectorEntityToken token : tokens) {
-            tokenButtons.add(new TokenSelectionRadioButton(token));
+            buttons.add(new VerticalSelectionButton<>(new SelectToken(token)));
         }
-        radioGroup = new InteractionRadioGroup(tokenButtons.toArray(new InteractionButton[0]));
+        radioGroup = new InteractionRadioGroup<>(buttons);
     }
 
     @Override
@@ -37,9 +40,9 @@ public class TokenSelectorMenu implements CustomDialogDelegate {
         return true;
     }
 
+    // Calls only when interaction is being created, doesn't update on exit
     @Override
     public String getConfirmText() {
-        // TODO
         return null;
     }
 
@@ -50,8 +53,7 @@ public class TokenSelectorMenu implements CustomDialogDelegate {
 
     @Override
     public void customDialogConfirm() {
-        // TODO
-        // plugin.setAttachedToken(token);
+        plugin.setToken(radioGroup.getSelected());
     }
 
     @Override
