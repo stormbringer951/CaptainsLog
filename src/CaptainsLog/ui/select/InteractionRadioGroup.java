@@ -68,12 +68,10 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
             }
             for (SelectionButton<T> button : buttons) {
                 if (button.isClicked(event)) {
-                    if (button.isChecked()) {
-                        redrawButtonSelection(event);
-                    } else {
-                        // TODO: possibly error check in case no other buttons are selected
-                        button.setChecked(true); // prevent unselection of current choice
-                    }
+                    // Note: we only get the MouseUp event because MouseDown is consumed
+                    // recalculate to use selection moused over when MouseUp event is sent. Prevents multiple selection
+                    // using (consumed) MouseDown event and then programmatically setting a second with MouseUp
+                    redrawButtonSelection(event);
                     break;
                 }
             }
