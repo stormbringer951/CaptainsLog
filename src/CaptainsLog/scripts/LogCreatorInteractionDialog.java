@@ -7,6 +7,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.Fonts;
@@ -103,7 +104,17 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         return !entity.hasSensorProfile() &&
                 !entity.hasDiscoveryXP() &&
                 entity.isVisibleToPlayerFleet() &&
-                !entity.getName().equals("Null");
+                !entity.hasTag(Tags.ORBITAL_JUNK) &&
+                !entity.hasTag(Tags.TERRAIN) &&
+                !entity.getName().equals("Null") &&
+                !(entity instanceof AsteroidAPI) &&
+                isPrimaryEntity(entity);
+    }
+
+    private boolean isPrimaryEntity(SectorEntityToken entity) {
+        return entity.getMarket() == null ||
+                entity.getMarket().getPrimaryEntity() == null ||
+                entity.getMarket().getPrimaryEntity() == entity;
     }
 
     private void pickTarget() {
