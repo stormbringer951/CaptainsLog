@@ -140,7 +140,6 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     public void setToken(SectorEntityToken token) {
         selectedObject = token;
         redrawTextPanel();
-        // TODO: trigger redraw
     }
 
     public void redrawTextPanel() {
