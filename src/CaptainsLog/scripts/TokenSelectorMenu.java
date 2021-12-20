@@ -17,11 +17,11 @@ public class TokenSelectorMenu implements CustomDialogDelegate {
     LogCreatorInteractionDialog plugin;
     InteractionRadioGroup<SectorEntityToken> radioGroup;
 
-    public TokenSelectorMenu(LogCreatorInteractionDialog plugin, List<SectorEntityToken> tokens) {
+    public TokenSelectorMenu(LogCreatorInteractionDialog plugin, List<SectorEntityToken> tokens, SectorEntityToken selected) {
         this.plugin = plugin;
         List<SelectionButton<SectorEntityToken>> buttons = new ArrayList<>();
         for (SectorEntityToken token : tokens) {
-            buttons.add(new VerticalSelectionButton<>(new SelectToken(token)));
+            buttons.add(new VerticalSelectionButton<>(new SelectToken(token), selected == token));
         }
         radioGroup = new InteractionRadioGroup<>(buttons);
     }

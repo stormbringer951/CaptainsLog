@@ -10,9 +10,11 @@ public class VerticalSelectionButton<V, T extends Selection<V>> implements Selec
 
     ButtonAPI button = null;
     T selection;
+    boolean startSelected;
 
-    public VerticalSelectionButton(T selection) {
+    public VerticalSelectionButton(T selection, boolean startSelected) {
         this.selection = selection;
+        this.startSelected = startSelected;
     }
 
     @Override
@@ -59,5 +61,6 @@ public class VerticalSelectionButton<V, T extends Selection<V>> implements Selec
                 height,
                 pad
             );
+        button.setChecked(startSelected);
     }
 }

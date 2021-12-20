@@ -123,7 +123,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
 
         float height = 600;
         float width = 400;
-        dialog.showCustomDialog(width, height, new TokenSelectorMenu(this, shortList));
+        dialog.showCustomDialog(width, height, new TokenSelectorMenu(this, shortList, selectedObject));
     }
 
     public void setToken(SectorEntityToken token) {
