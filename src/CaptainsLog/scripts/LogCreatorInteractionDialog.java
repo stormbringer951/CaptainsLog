@@ -2,19 +2,19 @@ package CaptainsLog.scripts;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.campaign.intel.FleetLogPanelPlugin;
-import CaptainsLog.ui.ButtonRow;
 import CaptainsLog.ui.TextArea;
-import CaptainsLog.ui.button.ClearAll;
-import CaptainsLog.ui.button.CreateLogEntry;
+import CaptainsLog.ui.TokenSelectorMenu;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +23,13 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     public enum OptionId {
         CREATE,
         CANCEL,
+        PICK_TARGET,
     }
 
     InteractionDialogAPI dialog;
     TextFieldAPI titleField;
     TextFieldAPI bodyField;
+    SectorEntityToken selectedObject = null;
 
     @Override
     public void init(InteractionDialogAPI dialog) {
@@ -40,6 +42,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         OptionPanelAPI options = dialog.getOptionPanel();
         options.addOption("Create", OptionId.CREATE);
         options.addOption("Cancel", OptionId.CANCEL);
+        options.addOption("Attach log to nearby object", OptionId.PICK_TARGET);
         dialog.setOptionOnEscape(null, OptionId.CANCEL);
 
         dialog.hideTextPanel();
@@ -91,7 +94,35 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
                 Global.getSector().getIntelManager().addIntel(new CustomMessageIntel(titleText, bodyText));
                 dialog.dismiss();
                 break;
+            case PICK_TARGET:
+                pickTarget();
+                break;
         }
+    }
+
+    private void pickTarget() {
+        LocationAPI location = Global.getSector().getCurrentLocation();
+
+        List<SectorEntityToken> shortList = new ArrayList<>();
+
+        if (location.isHyperspace()) {
+            return; // TODO: implement case for hyperspace
+        }
+
+        for (SectorEntityToken entity : location.getAllEntities()) {
+            if (
+                !entity.hasSensorProfile() &&
+                !entity.hasDiscoveryXP() &&
+                entity.isVisibleToPlayerFleet() &&
+                !entity.getName().equals("Null")
+            ) {
+                shortList.add(entity);
+            }
+        }
+
+        float height = 300;
+        float width = 400;
+        dialog.showCustomDialog(width, height, new TokenSelectorMenu(this, shortList));
     }
 
     @Override
