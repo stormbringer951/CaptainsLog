@@ -58,7 +58,6 @@ public class VerticalSelectionButton<V, T extends Selection<V>> implements Selec
         float height,
         float pad
     ) {
-        // TODO make prettier
         button = tooltip.addAreaCheckbox(getName(), new Object(), base, dark, bright, width, height, pad);
         button.setChecked(isChecked);
     }

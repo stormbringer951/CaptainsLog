@@ -3,6 +3,8 @@ package CaptainsLog.scripts;
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.campaign.intel.FleetLogPanelPlugin;
 import CaptainsLog.ui.TextArea;
+import CaptainsLog.ui.delegate.SectorEntityTokenSelectorDelegate;
+import CaptainsLog.ui.delegate.StarSystemSelectorDelegate;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
@@ -13,6 +15,7 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
+import com.fs.starfarer.api.util.Misc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,11 +59,6 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
 
         options.addOption("Create", OptionId.CREATE);
         options.addOption("Select object to attach to log", OptionId.PICK_TARGET);
-        if (location.isHyperspace()) {
-            options.setEnabled(OptionId.PICK_TARGET, false);
-            // TODO: implement
-            options.setTooltip(OptionId.PICK_TARGET, "Not implemented for hyperspace yet");
-        }
         options.addOption("Cancel", OptionId.CANCEL);
         dialog.setOptionOnEscape(null, OptionId.CANCEL);
 
@@ -145,20 +143,43 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         );
     }
 
+    private boolean isValidCaptainsLogTarget(StarSystemAPI system) {
+        return !(system.hasTag(Tags.THEME_HIDDEN) && !system.isEnteredByPlayer());
+    }
+
     private void pickTarget() {
-        LocationAPI location = Global.getSector().getCurrentLocation();
-
-        List<SectorEntityToken> shortList = new ArrayList<>();
-
-        for (SectorEntityToken entity : location.getAllEntities()) {
-            if (isValidCaptainsLogTarget(entity)) {
-                shortList.add(entity);
-            }
-        }
-
         float height = 400;
         float width = 400;
-        dialog.showCustomDialog(width, height, new TokenSelectorMenu(this, shortList, selectedObject));
+
+        LocationAPI location = Global.getSector().getCurrentLocation();
+
+        if (location.isHyperspace()) {
+            List<StarSystemAPI> shortList = new ArrayList<>();
+
+            for (StarSystemAPI system : Misc.getSystemsInRange(
+                Global.getSector().getPlayerFleet(),
+                null,
+                false,
+                100000000
+            )) {
+                if (isValidCaptainsLogTarget(system)) {
+                    shortList.add(system);
+                }
+            }
+            dialog.showCustomDialog(width, height, new StarSystemSelectorDelegate(this, shortList, selectedObject));
+        } else {
+            List<SectorEntityToken> shortList = new ArrayList<>();
+            for (SectorEntityToken entity : location.getAllEntities()) {
+                if (isValidCaptainsLogTarget(entity)) {
+                    shortList.add(entity);
+                }
+            }
+            dialog.showCustomDialog(
+                width,
+                height,
+                new SectorEntityTokenSelectorDelegate(this, shortList, selectedObject)
+            );
+        }
     }
 
     public void setToken(SectorEntityToken token) {
@@ -172,6 +193,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         panel.addPara("Log metadata");
         String selected = "None";
         if (selectedObject != null) {
+            // TODO: this does not work for StarSystemAPI getHyperspaceAnchor - "unknown location"
             selected = selectedObject.getName();
         }
         panel.addPara("Log attached to: " + selected);
