@@ -8,7 +8,7 @@ import java.awt.*;
 public interface SelectionButton<T> {
     boolean isChecked();
 
-    boolean isClicked(InputEventAPI event);
+    boolean isClicked();
 
     void setChecked(boolean checked);
 

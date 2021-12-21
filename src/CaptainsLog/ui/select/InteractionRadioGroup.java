@@ -13,14 +13,9 @@ import java.util.List;
 public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
 
     private final List<SelectionButton<T>> buttons;
-    private final boolean[] rememberedSelection;
 
     public InteractionRadioGroup(List<SelectionButton<T>> buttons) {
         this.buttons = buttons;
-        rememberedSelection = new boolean[buttons.size()];
-        for (int i = 0; i < buttons.size(); i++) {
-            rememberedSelection[i] = buttons.get(i).isChecked();
-        }
     }
 
     public void render(
@@ -76,9 +71,9 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
             // and then dragged so mouse up event occurs outside getPosition().containsEvent()
             // especially with a scroller where you must check getPosition().containsEvent() to make sure you are only
             // selecting visible elements
-            for (int i = 0; i < buttons.size(); ++i) {
-                if (buttons.get(i).isChecked() && rememberedSelection[i] != buttons.get(i).isChecked()) {
-                    redrawButtonSelection(i);
+            for (SelectionButton<T> button : buttons) {
+                if (button.isChecked() && button.isClicked()) {
+                    redrawButtonSelection(button);
                 }
             }
         }
@@ -93,10 +88,9 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
         return null;
     }
 
-    private void redrawButtonSelection(int selectedIndex) {
-        for (int i = 0; i < buttons.size(); ++i) {
-            buttons.get(i).setChecked(i == selectedIndex);
-            rememberedSelection[i] = i == selectedIndex;
+    private void redrawButtonSelection(SelectionButton<T> selectedButton) {
+        for (SelectionButton<T> button : buttons) {
+            button.setChecked(button == selectedButton);
         }
     }
 }

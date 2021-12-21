@@ -8,13 +8,13 @@ import java.awt.*;
 
 public class VerticalSelectionButton<V, T extends Selection<V>> implements SelectionButton<V> {
 
-    ButtonAPI button = null;
-    T selection;
-    boolean startSelected;
+    private ButtonAPI button = null;
+    private final T selection;
+    private boolean isChecked; // used to detect clicks
 
-    public VerticalSelectionButton(T selection, boolean startSelected) {
+    public VerticalSelectionButton(T selection, boolean isChecked) {
         this.selection = selection;
-        this.startSelected = startSelected;
+        this.isChecked = isChecked;
     }
 
     @Override
@@ -23,12 +23,13 @@ public class VerticalSelectionButton<V, T extends Selection<V>> implements Selec
     }
 
     @Override
-    public boolean isClicked(InputEventAPI event) {
-        return button != null && button.getPosition().containsEvent(event);
+    public boolean isClicked() {
+        return isChecked != button.isChecked();
     }
 
     @Override
     public void setChecked(boolean checked) {
+        isChecked = checked;
         button.setChecked(checked);
     }
 
@@ -59,6 +60,6 @@ public class VerticalSelectionButton<V, T extends Selection<V>> implements Selec
     ) {
         // TODO make prettier
         button = tooltip.addAreaCheckbox(getName(), new Object(), base, dark, bright, width, height, pad);
-        button.setChecked(startSelected);
+        button.setChecked(isChecked);
     }
 }
