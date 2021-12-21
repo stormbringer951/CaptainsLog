@@ -21,25 +21,26 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
 
     public enum OptionId {
         CREATE,
-        CANCEL,
         PICK_TARGET,
+        CANCEL,
     }
 
     InteractionDialogAPI dialog;
     TextFieldAPI titleField;
     TextFieldAPI bodyField;
-    SectorEntityToken selectedObject = null;
+    SectorEntityToken selectedObject;
 
     String initialTitle;
     String initialBodyText;
 
     LogCreatorInteractionDialog() {
-        this("Captain's Log", "");
+        this("Captain's Log", "", null);
     }
 
-    LogCreatorInteractionDialog(String title, String text) {
+    LogCreatorInteractionDialog(String title, String text, SectorEntityToken selectedObject) {
         this.initialTitle = title;
         this.initialBodyText = text;
+        this.selectedObject = selectedObject;
     }
 
     @Override
@@ -51,9 +52,16 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         initVisualPanel(dialog.getVisualPanel(), width, height);
 
         OptionPanelAPI options = dialog.getOptionPanel();
+        LocationAPI location = Global.getSector().getCurrentLocation();
+
         options.addOption("Create", OptionId.CREATE);
+        options.addOption("Select object to attach to log", OptionId.PICK_TARGET);
+        if (location.isHyperspace()) {
+            options.setEnabled(OptionId.PICK_TARGET, false);
+            // TODO: implement
+            options.setTooltip(OptionId.PICK_TARGET, "Not implemented for hyperspace yet");
+        }
         options.addOption("Cancel", OptionId.CANCEL);
-        options.addOption("Attach log to nearby object", OptionId.PICK_TARGET);
         dialog.setOptionOnEscape(null, OptionId.CANCEL);
 
         redrawTextPanel();
@@ -141,10 +149,6 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         LocationAPI location = Global.getSector().getCurrentLocation();
 
         List<SectorEntityToken> shortList = new ArrayList<>();
-
-        if (location.isHyperspace()) {
-            return; // TODO: implement case for hyperspace
-        }
 
         for (SectorEntityToken entity : location.getAllEntities()) {
             if (isValidCaptainsLogTarget(entity)) {
