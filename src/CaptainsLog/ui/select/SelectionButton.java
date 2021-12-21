@@ -18,6 +18,5 @@ public interface SelectionButton<T> {
 
     String getName();
 
-    // TODO parameterize
     T getValue();
 }

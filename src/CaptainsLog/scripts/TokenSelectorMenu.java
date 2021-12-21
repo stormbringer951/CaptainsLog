@@ -62,7 +62,6 @@ public class TokenSelectorMenu implements CustomDialogDelegate {
 
     @Override
     public void customDialogCancel() {
-        // TODO do nothing?
     }
 
     @Override

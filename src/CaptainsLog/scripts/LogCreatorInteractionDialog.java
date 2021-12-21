@@ -116,7 +116,6 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         }
     }
 
-    // TODO finish this logic
     private boolean isValidCaptainsLogTarget(SectorEntityToken entity) {
         return (
             !entity.hasSensorProfile() &&
