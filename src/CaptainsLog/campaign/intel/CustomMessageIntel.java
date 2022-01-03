@@ -16,6 +16,7 @@ import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
 import java.util.Set;
 
+// TODO: mark deprecated and upgrade to new format
 public class CustomMessageIntel extends BaseIntel {
 
     private final String title;
@@ -36,11 +37,12 @@ public class CustomMessageIntel extends BaseIntel {
 
         if (locationToken != null) {
             this.locationCreated = locationToken;
+            this.locationString = "Location: " + locationToken.getName() + ", " + getLocation();
         } else {
             this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
+            this.locationString = "Location: " + getLocation();
         }
         this.timeCreated = Global.getSector().getClock().getTimestamp();
-        this.locationString = "Location: " + getLocation();
         this.title = title;
         this.message = message;
         this.showOnMap = true;
