@@ -55,18 +55,18 @@ public class FleetLogIntel extends BaseIntel {
         float titleHeight = 28;
         float buttonRowHeight = 30;
         float bodyHeight = height - titleHeight - pad - buttonRowHeight - pad;
-        TextArea title = new TextArea(width, titleHeight, pad);
-        TextArea body = new TextArea(width, bodyHeight, pad, new FleetLogPanelPlugin());
-        title.setFont(Fonts.ORBITRON_16);
-        TextFieldAPI titleField = title.render(panel, 0, 0);
-        TextFieldAPI bodyField = body.render(panel, 0, titleHeight + pad);
-        ButtonRow buttonRow = new ButtonRow(
-            width,
-            buttonRowHeight,
-            new CreateLogEntry(titleField, bodyField),
-            new ClearAll(titleField, bodyField)
-        );
-        buttonRow.render(panel, 0, height - buttonRow.getHeight() - 4 * pad);
+//        TextArea title = new TextArea(width, titleHeight, pad);
+//        TextArea body = new TextArea(width, bodyHeight, pad, new FleetLogPanelPlugin());
+//        title.setFont(Fonts.ORBITRON_16);
+//        TextFieldAPI titleField = title.render(panel, 0, 0);
+//        TextFieldAPI bodyField = body.render(panel, 0, titleHeight + pad);
+//        ButtonRow buttonRow = new ButtonRow(
+//            width,
+//            buttonRowHeight,
+//            new CreateLogEntry(titleField, bodyField),
+//            new ClearAll(titleField, bodyField)
+//        );
+//        buttonRow.render(panel, 0, height - buttonRow.getHeight() - 4 * pad);
     }
 
     @Override
