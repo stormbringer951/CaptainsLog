@@ -25,13 +25,13 @@ public class CustomMessageIntel extends BaseIntel {
 
     private boolean showOnMap;
     private final SectorEntityToken locationCreated;
-    private long timeCreated;
+    private final long timeCreated;
 
     public CustomMessageIntel(String title, String message) {
-        this(title, message, null);
+        this(title, message, null, true);
     }
 
-    public CustomMessageIntel(String title, String message, SectorEntityToken locationToken) {
+    public CustomMessageIntel(String title, String message, SectorEntityToken locationToken, boolean isImportant) {
         // todo: handle newlines
         LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
 

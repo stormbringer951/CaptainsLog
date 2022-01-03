@@ -15,6 +15,7 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
+import com.fs.starfarer.api.util.Highlights;
 import com.fs.starfarer.api.util.Misc;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     public enum OptionId {
         CREATE,
         PICK_TARGET,
+        TOGGLE_IMPORTANT,
         CANCEL,
     }
 
@@ -32,6 +34,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     TextFieldAPI titleField;
     TextFieldAPI bodyField;
     SectorEntityToken selectedObject;
+    boolean isImportant = true;
 
     String initialTitle;
     String initialBodyText;
@@ -55,10 +58,9 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         initVisualPanel(dialog.getVisualPanel(), width, height);
 
         OptionPanelAPI options = dialog.getOptionPanel();
-        LocationAPI location = Global.getSector().getCurrentLocation();
-
         options.addOption("Create", OptionId.CREATE);
         options.addOption("Select object to attach to log", OptionId.PICK_TARGET);
+        options.addOption("Toggle log importance", OptionId.TOGGLE_IMPORTANT);
         options.addOption("Cancel", OptionId.CANCEL);
         dialog.setOptionOnEscape(null, OptionId.CANCEL);
 
@@ -113,11 +115,15 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
                 Global
                     .getSector()
                     .getIntelManager()
-                    .addIntel(new CustomMessageIntel(titleText, bodyText, selectedObject));
+                    .addIntel(new CustomMessageIntel(titleText, bodyText, selectedObject, isImportant));
                 dialog.dismiss();
                 break;
             case PICK_TARGET:
                 pickTarget();
+                break;
+            case TOGGLE_IMPORTANT:
+                isImportant = !isImportant;
+                redrawTextPanel();
                 break;
         }
     }
@@ -198,6 +204,11 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         }
         panel.addPara("Log attached to: " + selected);
         panel.highlightInLastPara(selected);
+        panel.addPara("Important: " + isImportant);
+        Highlights highlights = new Highlights();
+        highlights.append(Boolean.toString(true), Misc.getPositiveHighlightColor());
+        highlights.append(Boolean.toString(false), Misc.getNegativeHighlightColor());
+        panel.setHighlightsInLastPara(highlights);
         CampaignClockAPI clock = Global
             .getSector()
             .getClock()
