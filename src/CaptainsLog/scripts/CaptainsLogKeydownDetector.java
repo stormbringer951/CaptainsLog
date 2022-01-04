@@ -27,7 +27,7 @@ public class CaptainsLogKeydownDetector implements EveryFrameScript {
                 Global
                     .getSector()
                     .getCampaignUI()
-                    .showInteractionDialog(new LogCreatorInteractionDialog(), Global.getSector().getPlayerFleet());
+                    .showInteractionDialog(new LogCreatorInteractionDialog(null), Global.getSector().getPlayerFleet());
             }
         }
     }

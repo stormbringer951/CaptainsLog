@@ -5,15 +5,12 @@ import CaptainsLog.ui.ButtonRow;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.button.ClearAll;
 import CaptainsLog.ui.button.CreateLogEntry;
+import CaptainsLog.ui.button.OpenLogCreationDialog;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
-import com.fs.starfarer.api.ui.CustomPanelAPI;
-import com.fs.starfarer.api.ui.Fonts;
-import com.fs.starfarer.api.ui.SectorMapAPI;
-import com.fs.starfarer.api.ui.TextFieldAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Misc;
 import java.text.MessageFormat;
 import java.util.Set;
@@ -52,21 +49,9 @@ public class FleetLogIntel extends BaseIntel {
     public void createLargeDescription(CustomPanelAPI panel, float width, float height) {
         width -= 10; // give 10px padding on the right
         float pad = 5;
-        float titleHeight = 28;
         float buttonRowHeight = 30;
-        float bodyHeight = height - titleHeight - pad - buttonRowHeight - pad;
-//        TextArea title = new TextArea(width, titleHeight, pad);
-//        TextArea body = new TextArea(width, bodyHeight, pad, new FleetLogPanelPlugin());
-//        title.setFont(Fonts.ORBITRON_16);
-//        TextFieldAPI titleField = title.render(panel, 0, 0);
-//        TextFieldAPI bodyField = body.render(panel, 0, titleHeight + pad);
-//        ButtonRow buttonRow = new ButtonRow(
-//            width,
-//            buttonRowHeight,
-//            new CreateLogEntry(titleField, bodyField),
-//            new ClearAll(titleField, bodyField)
-//        );
-//        buttonRow.render(panel, 0, height - buttonRow.getHeight() - 4 * pad);
+        ButtonRow buttonRow = new ButtonRow(width, buttonRowHeight, new OpenLogCreationDialog(this));
+        buttonRow.render(panel, 0, buttonRow.getHeight());
     }
 
     @Override

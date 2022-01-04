@@ -1,6 +1,7 @@
 package CaptainsLog.scripts;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
+import CaptainsLog.campaign.intel.FleetLogIntel;
 import CaptainsLog.campaign.intel.FleetLogPanelPlugin;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.delegate.SectorEntityTokenSelectorDelegate;
@@ -11,10 +12,7 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.input.InputEventAPI;
-import com.fs.starfarer.api.ui.CustomPanelAPI;
-import com.fs.starfarer.api.ui.Fonts;
-import com.fs.starfarer.api.ui.PositionAPI;
-import com.fs.starfarer.api.ui.TextFieldAPI;
+import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Highlights;
 import com.fs.starfarer.api.util.Misc;
 import java.util.ArrayList;
@@ -30,23 +28,25 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         CANCEL,
     }
 
-    InteractionDialogAPI dialog;
-    TextFieldAPI titleField;
-    TextFieldAPI bodyField;
-    SectorEntityToken selectedObject;
-    boolean isImportant = true;
+    private InteractionDialogAPI dialog;
+    private TextFieldAPI titleField;
+    private TextFieldAPI bodyField;
+    private SectorEntityToken selectedObject;
+    private boolean isImportant = true;
 
-    String initialTitle;
-    String initialBodyText;
+    private final String initialTitle;
+    private final String initialBodyText;
+    private final IntelUIAPI ui;
 
-    LogCreatorInteractionDialog() {
-        this("Captain's Log", "", null);
+    public LogCreatorInteractionDialog(IntelUIAPI ui) {
+        this("Captain's Log", "", null, ui);
     }
 
-    LogCreatorInteractionDialog(String title, String text, SectorEntityToken selectedObject) {
+    LogCreatorInteractionDialog(String title, String text, SectorEntityToken selectedObject, IntelUIAPI ui) {
         this.initialTitle = title;
         this.initialBodyText = text;
         this.selectedObject = selectedObject;
+        this.ui = ui;
     }
 
     @Override
@@ -115,7 +115,12 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
                 Global
                     .getSector()
                     .getIntelManager()
-                    .addIntel(new CustomMessageIntel(titleText, bodyText, selectedObject, isImportant));
+                    .addIntel(new CustomMessageIntel(titleText, bodyText, selectedObject, isImportant), true);
+                if (ui != null) {
+                    // TODO: only used when running from intel screen, convert this into a callback
+                    ui.recreateIntelUI();
+                    ui.updateUIForItem(FleetLogIntel.getInstance());
+                }
                 dialog.dismiss();
                 break;
             case PICK_TARGET:
