@@ -11,6 +11,9 @@ public class CaptainsLogModPlugin extends BaseModPlugin {
 
     @Override
     public void onGameLoad(boolean newGame) {
+        if (!Global.getSettings().getBoolean("captains_log_enable_automatic_logging")) {
+            return;
+        }
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
         Global.getSector().addTransientScript(new RuinObserver());
 

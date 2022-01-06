@@ -1,4 +1,5 @@
 {
+  "captains_log_enable_automatic_logging": true,
   "graphics": {
     "intel": {
       "captains_log":"graphics/icons/intel/fleet_log2.png" # placeholder
