@@ -12,8 +12,14 @@ public abstract class BaseIntel extends BaseIntelPlugin {
 
     @Override
     public String getSortString() {
-        SectorEntityToken mapLocation = getMapLocation(null);
-        return String.format("%07.0f", Misc.getDistanceToPlayerLY(mapLocation));
+        SectorEntityToken mapLocation = getEntity();
+        float distance;
+        if (mapLocation == null) {
+            distance = 100000f; // same magic number as if player fleet was null for getDistanceToPlayerLY
+        } else {
+            distance = Misc.getDistanceToPlayerLY(mapLocation);
+        }
+        return String.format("%07.0f", distance);
     }
 
     @Override
@@ -55,4 +61,6 @@ public abstract class BaseIntel extends BaseIntelPlugin {
         }
         return button;
     }
+
+    public abstract SectorEntityToken getEntity();
 }

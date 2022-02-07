@@ -87,7 +87,7 @@ public class UnremovableIntel extends BaseIntel {
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        return cryosleeper;
+        return getEntity();
     }
 
     @Override
@@ -100,6 +100,7 @@ public class UnremovableIntel extends BaseIntel {
         return "ui_discovered_entity";
     }
 
+    @Override
     public SectorEntityToken getEntity() {
         return cryosleeper;
     }

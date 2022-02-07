@@ -114,6 +114,11 @@ public class CustomMessageIntel extends BaseIntel {
         if (!showOnMap || isEnding()) {
             return null;
         }
+        return getEntity();
+    }
+
+    @Override
+    public SectorEntityToken getEntity() {
         return locationCreated;
     }
 

@@ -167,6 +167,7 @@ public class RuinsIntelv2 extends BaseIntel {
         return "ui_discovered_entity";
     }
 
+    @Override
     public SectorEntityToken getEntity() {
         return marketToken;
     }

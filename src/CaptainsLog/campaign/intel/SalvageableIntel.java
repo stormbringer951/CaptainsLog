@@ -108,6 +108,7 @@ public class SalvageableIntel extends BaseIntel {
         }
     }
 
+    @Override
     public SectorEntityToken getEntity() {
         return salvageObject;
     }
@@ -210,7 +211,7 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        return salvageObject;
+        return getEntity();
     }
 
     @Override
