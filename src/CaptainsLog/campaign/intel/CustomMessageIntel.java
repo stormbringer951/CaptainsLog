@@ -18,7 +18,7 @@ public class CustomMessageIntel extends BaseIntel {
 
     private final String message;
     private final String locationString;
-    private static final String CAPTAIN_LOG_INTEL = "Captain's Log";
+    private static final String CAPTAIN_LOG_INTEL = "Exploration";
 
     private boolean showOnMap;
     private SectorEntityToken locationCreated;

@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class UnremovableIntel extends BaseIntel {
 
-    private static final String INTEL_CRYOSLEEPER = "Cryosleepers";
+    private static final String INTEL_CRYOSLEEPER = "Exploration";
     private SectorEntityToken cryosleeper;
 
     public UnremovableIntel(SectorEntityToken cryosleeper) {

@@ -17,7 +17,7 @@ import java.util.Set;
 public class RuinsIntelv2 extends BaseIntel {
 
     public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
-    public static final String INTEL_RUINS = "Unexplored Ruins";
+    public static final String INTEL_RUINS = "Exploration";
 
     private final SectorEntityToken marketToken;
     private final String ruinsType;
