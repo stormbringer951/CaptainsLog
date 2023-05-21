@@ -1,6 +1,5 @@
 package CaptainsLog.scripts;
 
-import CaptainsLog.campaign.intel.RuinsIntel;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.PlanetAPI;
@@ -51,7 +50,6 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
 
             if (notRunYet) {
                 runAtStart(sector);
-                removeDefunctRuins(sector);
             }
         }
     }
@@ -156,16 +154,5 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
 
         interval.setInterval(5f, 5f);
         notRunYet = false;
-    }
-
-    private static void removeDefunctRuins(SectorAPI sector) {
-        IntelManagerAPI intelManager = sector.getIntelManager();
-
-        ArrayList<IntelInfoPlugin> toRemove = new ArrayList<>(intelManager.getIntel(RuinsIntel.class));
-
-        for (IntelInfoPlugin intel : toRemove) {
-            // cleanly remove old instead of removing compat entirely
-            intelManager.removeIntel(intel);
-        }
     }
 }

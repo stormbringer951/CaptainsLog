@@ -1,7 +1,7 @@
 package CaptainsLog.console;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
-import CaptainsLog.campaign.intel.RuinsIntelv2;
+import CaptainsLog.campaign.intel.RuinsIntel;
 import CaptainsLog.campaign.intel.SalvageableIntel;
 import CaptainsLog.campaign.intel.UnremovableIntel;
 import com.fs.starfarer.api.Global;
@@ -24,7 +24,7 @@ public class RemoveCaptainsLog implements BaseCommand {
 
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
         ArrayList<IntelInfoPlugin> all = new ArrayList<>();
-        all.addAll(intelManager.getIntel(RuinsIntelv2.class));
+        all.addAll(intelManager.getIntel(RuinsIntel.class));
         all.addAll(intelManager.getIntel(SalvageableIntel.class));
         all.addAll(intelManager.getIntel(UnremovableIntel.class));
         all.addAll(intelManager.getIntel(CustomMessageIntel.class));
