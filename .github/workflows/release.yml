@@ -20,8 +20,6 @@ jobs:
             # GitHub Actions by default doesn't check out tags, so make sure those are included
             - name: Checkout
               uses: actions/checkout@v2
-              with:
-                  lfs: true
 
             - name: Fetch Tags
               run: git fetch --prune --unshallow --tags
