@@ -21,19 +21,19 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
-            - name: Fetch Tags
+            - name: Fetch tags
               run: git fetch --prune --unshallow --tags
 
-            - name: Set Variables
+            - name: Set variables
               run: |
                   echo "VERSION=$(git describe --tags)" >> $GITHUB_ENV
                   git log --format=%B -n 1 $(git log -1 --pretty=format:"%h") | cat - > changes.txt
 
-            - name: Create Mod Zipfile
+            - name: Create mod zipfile
               run: |
                   ./gradlew release
 
-            - name: Publish Release on GitHub
+            - name: Publish release on GitHub
               uses: "ncipollo/release-action@v1"
               with:
                   name: ${{ env.VERSION }}
