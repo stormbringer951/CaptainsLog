@@ -1,12 +1,25 @@
-# Remove working directory
-out/
-
-# Remove compiled content
-jars/
-
-# Remove project files
+# IDE configs
 .idea/
+.vscode/
+
+# Local development files (IntelliJ)
+out/
+jars/
 *.iml
 
-# Node
+# Local development files (Gradle)
+.classpath
+.gradle/
+.project
+.settings/
+bin/
+build/
+gradle.properties
+
+# Node modules (Prettier)
 node_modules/
+package-lock.json
+
+# Build artifacts
+/*.jar
+/*.zip
