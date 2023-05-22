@@ -1,4 +1,4 @@
-name: GitHub Release
+name: Build Mod
 
 on:
     pull_request:
@@ -19,4 +19,5 @@ jobs:
 
             - name: Create Mod Zipfile
               run: |
+                  chmod +x gradlew
                   ./gradlew build
