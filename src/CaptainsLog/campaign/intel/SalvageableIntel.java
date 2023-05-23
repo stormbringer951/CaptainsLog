@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 public class SalvageableIntel extends BaseIntel {
 
     // TODO: split into derelict_ship and other?
-    public static final String INTEL_SALVAGEABLE = "Exploration";
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private final SectorEntityToken salvageObject;
@@ -117,7 +116,7 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     protected String getName() {
-        String name = INTEL_SALVAGEABLE;
+        String name = "Salvageable ";
         if (isShip()) {
             name += variant.getHullSpec().getHullName();
         } else {
@@ -138,7 +137,7 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(INTEL_SALVAGEABLE);
+        tags.add(Tags.INTEL_EXPLORATION);
         return tags;
     }
 
@@ -246,7 +245,10 @@ public class SalvageableIntel extends BaseIntel {
         return IntelSortTier.TIER_5;
     }
 
-    // Return number between 0 and 9
+    /**
+     * @param salvageValue estimated value of the salvage (ignored for ships)
+     * @return number between 0 and 4
+     */
     private int getValueRating(float salvageValue) {
         if (isShip()) {
             switch (variant.getHullSize()) {
