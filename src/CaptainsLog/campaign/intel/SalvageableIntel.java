@@ -158,8 +158,11 @@ public class SalvageableIntel extends BaseIntel {
         }
         return value;
     }
-    
-    private float salvageToValue(List<SalvageEntityGenDataSpec.DropData> dropValue, List<SalvageEntityGenDataSpec.DropData> dropRandom) {
+
+    private float salvageToValue(
+        List<SalvageEntityGenDataSpec.DropData> dropValue,
+        List<SalvageEntityGenDataSpec.DropData> dropRandom
+    ) {
         float value = 0;
         for (SalvageEntityGenDataSpec.DropData data : dropValue) {
             value += data.value;
