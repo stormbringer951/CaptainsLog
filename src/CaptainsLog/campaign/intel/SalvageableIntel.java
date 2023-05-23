@@ -15,6 +15,7 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
+import java.util.List;
 import java.util.Set;
 import org.apache.log4j.Logger;
 
@@ -149,29 +150,26 @@ public class SalvageableIntel extends BaseIntel {
             .getSpec(SalvageEntityGenDataSpec.class, salvageObject.getCustomEntityType(), true);
 
         if (salvageSpec != null) {
-            for (SalvageEntityGenDataSpec.DropData data : salvageSpec.getDropValue()) {
-                value += data.value;
-            }
-            for (SalvageEntityGenDataSpec.DropData data : salvageSpec.getDropRandom()) {
-                if (data.value > 0) {
-                    value += data.value;
-                } else {
-                    value += 500; // close enough - Alex
-                }
-            }
+            value += salvageToValue(salvageSpec.getDropValue(), salvageSpec.getDropRandom());
         }
-        for (SalvageEntityGenDataSpec.DropData data : salvageObject.getDropValue()) {
+        value += salvageToValue(salvageObject.getDropValue(), salvageObject.getDropRandom());
+        if (isShip()) {
+            value += variant.getHullSpec().getBaseValue();
+        }
+        return value;
+    }
+    
+    private float salvageToValue(List<SalvageEntityGenDataSpec.DropData> dropValue, List<SalvageEntityGenDataSpec.DropData> dropRandom) {
+        float value = 0;
+        for (SalvageEntityGenDataSpec.DropData data : dropValue) {
             value += data.value;
         }
-        for (SalvageEntityGenDataSpec.DropData data : salvageObject.getDropRandom()) {
+        for (SalvageEntityGenDataSpec.DropData data : dropRandom) {
             if (data.value > 0) {
                 value += data.value;
             } else {
                 value += 500; // close enough - Alex
             }
-        }
-        if (isShip()) {
-            value += variant.getHullSpec().getBaseValue();
         }
         return value;
     }
