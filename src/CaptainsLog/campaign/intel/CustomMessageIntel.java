@@ -47,7 +47,7 @@ public class CustomMessageIntel extends BaseIntel {
         Color c = getTitleColor(mode);
         Color tc = Misc.getTextColor();
 
-        String title = CAPTAIN_LOG_INTEL;
+        String title = "Captain's Log";
         if (isEnding()) {
             title += " - Deleted";
         }
