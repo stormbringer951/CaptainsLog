@@ -1,0 +1,88 @@
+import groovy.json.JsonSlurper
+
+plugins {
+    id 'java'
+}
+
+// define custom repositories
+repositories {
+    mavenCentral()
+    ivy {
+        url 'https://github.com/'
+        patternLayout {
+            artifact '/[organization]/[module]/releases/download/[revision]/[ext]'
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+// add zipped configuration
+configurations {
+    zipped
+}
+// install dependencies from zipped releases
+task installDependencies(type: Sync) {
+    def extractDir = "${buildDir}/libs"
+    
+    ext.extractedJars = fileTree(extractDir) {
+        include "**/*.jar"
+        builtBy "installDependencies"
+    }
+
+    dependsOn configurations.zipped
+    from { 
+        configurations.zipped.collect { zipTree(it) }
+    }
+    into extractDir
+}
+
+// project level config
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+// where to find sources
+sourceSets.main.java.srcDirs = ['src/']
+
+// compile time dependencies
+dependencies {
+    compileOnly "jaghaimo:starsector-api:0.96a-RC10@starfarer.api.jar"
+    zipped "Lukas22041:LunaLib:1.7.4@LunaLib.zip"
+    zipped "LazyWizard:console-commands:2023.05.05@Console_Commands_2023.5.05.zip"
+    compileOnly files({ tasks.installDependencies.extractedJars })
+
+    // game dependencies
+    compileOnly group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
+    compileOnly group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.3'
+    compileOnly group: 'org.lwjgl.lwjgl', name: 'lwjgl_util', version: '2.9.3'
+    compileOnly group: 'log4j', name: 'log4j', version: '1.2.9'
+    compileOnly group: 'org.json', name: 'json', version: '20090211'
+    compileOnly group: 'net.java.jinput', name: 'jinput', version: '2.0.7'
+    compileOnly group: 'org.codehaus.janino', name: 'janino', version: '3.0.7'
+
+    // lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+// custom tasks
+task release(type: Zip) {
+    dependsOn build
+    archiveFileName = "${project.name}-${readModInfoJson().version}.zip"
+    destinationDirectory = file(rootDir)
+    from 'mod_info.json'
+    from 'CaptainsLog.version'
+    from 'readme.md'
+    from jar
+    into project.name
+}
+
+// methods
+def readModInfoJson() {
+    def jsonFile = file('mod_info.json')
+    def slurper = new JsonSlurper()
+    return slurper.parse(jsonFile)
+}
