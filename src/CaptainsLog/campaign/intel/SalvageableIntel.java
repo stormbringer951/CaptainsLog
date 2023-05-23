@@ -44,6 +44,8 @@ public class SalvageableIntel extends BaseIntel {
         float salvageValue = estimateSalvageValue();
         rating = getValueRating(salvageValue);
 
+        getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
+
         log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
 
@@ -198,9 +200,9 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public String getSmallDescriptionTitle() {
         if (isShip()) {
-            return variant.getHullSpec().getHullNameWithDashClass();
+            return "Salvageable Ship";
         } else {
-            return salvageObject.getFullName();
+            return "Salvageable " + salvageObject.getFullName();
         }
     }
 

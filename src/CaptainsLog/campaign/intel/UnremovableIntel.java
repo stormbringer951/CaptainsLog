@@ -19,6 +19,7 @@ public class UnremovableIntel extends BaseIntel {
 
     public UnremovableIntel(SectorEntityToken cryosleeper) {
         this.cryosleeper = cryosleeper;
+        getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
     }
 
     @Override

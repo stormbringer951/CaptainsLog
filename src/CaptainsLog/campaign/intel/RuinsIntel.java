@@ -35,6 +35,7 @@ public class RuinsIntel extends BaseIntel {
     public RuinsIntel(SectorEntityToken marketToken) {
         this.marketToken = marketToken;
         this.ruinsType = marketToken.getMarket().getCondition(getRuinType(marketToken.getMarket())).getSpec().getId();
+        getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
     }
 
     private MarketConditionSpecAPI getRuinsSpec() {
@@ -90,14 +91,14 @@ public class RuinsIntel extends BaseIntel {
 
     @Override
     public String getSmallDescriptionTitle() {
-        return getRuinsSpec().getName() + " on " + marketToken.getName();
+        return "Unexplored Ruins";
     }
 
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
 
-        String title = INTEL_RUINS;
+        String title = getRuinsSpec().getName() + " on " + marketToken.getName();
         if (isEnding()) {
             title += " - Deleted";
         }
