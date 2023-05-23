@@ -9,6 +9,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 public abstract class BaseIntel extends BaseIntelPlugin {
+
     protected static final String CAPTAINS_LOG_MEMORY_KEY = "$captainsLogIntel";
 
     @Override

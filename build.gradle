@@ -11,6 +11,7 @@ repositories {
         url 'https://github.com/'
         patternLayout {
             artifact '/[organization]/[module]/releases/download/[revision]/[ext]'
+            artifact '/[organization]/[module]/raw/[revision]/jars/[ext]'
         }
         metadataSources {
             artifact()
@@ -22,6 +23,7 @@ repositories {
 configurations {
     zipped
 }
+
 // install dependencies from zipped releases
 task installDependencies(type: Sync) {
     def extractDir = "${buildDir}/libs"
@@ -46,6 +48,17 @@ java {
 
 // where to find sources
 sourceSets.main.java.srcDirs = ['src/']
+
+// build everything and make a jar
+build {
+    doLast {
+        copy {
+            from 'assets'
+            from jar
+            into '.'
+        }
+    }
+}
 
 // compile time dependencies
 dependencies {
@@ -73,7 +86,7 @@ task release(type: Zip) {
     dependsOn build
     archiveFileName = "${project.name}-${readModInfoJson().version}.zip"
     destinationDirectory = file(rootDir)
-    from 'mod_info.json'
+    from 'assets'
     from 'CaptainsLog.version'
     from 'readme.md'
     from jar
@@ -82,7 +95,7 @@ task release(type: Zip) {
 
 // methods
 def readModInfoJson() {
-    def jsonFile = file('mod_info.json')
+    def jsonFile = file('assets/mod_info.json')
     def slurper = new JsonSlurper()
     return slurper.parse(jsonFile)
 }
