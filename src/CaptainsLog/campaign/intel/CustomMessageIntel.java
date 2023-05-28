@@ -8,6 +8,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -18,7 +19,6 @@ public class CustomMessageIntel extends BaseIntel {
 
     private final String message;
     private final String locationString;
-    private static final String CAPTAIN_LOG_INTEL = "Exploration";
 
     private boolean showOnMap;
     private SectorEntityToken locationCreated;
@@ -105,7 +105,7 @@ public class CustomMessageIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(CAPTAIN_LOG_INTEL);
+        tags.add(Tags.INTEL_FLEET_LOG);
         return tags;
     }
 

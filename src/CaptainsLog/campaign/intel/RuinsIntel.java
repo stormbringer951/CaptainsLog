@@ -8,6 +8,7 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.MarketConditionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Conditions;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -17,7 +18,9 @@ import java.util.Set;
 public class RuinsIntel extends BaseIntel {
 
     public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
-    public static final String INTEL_RUINS = "Exploration";
+    public static final String INTEL_RUINS = "Unexplored Ruins";
+
+    private static final String INTEL_TYPE_KEY = "Unexplored Ruins"; // Used by stelnet for detecting intel types
 
     private final SectorEntityToken marketToken;
     private final String ruinsType;
@@ -91,19 +94,12 @@ public class RuinsIntel extends BaseIntel {
 
     @Override
     public String getSmallDescriptionTitle() {
-        return "Unexplored Ruins";
+        return INTEL_TYPE_KEY;
     }
 
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
-
-        String title = getRuinsSpec().getName() + " on " + marketToken.getName();
-        if (isEnding()) {
-            title += " - Deleted";
-        }
-
-        info.addPara(title, c, 0f);
 
         float initPad;
         if (mode == ListInfoMode.IN_DESC) {
@@ -112,15 +108,24 @@ public class RuinsIntel extends BaseIntel {
             initPad = 3f;
         }
 
+        String title = getRuinsSpec().getName();
+        String planetName = marketToken.getName();
+        String systemName = marketToken.getStarSystem().getName();
+
+        if (isEnding()) {
+            title += " - Deleted";
+        }
+
+        info.addPara(title, c, 0f);
+
         bullet(info);
 
-        info.addPara(getRuinsSpec().getName(), Misc.getRelColor(getFraction()), initPad);
+        info.addPara("On " + planetName + " in the " + systemName, initPad, getBulletColorForMode(mode),
+                Misc.getHighlightColor(), planetName, marketToken.getStarSystem().getNameWithNoType());
 
-        String location = marketToken.getName();
-        if (marketToken.getStarSystem() != null) {
-            location += ", " + marketToken.getStarSystem().getName();
-        }
-        info.addPara(location, initPad, getBulletColorForMode(mode));
+        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(marketToken));
+        info.addPara(distanceLY + " light years away", initPad, getBulletColorForMode(mode),
+                Misc.getHighlightColor(), Integer.toString(distanceLY));
 
         unindent(info);
     }
@@ -136,7 +141,7 @@ public class RuinsIntel extends BaseIntel {
         info.addPara(
             "Located in the " + marketToken.getStarSystem().getNameWithLowercaseType() + ".",
             opad,
-            Misc.getPositiveHighlightColor(),
+            Misc.getHighlightColor(),
             marketToken.getStarSystem().getBaseName()
         );
 
@@ -150,7 +155,11 @@ public class RuinsIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(INTEL_RUINS);
+        if (true) { // TODO
+            tags.add(INTEL_RUINS);
+        } else {
+            tags.add(Tags.INTEL_EXPLORATION);
+        }
         return tags;
     }
 

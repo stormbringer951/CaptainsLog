@@ -22,6 +22,8 @@ import org.apache.log4j.Logger;
 public class SalvageableIntel extends BaseIntel {
 
     // TODO: split into derelict_ship and other?
+    public static final String INTEL_SALVAGEABLE = "Salvage";
+    private static final String INTEL_TYPE_KEY_SUBSTRING = "Salvageable"; // Used by stelnet for detecting intel types
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private final SectorEntityToken salvageObject;
@@ -53,7 +55,7 @@ public class SalvageableIntel extends BaseIntel {
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
 
-        String title = salvageObject.getFullName();
+        String title = getName();
         if (isEnding()) {
             title += " - Deleted";
         }
@@ -69,16 +71,27 @@ public class SalvageableIntel extends BaseIntel {
 
         bullet(info);
         if (isShip()) {
-            info.addPara(variant.getHullSpec().getHullName(), Misc.getRelColor(rating / 4f), initPad);
+            String hullSizeString = Misc.getHullSizeStr(variant.getHullSpec().getHullSize());
+            info.addPara(
+                hullSizeString + "-sized vessel",
+                initPad,
+                getBulletColorForMode(mode),
+                Misc.getHighlightColor(),
+                hullSizeString
+            );
         }
 
         info.addPara(
             Utils.getSystemNameOrHyperspace(salvageObject),
             initPad,
             getBulletColorForMode(mode),
-            Misc.getPositiveHighlightColor(),
+            Misc.getHighlightColor(),
             Utils.getSystemNameOrHyperspaceBase(salvageObject)
         );
+
+        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(salvageObject));
+        info.addPara(distanceLY + " light years away", initPad, getBulletColorForMode(mode),
+                Misc.getHighlightColor(), Integer.toString(distanceLY));
 
         unindent(info);
     }
@@ -100,7 +113,7 @@ public class SalvageableIntel extends BaseIntel {
         info.addPara(
             "Location: " + Utils.getSystemNameOrHyperspace(salvageObject) + ".",
             opad,
-            Misc.getPositiveHighlightColor(),
+            Misc.getHighlightColor(),
             Utils.getSystemNameOrHyperspaceBase(salvageObject)
         );
 
@@ -117,9 +130,10 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     protected String getName() {
-        String name = "Salvageable ";
+        String name = INTEL_TYPE_KEY_SUBSTRING + " ";
         if (isShip()) {
-            name += variant.getHullSpec().getHullName();
+            // Misc.getHullSizeStr(variant.getHullSpec().getHullSize())
+            name += variant.getHullSpec().getHullName() + " " + variant.getHullSpec().getDesignation();
         } else {
             name += salvageObject.getFullName();
         }
@@ -138,7 +152,11 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(Tags.INTEL_EXPLORATION);
+        if (true) { // TODO
+            tags.add(INTEL_SALVAGEABLE);
+        } else {
+            tags.add(Tags.INTEL_EXPLORATION);
+        }
         return tags;
     }
 
@@ -200,9 +218,9 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public String getSmallDescriptionTitle() {
         if (isShip()) {
-            return "Salvageable Ship";
+            return INTEL_TYPE_KEY_SUBSTRING + " Ship";
         } else {
-            return "Salvageable " + salvageObject.getFullName();
+            return INTEL_TYPE_KEY_SUBSTRING + " " + salvageObject.getFullName();
         }
     }
 

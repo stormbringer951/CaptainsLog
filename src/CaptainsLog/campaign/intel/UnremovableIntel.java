@@ -1,9 +1,11 @@
 package CaptainsLog.campaign.intel;
 
 import CaptainsLog.campaign.intel.button.LayInCourse;
+import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.loading.Description.Type;
 import com.fs.starfarer.api.ui.SectorMapAPI;
@@ -13,9 +15,8 @@ import java.awt.Color;
 import java.util.Set;
 
 public class UnremovableIntel extends BaseIntel {
-
-    private static final String INTEL_CRYOSLEEPER = "Exploration";
-    private SectorEntityToken cryosleeper;
+    private final SectorEntityToken cryosleeper;
+    private static final String INTEL_TYPE_KEY = "Megastructure"; // Used by stelnet for detecting intel types
 
     public UnremovableIntel(SectorEntityToken cryosleeper) {
         this.cryosleeper = cryosleeper;
@@ -35,12 +36,13 @@ public class UnremovableIntel extends BaseIntel {
         }
 
         bullet(info);
-        info.addPara(cryosleeper.getStarSystem().getName(), initPad, getBulletColorForMode(mode));
+        info.addPara(cryosleeper.getStarSystem().getName(), initPad, getBulletColorForMode(mode),
+                Misc.getHighlightColor(), Utils.getSystemNameOrHyperspaceBase(cryosleeper));
         unindent(info);
     }
 
     public String getSmallDescriptionTitle() {
-        return cryosleeper.getName();
+        return INTEL_TYPE_KEY;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class UnremovableIntel extends BaseIntel {
         info.addPara(
             "Located in the " + cryosleeper.getStarSystem().getNameWithLowercaseType() + ".",
             opad,
-            Misc.getPositiveHighlightColor(),
+            Misc.getHighlightColor(),
             cryosleeper.getStarSystem().getBaseName()
         );
 
@@ -71,8 +73,7 @@ public class UnremovableIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(INTEL_CRYOSLEEPER);
-
+        tags.add(Tags.INTEL_EXPLORATION);
         return tags;
     }
 
