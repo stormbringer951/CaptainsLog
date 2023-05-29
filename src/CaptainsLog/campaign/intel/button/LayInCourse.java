@@ -43,6 +43,7 @@ public class LayInCourse implements IntelButton {
 
     @Override
     public boolean shouldCreateButton() {
+        // prevents user from repeatedly clicking lay in course to interact with entity they have already salvaged
         return !target.hasTag(Tags.FADING_OUT_AND_EXPIRING) && target.hasTag(Tags.NON_CLICKABLE);
     }
 }
