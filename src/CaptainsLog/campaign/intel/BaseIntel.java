@@ -61,6 +61,7 @@ public abstract class BaseIntel extends BaseIntelPlugin {
         if (intelButton.getShortcut() > 0) {
             button.setShortcut(intelButton.getShortcut(), false);
         }
+        return button;
     }
 
     public abstract SectorEntityToken getEntity();
