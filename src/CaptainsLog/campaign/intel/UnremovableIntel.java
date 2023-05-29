@@ -94,7 +94,13 @@ public class UnremovableIntel extends BaseIntel {
 
     @Override
     public boolean shouldRemoveIntel() {
-        return cryosleeper == null || !cryosleeper.isAlive();
+        boolean shouldRemove = cryosleeper == null || !cryosleeper.isAlive();
+        if (shouldRemove) {
+            // making the assumption that this is being called by the IntelManagerAPI; this will make it unfilterable
+            // by stelnet but the gap between this and removal should be short
+            getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        }
+        return shouldRemove;
     }
 
     @Override

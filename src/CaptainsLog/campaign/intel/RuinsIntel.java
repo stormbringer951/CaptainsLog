@@ -84,7 +84,13 @@ public class RuinsIntel extends BaseIntel {
 
     @Override
     public boolean shouldRemoveIntel() {
-        return doesNotHaveUnexploredRuins(marketToken);
+        boolean shouldRemove = doesNotHaveUnexploredRuins(marketToken);
+        if (shouldRemove) {
+            // making the assumption that this is being called by the IntelManagerAPI; this will make it unfilterable
+            // by stelnet but the gap between this and removal should be short
+            getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        }
+        return shouldRemove;
     }
 
     @Override
@@ -190,22 +196,9 @@ public class RuinsIntel extends BaseIntel {
         return IntelSortTier.TIER_4;
     }
 
-    private int getRuinsTier() {
-        switch (ruinsType) {
-            case (Conditions.RUINS_SCATTERED):
-                return 1;
-            case (Conditions.RUINS_WIDESPREAD):
-                return 2;
-            case (Conditions.RUINS_EXTENSIVE):
-                return 3;
-            case (Conditions.RUINS_VAST):
-                return 4;
-            default:
-                return 0;
-        }
-    }
-
-    private float getFraction() {
-        return getRuinsTier() / 4f;
+    @Override
+    public void endAfterDelay(float days) {
+        getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        super.endAfterDelay(days);
     }
 }

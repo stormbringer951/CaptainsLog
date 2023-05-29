@@ -20,15 +20,12 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 public class SalvageableIntel extends BaseIntel {
-
-    // TODO: split into derelict_ship and other?
     public static final String INTEL_SALVAGEABLE = "Salvage";
     private static final String INTEL_TYPE_KEY_SUBSTRING = "Salvageable"; // Used by stelnet for detecting intel types
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private final SectorEntityToken salvageObject;
     private final ShipVariantAPI variant;
-    private final int rating;
 
     public SalvageableIntel(SectorEntityToken salvageObject) {
         this.salvageObject = salvageObject;
@@ -44,7 +41,7 @@ public class SalvageableIntel extends BaseIntel {
         }
 
         float salvageValue = estimateSalvageValue();
-        rating = getValueRating(salvageValue);
+        int rating = getValueRating(salvageValue);
 
         getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
 
@@ -236,7 +233,13 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     public boolean shouldRemoveIntel() {
-        return shouldRemoveIntelEntry(salvageObject);
+        boolean shouldRemove = shouldRemoveIntelEntry(salvageObject);
+        if (shouldRemove) {
+            // making the assumption that this is being called by the IntelManagerAPI; this will make it unfilterable
+            // by stelnet but the gap between this and removal should be short
+            getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        }
+        return shouldRemove;
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
@@ -295,5 +298,11 @@ public class SalvageableIntel extends BaseIntel {
                 return 0;
             }
         }
+    }
+
+    @Override
+    public void endAfterDelay(float days) {
+        getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        super.endAfterDelay(days);
     }
 }

@@ -10,7 +10,7 @@ import com.fs.starfarer.api.util.Misc;
 
 public abstract class BaseIntel extends BaseIntelPlugin {
 
-    protected static final String CAPTAINS_LOG_MEMORY_KEY = "$captainsLogIntel";
+    public static final String CAPTAINS_LOG_MEMORY_KEY = "$captainsLogIntel";
 
     @Override
     public String getSortString() {
@@ -61,7 +61,6 @@ public abstract class BaseIntel extends BaseIntelPlugin {
         if (intelButton.getShortcut() > 0) {
             button.setShortcut(intelButton.getShortcut(), false);
         }
-        return button;
     }
 
     public abstract SectorEntityToken getEntity();

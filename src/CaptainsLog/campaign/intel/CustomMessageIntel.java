@@ -21,7 +21,7 @@ public class CustomMessageIntel extends BaseIntel {
     private final String locationString;
 
     private boolean showOnMap;
-    private SectorEntityToken locationCreated;
+    private final SectorEntityToken locationCreated;
 
     public CustomMessageIntel(String message) {
         // todo: handle newlines
