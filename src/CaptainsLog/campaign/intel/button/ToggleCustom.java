@@ -41,4 +41,9 @@ public class ToggleCustom implements IntelButton {
     public int getShortcut() {
         return Keyboard.KEY_M;
     }
+
+    @Override
+    public boolean shouldCreateButton() {
+        return true;
+    }
 }
