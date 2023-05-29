@@ -1,6 +1,6 @@
 package CaptainsLog.campaign.intel.button;
 
-import CaptainsLog.campaign.intel.RuinsIntelv2;
+import CaptainsLog.campaign.intel.RuinsIntel;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -8,9 +8,9 @@ import org.lwjgl.input.Keyboard;
 
 public class IgnoreRuins implements IntelButton {
 
-    private final RuinsIntelv2 intel;
+    private final RuinsIntel intel;
 
-    public IgnoreRuins(RuinsIntelv2 intel) {
+    public IgnoreRuins(RuinsIntel intel) {
         this.intel = intel;
     }
 
@@ -20,7 +20,7 @@ public class IgnoreRuins implements IntelButton {
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
         MemoryAPI memory = intel.getEntity().getMemory();
-        memory.set(RuinsIntelv2.IGNORE_RUINS_MEM_FLAG, true);
+        memory.set(RuinsIntel.IGNORE_RUINS_MEM_FLAG, true);
         intel.endImmediately();
         ui.recreateIntelUI();
     }
