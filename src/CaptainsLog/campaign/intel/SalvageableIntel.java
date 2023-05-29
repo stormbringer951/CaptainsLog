@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 public class SalvageableIntel extends BaseIntel {
+
     public static final String INTEL_SALVAGEABLE = "Salvage";
     private static final String INTEL_TYPE_KEY_SUBSTRING = "Salvageable"; // Used by stelnet for detecting intel types
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
@@ -87,8 +88,13 @@ public class SalvageableIntel extends BaseIntel {
         );
 
         int distanceLY = Math.round(Misc.getDistanceToPlayerLY(salvageObject));
-        info.addPara(distanceLY + " light years away", initPad, getBulletColorForMode(mode),
-                Misc.getHighlightColor(), Integer.toString(distanceLY));
+        info.addPara(
+            distanceLY + " light years away",
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getHighlightColor(),
+            Integer.toString(distanceLY)
+        );
 
         unindent(info);
     }

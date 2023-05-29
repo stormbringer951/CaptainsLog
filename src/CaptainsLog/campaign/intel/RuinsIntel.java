@@ -126,12 +126,23 @@ public class RuinsIntel extends BaseIntel {
 
         bullet(info);
 
-        info.addPara("On " + planetName + " in the " + systemName, initPad, getBulletColorForMode(mode),
-                Misc.getHighlightColor(), planetName, marketToken.getStarSystem().getNameWithNoType());
+        info.addPara(
+            "On " + planetName + " in the " + systemName,
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getHighlightColor(),
+            planetName,
+            marketToken.getStarSystem().getNameWithNoType()
+        );
 
         int distanceLY = Math.round(Misc.getDistanceToPlayerLY(marketToken));
-        info.addPara(distanceLY + " light years away", initPad, getBulletColorForMode(mode),
-                Misc.getHighlightColor(), Integer.toString(distanceLY));
+        info.addPara(
+            distanceLY + " light years away",
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getHighlightColor(),
+            Integer.toString(distanceLY)
+        );
 
         unindent(info);
     }

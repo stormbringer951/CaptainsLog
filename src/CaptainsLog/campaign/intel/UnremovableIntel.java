@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.util.Set;
 
 public class UnremovableIntel extends BaseIntel {
+
     private final SectorEntityToken cryosleeper;
     private static final String INTEL_TYPE_KEY = "Megastructure"; // Used by stelnet for detecting intel types
 
@@ -36,8 +37,13 @@ public class UnremovableIntel extends BaseIntel {
         }
 
         bullet(info);
-        info.addPara(cryosleeper.getStarSystem().getName(), initPad, getBulletColorForMode(mode),
-                Misc.getHighlightColor(), Utils.getSystemNameOrHyperspaceBase(cryosleeper));
+        info.addPara(
+            cryosleeper.getStarSystem().getName(),
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getHighlightColor(),
+            Utils.getSystemNameOrHyperspaceBase(cryosleeper)
+        );
         unindent(info);
     }
 
