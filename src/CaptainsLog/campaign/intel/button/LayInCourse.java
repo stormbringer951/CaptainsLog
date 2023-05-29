@@ -2,6 +2,7 @@ package CaptainsLog.campaign.intel.button;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import org.lwjgl.input.Keyboard;
@@ -38,5 +39,10 @@ public class LayInCourse implements IntelButton {
     @Override
     public int getShortcut() {
         return Keyboard.KEY_L;
+    }
+
+    @Override
+    public boolean shouldCreateButton() {
+        return !target.hasTag(Tags.FADING_OUT_AND_EXPIRING) && target.hasTag(Tags.NON_CLICKABLE);
     }
 }
