@@ -15,4 +15,6 @@ public interface IntelButton {
     public String getName();
 
     public int getShortcut();
+
+    public boolean shouldCreateButton();
 }

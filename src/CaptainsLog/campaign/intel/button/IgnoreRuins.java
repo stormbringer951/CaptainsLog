@@ -48,4 +48,9 @@ public class IgnoreRuins implements IntelButton {
     public int getShortcut() {
         return Keyboard.KEY_I;
     }
+
+    @Override
+    public boolean shouldCreateButton() {
+        return true;
+    }
 }

@@ -56,12 +56,14 @@ public abstract class BaseIntel extends BaseIntelPlugin {
         return super.doesButtonHaveConfirmDialog(buttonId);
     }
 
-    protected ButtonAPI addGenericButton(TooltipMakerAPI info, float width, IntelButton intelButton) {
+    protected void addGenericButton(TooltipMakerAPI info, float width, IntelButton intelButton) {
+        if (!intelButton.shouldCreateButton()) {
+            return;
+        }
         ButtonAPI button = addGenericButton(info, width, intelButton.getName(), intelButton);
         if (intelButton.getShortcut() > 0) {
             button.setShortcut(intelButton.getShortcut(), false);
         }
-        return button;
     }
 
     public abstract SectorEntityToken getEntity();

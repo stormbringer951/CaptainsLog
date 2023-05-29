@@ -41,4 +41,9 @@ public class IgnoreCustom implements IntelButton {
     public int getShortcut() {
         return Keyboard.KEY_D;
     }
+
+    @Override
+    public boolean shouldCreateButton() {
+        return true;
+    }
 }
