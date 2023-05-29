@@ -1,4 +1,5 @@
-0.2.0
+Version 0.2.0
 
-- Rework intel GUI to follow vanilla style
+- Rework intel reports to more closely follow vanilla style
 - Fix bug that allowed players to use "lay in course" button to repeatedly salvage the same object.
+- Add Lunalib version checker changelog support

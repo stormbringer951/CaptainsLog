@@ -23,5 +23,6 @@ package-lock.json
 # Build artifacts
 /data/
 /mod_info.json
+/changelog.txt
 /*.jar
 /*.zip
