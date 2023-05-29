@@ -1,6 +1,6 @@
 package CaptainsLog.scripts;
 
-import CaptainsLog.campaign.intel.RuinsIntelv2;
+import CaptainsLog.campaign.intel.RuinsIntel;
 import CaptainsLog.campaign.intel.SalvageableIntel;
 import CaptainsLog.campaign.intel.UnremovableIntel;
 import com.fs.starfarer.api.Global;
@@ -136,22 +136,22 @@ public final class Utils {
     }
 
     public static boolean tryCreateUnsearchedRuinsReport(SectorEntityToken entity, Logger log, boolean showMessage) {
-        if (RuinsIntelv2.doesNotHaveUnexploredRuins(entity)) {
+        if (RuinsIntel.doesNotHaveUnexploredRuins(entity)) {
             return false; // not eligible
         }
 
         // TODO: refactor to memory key
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntelv2.class)) {
-            RuinsIntelv2 r = (RuinsIntelv2) intel;
+        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntel.class)) {
+            RuinsIntel r = (RuinsIntel) intel;
             if (r.getEntity() == entity) {
                 return false; // report exists
             }
         }
 
-        RuinsIntelv2 report = new RuinsIntelv2(entity);
+        RuinsIntel report = new RuinsIntel(entity);
         report.setNew(showMessage);
-        intelManager.addIntel(new RuinsIntelv2(entity), !showMessage);
+        intelManager.addIntel(new RuinsIntel(entity), !showMessage);
         log.info("Created intel report for " + entity.getName() + " in " + getSystemNameOrHyperspaceBase(entity));
         return true;
     }

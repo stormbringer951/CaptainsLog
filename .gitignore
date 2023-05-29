@@ -21,5 +21,7 @@ node_modules/
 package-lock.json
 
 # Build artifacts
+/data/
+/mod_info.json
 /*.jar
 /*.zip

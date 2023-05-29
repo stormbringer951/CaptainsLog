@@ -15,18 +15,18 @@ import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
+import java.util.List;
 import java.util.Set;
 import org.apache.log4j.Logger;
 
 public class SalvageableIntel extends BaseIntel {
 
-    // TODO: split into derelict_ship and other?
-    public static final String INTEL_SALVAGEABLE = "Salvageable";
+    public static final String INTEL_SALVAGEABLE = "Salvage";
+    private static final String INTEL_TYPE_KEY_SUBSTRING = "Salvageable"; // Used by stelnet for detecting intel types
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private final SectorEntityToken salvageObject;
     private final ShipVariantAPI variant;
-    private final int rating;
 
     public SalvageableIntel(SectorEntityToken salvageObject) {
         this.salvageObject = salvageObject;
@@ -42,7 +42,9 @@ public class SalvageableIntel extends BaseIntel {
         }
 
         float salvageValue = estimateSalvageValue();
-        rating = getValueRating(salvageValue);
+        int rating = getValueRating(salvageValue);
+
+        getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
 
         log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
@@ -51,7 +53,7 @@ public class SalvageableIntel extends BaseIntel {
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
 
-        String title = salvageObject.getFullName();
+        String title = getName();
         if (isEnding()) {
             title += " - Deleted";
         }
@@ -67,15 +69,31 @@ public class SalvageableIntel extends BaseIntel {
 
         bullet(info);
         if (isShip()) {
-            info.addPara(variant.getHullSpec().getHullName(), Misc.getRelColor(rating / 4f), initPad);
+            String hullSizeString = Misc.getHullSizeStr(variant.getHullSpec().getHullSize());
+            info.addPara(
+                hullSizeString + "-sized vessel",
+                initPad,
+                getBulletColorForMode(mode),
+                Misc.getHighlightColor(),
+                hullSizeString
+            );
         }
 
         info.addPara(
             Utils.getSystemNameOrHyperspace(salvageObject),
             initPad,
             getBulletColorForMode(mode),
-            Misc.getPositiveHighlightColor(),
+            Misc.getHighlightColor(),
             Utils.getSystemNameOrHyperspaceBase(salvageObject)
+        );
+
+        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(salvageObject));
+        info.addPara(
+            distanceLY + " light years away",
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getHighlightColor(),
+            Integer.toString(distanceLY)
         );
 
         unindent(info);
@@ -98,7 +116,7 @@ public class SalvageableIntel extends BaseIntel {
         info.addPara(
             "Location: " + Utils.getSystemNameOrHyperspace(salvageObject) + ".",
             opad,
-            Misc.getPositiveHighlightColor(),
+            Misc.getHighlightColor(),
             Utils.getSystemNameOrHyperspaceBase(salvageObject)
         );
 
@@ -115,9 +133,10 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     protected String getName() {
-        String name = INTEL_SALVAGEABLE;
+        String name = INTEL_TYPE_KEY_SUBSTRING + " ";
         if (isShip()) {
-            name += variant.getHullSpec().getHullName();
+            // Misc.getHullSizeStr(variant.getHullSpec().getHullSize())
+            name += variant.getHullSpec().getHullName() + " " + variant.getHullSpec().getDesignation();
         } else {
             name += salvageObject.getFullName();
         }
@@ -136,7 +155,11 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(INTEL_SALVAGEABLE);
+        if (true) { // TODO
+            tags.add(INTEL_SALVAGEABLE);
+        } else {
+            tags.add(Tags.INTEL_EXPLORATION);
+        }
         return tags;
     }
 
@@ -148,29 +171,29 @@ public class SalvageableIntel extends BaseIntel {
             .getSpec(SalvageEntityGenDataSpec.class, salvageObject.getCustomEntityType(), true);
 
         if (salvageSpec != null) {
-            for (SalvageEntityGenDataSpec.DropData data : salvageSpec.getDropValue()) {
-                value += data.value;
-            }
-            for (SalvageEntityGenDataSpec.DropData data : salvageSpec.getDropRandom()) {
-                if (data.value > 0) {
-                    value += data.value;
-                } else {
-                    value += 500; // close enough - Alex
-                }
-            }
+            value += salvageToValue(salvageSpec.getDropValue(), salvageSpec.getDropRandom());
         }
-        for (SalvageEntityGenDataSpec.DropData data : salvageObject.getDropValue()) {
+        value += salvageToValue(salvageObject.getDropValue(), salvageObject.getDropRandom());
+        if (isShip()) {
+            value += variant.getHullSpec().getBaseValue();
+        }
+        return value;
+    }
+
+    private float salvageToValue(
+        List<SalvageEntityGenDataSpec.DropData> dropValue,
+        List<SalvageEntityGenDataSpec.DropData> dropRandom
+    ) {
+        float value = 0;
+        for (SalvageEntityGenDataSpec.DropData data : dropValue) {
             value += data.value;
         }
-        for (SalvageEntityGenDataSpec.DropData data : salvageObject.getDropRandom()) {
+        for (SalvageEntityGenDataSpec.DropData data : dropRandom) {
             if (data.value > 0) {
                 value += data.value;
             } else {
                 value += 500; // close enough - Alex
             }
-        }
-        if (isShip()) {
-            value += variant.getHullSpec().getBaseValue();
         }
         return value;
     }
@@ -198,9 +221,9 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public String getSmallDescriptionTitle() {
         if (isShip()) {
-            return variant.getHullSpec().getHullNameWithDashClass();
+            return INTEL_TYPE_KEY_SUBSTRING + " Ship";
         } else {
-            return salvageObject.getFullName();
+            return INTEL_TYPE_KEY_SUBSTRING + " " + salvageObject.getFullName();
         }
     }
 
@@ -216,7 +239,13 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     public boolean shouldRemoveIntel() {
-        return shouldRemoveIntelEntry(salvageObject);
+        boolean shouldRemove = shouldRemoveIntelEntry(salvageObject);
+        if (shouldRemove) {
+            // making the assumption that this is being called by the IntelManagerAPI; this will make it unfilterable
+            // by stelnet but the gap between this and removal should be short
+            getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        }
+        return shouldRemove;
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
@@ -244,7 +273,10 @@ public class SalvageableIntel extends BaseIntel {
         return IntelSortTier.TIER_5;
     }
 
-    // Return number between 0 and 9
+    /**
+     * @param salvageValue estimated value of the salvage (ignored for ships)
+     * @return number between 0 and 4
+     */
     private int getValueRating(float salvageValue) {
         if (isShip()) {
             switch (variant.getHullSize()) {
@@ -272,5 +304,11 @@ public class SalvageableIntel extends BaseIntel {
                 return 0;
             }
         }
+    }
+
+    @Override
+    public void endAfterDelay(float days) {
+        getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        super.endAfterDelay(days);
     }
 }
