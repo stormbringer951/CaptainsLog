@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
+import com.fs.starfarer.api.impl.campaign.econ.CommRelayCondition;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.ui.SectorMapAPI;
@@ -56,6 +57,14 @@ public class CommRelayIntel extends BaseIntel {
         return INTEL_TYPE_KEY;
     }
 
+    private float getBonus() {
+        if (commRelay.hasTag(Tags.MAKESHIFT)) {
+            return CommRelayCondition.MAKESHIFT_COMM_RELAY_BONUS;
+        } else {
+            return CommRelayCondition.COMM_RELAY_BONUS;
+        }
+    }
+
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
@@ -66,6 +75,11 @@ public class CommRelayIntel extends BaseIntel {
         for (String para : desc.getText1Paras()) {
             info.addPara(para, opad);
         }
+
+        bullet(info);
+        String modifier = "+" + Math.round(getBonus());
+        info.addPara(modifier + " stability for same-faction colonies in system", opad, Misc.getHighlightColor(), modifier);
+        unindent(info);
 
         info.addPara(
             "This comm relay is located in the " + commRelay.getStarSystem().getNameWithLowercaseType() + ".",
