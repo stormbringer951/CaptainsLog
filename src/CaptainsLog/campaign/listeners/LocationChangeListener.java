@@ -14,8 +14,14 @@ public class LocationChangeListener implements CurrentLocationChangedListener {
 
     public void reportCurrentLocationChanged(LocationAPI prev, LocationAPI curr) {
         if (curr instanceof StarSystemAPI) {
+            // this code is very awkward; reportCurrentLocationChanged() runs before CoreScript::markSystemAsEntered(). I don't think there are side effects but a regression is possible
             ((StarSystemAPI) curr).setEnteredByPlayer(true);
+            // find unclaimed Domain or third-party faction comm relays in unexplored systems
             Utils.tryCreateCommRelayReports(curr.getEntitiesWithTag(Tags.COMM_RELAY), log, true);
+        }
+        if (prev instanceof StarSystemAPI) {
+            // leaving systems should add player-built comm relays or comm relays created by other means
+            Utils.tryCreateCommRelayReports(prev.getEntitiesWithTag(Tags.COMM_RELAY), log, true);
         }
         Utils.tryCreateCryosleeperReports(curr.getEntitiesWithTag(Tags.CRYOSLEEPER), log, true);
         Utils.tryCreateUnsearchedRuinsReports(curr.getEntitiesWithTag(Tags.PLANET), log, true);
