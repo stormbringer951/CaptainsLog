@@ -62,19 +62,13 @@ public final class Utils {
         if (!cryosleeper.hasTag(Tags.CRYOSLEEPER) || cryosleeper.hasSensorProfile() || cryosleeper.isDiscoverable()) {
             return false; // not a discovered cryosleeper
         }
-
-        // TODO: refactor to memory key
-        IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        for (IntelInfoPlugin intel : intelManager.getIntel(UnremovableIntel.class)) {
-            UnremovableIntel cs = (UnremovableIntel) intel;
-            if (cs.getEntity() == cryosleeper) {
-                return false; // report exists
-            }
+        if (cryosleeper.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+            return false;
         }
 
         UnremovableIntel report = new UnremovableIntel(cryosleeper);
         report.setNew(showMessage);
-        intelManager.addIntel(report, !showMessage);
+        Global.getSector().getIntelManager().addIntel(report, !showMessage);
         log.info("Created intel report for cryosleeper in " + cryosleeper.getStarSystem());
 
         return true;
@@ -122,19 +116,12 @@ public final class Utils {
         if (SalvageableIntel.shouldRemoveIntelEntry(token)) {
             return false;
         }
-
-        // TODO: refactor to memory key
-        IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        for (IntelInfoPlugin i : intelManager.getIntel(SalvageableIntel.class)) {
-            SalvageableIntel rs = (SalvageableIntel) i;
-            if (rs.getEntity() == token) {
-                return false;
-            }
+        if (token.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+            return false;
         }
-
         SalvageableIntel report = new SalvageableIntel(token);
         report.setNew(showMessage);
-        intelManager.addIntel(report, !showMessage);
+        Global.getSector().getIntelManager().addIntel(report, !showMessage);
         log.info("Created report for " + token.getFullName() + " in " + getSystemNameOrHyperspace(token));
         return true;
     }
