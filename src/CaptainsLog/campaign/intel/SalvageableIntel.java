@@ -44,7 +44,7 @@ public class SalvageableIntel extends BaseIntel {
         float salvageValue = estimateSalvageValue();
         int rating = getValueRating(salvageValue);
 
-        getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
+        getMapLocation(null).getMemoryWithoutUpdate().set(CAPTAINS_LOG_MEMORY_KEY, true);
 
         log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
@@ -241,9 +241,8 @@ public class SalvageableIntel extends BaseIntel {
     public boolean shouldRemoveIntel() {
         boolean shouldRemove = shouldRemoveIntelEntry(salvageObject);
         if (shouldRemove) {
-            // making the assumption that this is being called by the IntelManagerAPI; this will make it unfilterable
-            // by stelnet but the gap between this and removal should be short
-            getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+            setHidden(true);
+            getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
         }
         return shouldRemove;
     }
@@ -308,7 +307,7 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     public void endAfterDelay(float days) {
-        getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+        getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
         super.endAfterDelay(days);
     }
 }
