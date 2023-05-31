@@ -78,7 +78,12 @@ public class CommRelayIntel extends BaseIntel {
 
         bullet(info);
         String modifier = "+" + Math.round(getBonus());
-        info.addPara(modifier + " stability for same-faction colonies in system", opad, Misc.getHighlightColor(), modifier);
+        info.addPara(
+            modifier + " stability for same-faction colonies in system",
+            opad,
+            Misc.getHighlightColor(),
+            modifier
+        );
         unindent(info);
 
         info.addPara(
