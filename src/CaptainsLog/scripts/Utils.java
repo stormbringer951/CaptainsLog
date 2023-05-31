@@ -1,8 +1,6 @@
 package CaptainsLog.scripts;
 
-import CaptainsLog.campaign.intel.RuinsIntel;
-import CaptainsLog.campaign.intel.SalvageableIntel;
-import CaptainsLog.campaign.intel.UnremovableIntel;
+import CaptainsLog.campaign.intel.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
