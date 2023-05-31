@@ -134,10 +134,10 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
     }
 
     private void runAtStart(SectorAPI sector) {
-        int count =
-            Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false) +
-            Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false) +
-            Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
+        int count = Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
+        count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
+        count += Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
+        count += Utils.tryCreateCommRelayReports(sector.getCustomEntitiesWithTag(Tags.COMM_RELAY), log, false);
 
         if (count > 0) {
             sector

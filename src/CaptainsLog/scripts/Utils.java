@@ -1,8 +1,6 @@
 package CaptainsLog.scripts;
 
-import CaptainsLog.campaign.intel.RuinsIntel;
-import CaptainsLog.campaign.intel.SalvageableIntel;
-import CaptainsLog.campaign.intel.UnremovableIntel;
+import CaptainsLog.campaign.intel.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
@@ -79,6 +77,32 @@ public final class Utils {
         intelManager.addIntel(report, !showMessage);
         log.info("Created intel report for cryosleeper in " + cryosleeper.getStarSystem());
 
+        return true;
+    }
+
+    public static int tryCreateCommRelayReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+        int count = 0;
+
+        for (SectorEntityToken token : tokens) {
+            if (tryCreateCommRelayReport(token, log, showMessage)) {
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    public static boolean tryCreateCommRelayReport(SectorEntityToken token, Logger log, boolean showMessage) {
+        if (CommRelayIntel.intelShouldNotExist(token)) {
+            return false;
+        }
+        if (token.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+            return false;
+        }
+        CommRelayIntel report = new CommRelayIntel(token);
+        report.setNew(showMessage);
+        Global.getSector().getIntelManager().addIntel(report, !showMessage);
+        log.info("Created report for " + token.getFullName() + " in " + getSystemNameOrHyperspace(token));
         return true;
     }
 
