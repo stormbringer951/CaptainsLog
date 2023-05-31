@@ -82,6 +82,32 @@ public final class Utils {
         return true;
     }
 
+    public static int tryCreateCommRelayReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+        int count = 0;
+
+        for (SectorEntityToken token : tokens) {
+            if (tryCreateCommRelayReport(token, log, showMessage)) {
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    public static boolean tryCreateCommRelayReport(SectorEntityToken token, Logger log, boolean showMessage) {
+        if (CommRelayIntel.intelShouldNotExist(token)) {
+            return false;
+        }
+        if (token.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+            return false;
+        }
+        CommRelayIntel report = new CommRelayIntel(token);
+        report.setNew(showMessage);
+        Global.getSector().getIntelManager().addIntel(report, !showMessage);
+        log.info("Created report for " + token.getFullName() + " in " + getSystemNameOrHyperspace(token));
+        return true;
+    }
+
     public static int tryCreateSalvageableReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
         int count = 0;
 
