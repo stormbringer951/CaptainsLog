@@ -10,4 +10,3 @@ CaptainsLog_Enable_Comm_Relays,Enable Comm Relay Intel,Boolean,true,,"Enables in
 Displayed in the Comm Relays intel tab, or in Exploration if Stellar Networks is enabled.",,,
 CaptainsLog_Enable_Colony_Structures,Enable Megastructure Intel,Boolean,true,,"Enable intel reports for cryosleepers and coronal hypershunts.
 Displayed in the Exploration intel tab.",,,
-,,,,,,,,
