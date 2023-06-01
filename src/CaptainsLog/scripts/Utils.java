@@ -2,11 +2,7 @@ package CaptainsLog.scripts;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
-import CaptainsLog.campaign.intel.*;
-import CaptainsLog.campaign.intel.automated.CommRelayIntel;
-import CaptainsLog.campaign.intel.automated.IntelValidityUtils;
-import CaptainsLog.campaign.intel.automated.MegastructureIntel;
-import CaptainsLog.campaign.intel.automated.RuinsIntel;
+import CaptainsLog.campaign.intel.automated.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -18,11 +14,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public final class Utils {
-
-    // This fixes a possible regression where a SectorEntityToken is not hidden but we don't have access to the map yet
-    public static boolean isInUnexploredSystem(SectorEntityToken token) {
-        return token.getStarSystem() != null && !token.getStarSystem().isEnteredByPlayer();
-    }
 
     public static String getSystemNameOrHyperspaceBase(SectorEntityToken token) {
         if (token.getStarSystem() != null) {
@@ -128,7 +119,7 @@ public final class Utils {
     public static boolean tryCreateSalvageableReport(SectorEntityToken token, Logger log, boolean showMessage) {
         if (
             SettingsUtils.excludeSalvageableReports() ||
-            SalvageableIntel.shouldRemoveIntelEntry(token) ||
+            IntelValidityUtils.isSalvageableIntelInvalid(token) ||
             IntelValidityUtils.doesIntelAlreadyExist(token)
         ) {
             return false;

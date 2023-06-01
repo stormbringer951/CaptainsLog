@@ -1,6 +1,7 @@
 package CaptainsLog.campaign.intel.button;
 
-import CaptainsLog.campaign.intel.SalvageableIntel;
+import CaptainsLog.Constants;
+import CaptainsLog.campaign.intel.automated.SalvageableIntel;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -20,7 +21,7 @@ public class IgnoreSalvage implements IntelButton {
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
         MemoryAPI mem = intel.getEntity().getMemory();
-        mem.set(SalvageableIntel.IGNORE_SALVAGEABLE_MEM_FLAG, true);
+        mem.set(Constants.IGNORE_SALVAGEABLE_MEM_FLAG, true);
         intel.endImmediately();
         ui.recreateIntelUI();
     }

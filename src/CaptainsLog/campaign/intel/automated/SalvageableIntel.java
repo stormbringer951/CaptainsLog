@@ -1,4 +1,4 @@
-package CaptainsLog.campaign.intel;
+package CaptainsLog.campaign.intel.automated;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
@@ -6,11 +6,9 @@ import CaptainsLog.campaign.intel.button.IgnoreSalvage;
 import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
-import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.procgen.SalvageEntityGenDataSpec;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.ui.SectorMapAPI;
@@ -21,21 +19,18 @@ import java.util.List;
 import java.util.Set;
 import org.apache.log4j.Logger;
 
-public class SalvageableIntel extends BaseIntel {
+public class SalvageableIntel extends AutomatedIntel {
 
-    public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
-    private final SectorEntityToken salvageObject;
     private final ShipVariantAPI variant;
 
-    public SalvageableIntel(SectorEntityToken salvageObject) {
-        this.salvageObject = salvageObject;
-
+    public SalvageableIntel(SectorEntityToken token) {
+        super(token);
         // entity.getCustomPlugin() instanceof DerelictShipEntityPlugin ||
         // Entities.WRECK.equals(type)
 
-        if (salvageObject.getCustomPlugin() instanceof DerelictShipEntityPlugin) {
-            DerelictShipEntityPlugin p = (DerelictShipEntityPlugin) salvageObject.getCustomPlugin();
+        if (token.getCustomPlugin() instanceof DerelictShipEntityPlugin) {
+            DerelictShipEntityPlugin p = (DerelictShipEntityPlugin) token.getCustomPlugin();
             variant = Global.getSettings().getVariant(p.getData().ship.variantId);
         } else {
             variant = null;
@@ -43,8 +38,6 @@ public class SalvageableIntel extends BaseIntel {
 
         float salvageValue = estimateSalvageValue();
         int rating = getValueRating(salvageValue);
-
-        getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
 
         log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
@@ -80,14 +73,14 @@ public class SalvageableIntel extends BaseIntel {
         }
 
         info.addPara(
-            Utils.getSystemNameOrHyperspace(salvageObject),
+            Utils.getSystemNameOrHyperspace(token),
             initPad,
             getBulletColorForMode(mode),
             Misc.getHighlightColor(),
-            Utils.getSystemNameOrHyperspaceBase(salvageObject)
+            Utils.getSystemNameOrHyperspaceBase(token)
         );
 
-        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(salvageObject));
+        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(token));
         info.addPara(
             distanceLY + " light years away",
             initPad,
@@ -114,21 +107,16 @@ public class SalvageableIntel extends BaseIntel {
         }
 
         info.addPara(
-            "Location: " + Utils.getSystemNameOrHyperspace(salvageObject) + ".",
+            "Location: " + Utils.getSystemNameOrHyperspace(token) + ".",
             opad,
             Misc.getHighlightColor(),
-            Utils.getSystemNameOrHyperspaceBase(salvageObject)
+            Utils.getSystemNameOrHyperspaceBase(token)
         );
 
         if (!isEnding()) {
-            addGenericButton(info, width, new LayInCourse(salvageObject));
+            addGenericButton(info, width, new LayInCourse(token));
             addGenericButton(info, width, new IgnoreSalvage(this));
         }
-    }
-
-    @Override
-    public SectorEntityToken getEntity() {
-        return salvageObject;
     }
 
     @Override
@@ -138,7 +126,7 @@ public class SalvageableIntel extends BaseIntel {
             // Misc.getHullSizeStr(variant.getHullSpec().getHullSize())
             name += variant.getHullSpec().getHullName() + " " + variant.getHullSpec().getDesignation();
         } else {
-            name += salvageObject.getFullName();
+            name += token.getFullName();
         }
         return name;
     }
@@ -149,7 +137,7 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     public String getIcon() {
-        return salvageObject.getCustomEntitySpec().getIconName();
+        return token.getCustomEntitySpec().getIconName();
     }
 
     @Override
@@ -168,12 +156,12 @@ public class SalvageableIntel extends BaseIntel {
 
         SalvageEntityGenDataSpec salvageSpec = (SalvageEntityGenDataSpec) Global
             .getSettings()
-            .getSpec(SalvageEntityGenDataSpec.class, salvageObject.getCustomEntityType(), true);
+            .getSpec(SalvageEntityGenDataSpec.class, token.getCustomEntityType(), true);
 
         if (salvageSpec != null) {
             value += salvageToValue(salvageSpec.getDropValue(), salvageSpec.getDropRandom());
         }
-        value += salvageToValue(salvageObject.getDropValue(), salvageObject.getDropRandom());
+        value += salvageToValue(token.getDropValue(), token.getDropRandom());
         if (isShip()) {
             value += variant.getHullSpec().getBaseValue();
         }
@@ -206,7 +194,7 @@ public class SalvageableIntel extends BaseIntel {
         if (isShip()) {
             return variant.getHullSpec().getSpriteName();
         } else {
-            return salvageObject.getCustomEntitySpec().getSpriteName();
+            return token.getCustomEntitySpec().getSpriteName();
         }
     }
 
@@ -214,7 +202,7 @@ public class SalvageableIntel extends BaseIntel {
         if (isShip()) {
             return Global.getSettings().getDescription(variant.getHullSpec().getDescriptionId(), Description.Type.SHIP);
         } else {
-            return Global.getSettings().getDescription(salvageObject.getCustomDescriptionId(), Description.Type.CUSTOM);
+            return Global.getSettings().getDescription(token.getCustomDescriptionId(), Description.Type.CUSTOM);
         }
     }
 
@@ -223,46 +211,13 @@ public class SalvageableIntel extends BaseIntel {
         if (isShip()) {
             return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " Ship";
         } else {
-            return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " " + salvageObject.getFullName();
+            return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " " + token.getFullName();
         }
-    }
-
-    @Override
-    public FactionAPI getFactionForUIColors() {
-        return super.getFactionForUIColors();
-    }
-
-    @Override
-    public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        return getEntity();
     }
 
     @Override
     public boolean shouldRemoveIntel() {
-        boolean shouldRemove = shouldRemoveIntelEntry(salvageObject);
-        if (shouldRemove) {
-            setHidden(true);
-            getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
-        }
-        return shouldRemove;
-    }
-
-    public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
-        if (SettingsUtils.excludeSalvageableReports()) {
-            return true;
-        }
-        return (
-            token == null ||
-            !token.hasTag(Tags.SALVAGEABLE) ||
-            token.hasSensorProfile() ||
-            token.isDiscoverable() ||
-            token.hasTag("nex_museum_ship") ||
-            token.hasTag(Tags.CRYOSLEEPER) ||
-            !token.isAlive() ||
-            token.getMemoryWithoutUpdate().getBoolean(IGNORE_SALVAGEABLE_MEM_FLAG) ||
-            token.getFullName().equals("Technology Cache") ||
-            Utils.isInUnexploredSystem(token)
-        );
+        return IntelValidityUtils.isSalvageableIntelInvalid(token);
     }
 
     @Override
