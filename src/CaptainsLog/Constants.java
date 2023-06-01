@@ -12,6 +12,7 @@ public final class Constants {
     public static final String STELNET_INTEL_TYPE_SUBSTRING_RUINS = "Ruins";
 
     public static final String STELNET_INTEL_TYPE_SUBSTRING_COMM_RELAY = "Comm Relay";
+    public static final String CAPTAINS_LOG_MEMORY_KEY = "$captainsLogIntel";
 
     // Intel category tags
     public static String STELNET_FILTERED_INTEL_TAG = Tags.INTEL_EXPLORATION;
