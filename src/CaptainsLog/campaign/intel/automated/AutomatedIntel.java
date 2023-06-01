@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 
 public abstract class AutomatedIntel extends BaseIntel {
+
     protected final SectorEntityToken token;
 
     AutomatedIntel(SectorEntityToken token) {

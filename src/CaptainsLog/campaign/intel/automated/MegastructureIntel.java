@@ -34,11 +34,11 @@ public class MegastructureIntel extends AutomatedIntel {
 
         bullet(info);
         info.addPara(
-                token.getStarSystem().getName(),
-                initPad,
-                getBulletColorForMode(mode),
-                Misc.getHighlightColor(),
-                Utils.getSystemNameOrHyperspaceBase(token)
+            token.getStarSystem().getName(),
+            initPad,
+            getBulletColorForMode(mode),
+            Misc.getHighlightColor(),
+            Utils.getSystemNameOrHyperspaceBase(token)
         );
         unindent(info);
     }
@@ -46,22 +46,20 @@ public class MegastructureIntel extends AutomatedIntel {
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
-        String descriptionId = token.getCustomEntitySpec().getCustomDescriptionId();;
+        String descriptionId = token.getCustomEntitySpec().getCustomDescriptionId();
         Description desc = Global.getSettings().getDescription(descriptionId, Type.CUSTOM);
-
         info.addImage(token.getCustomEntitySpec().getInteractionImage(), width, opad);
+
         // TooltipMakerAPI text = info.beginImageWithText(token.getCustomEntitySpec().getSpriteName(), 64);
         info.addPara(desc.getText1(), Misc.getTextColor(), opad);
         // info.addImageWithText(opad);
 
-
         info.addPara(
-                "Located in the " + token.getStarSystem().getNameWithLowercaseType() + ".",
-                opad,
-                Misc.getHighlightColor(),
-                token.getStarSystem().getBaseName()
+            "Located in the " + token.getStarSystem().getNameWithLowercaseType() + ".",
+            opad,
+            Misc.getHighlightColor(),
+            token.getStarSystem().getBaseName()
         );
-
         addGenericButton(info, width, new LayInCourse(token));
     }
 

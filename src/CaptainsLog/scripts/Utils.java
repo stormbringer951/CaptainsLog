@@ -66,7 +66,11 @@ public final class Utils {
     }
 
     public static boolean tryCreateMegastructureReport(SectorEntityToken token, Logger log, boolean showMessage) {
-        if (SettingsUtils.excludeMegastructures() || IntelValidityUtils.isMegastructureInvalid(token) || IntelValidityUtils.doesIntelAlreadyExist(token)) {
+        if (
+            SettingsUtils.excludeMegastructures() ||
+            IntelValidityUtils.isMegastructureInvalid(token) ||
+            IntelValidityUtils.doesIntelAlreadyExist(token)
+        ) {
             return false;
         }
 
