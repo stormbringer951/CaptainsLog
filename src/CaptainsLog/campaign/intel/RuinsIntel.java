@@ -1,5 +1,7 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.button.IgnoreRuins;
 import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
@@ -8,7 +10,6 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.MarketConditionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Conditions;
-import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -18,9 +19,6 @@ import java.util.Set;
 public class RuinsIntel extends BaseIntel {
 
     public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
-    public static final String INTEL_RUINS = "Unexplored Ruins";
-
-    private static final String INTEL_TYPE_KEY = "Unexplored Ruins"; // Used by stelnet for detecting intel types
 
     private final SectorEntityToken marketToken;
     private final String ruinsType;
@@ -70,9 +68,11 @@ public class RuinsIntel extends BaseIntel {
     }
 
     public static boolean doesNotHaveUnexploredRuins(SectorEntityToken token) {
+        if (SettingsUtils.excludeRuinsReports()) {
+            return false;
+        }
         MarketAPI market = token.getMarket();
-        return (
-            market == null ||
+        return (market == null ||
             token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
             !market.isPlanetConditionMarketOnly() ||
             !hasRuins(market) ||
@@ -99,7 +99,7 @@ public class RuinsIntel extends BaseIntel {
 
     @Override
     public String getSmallDescriptionTitle() {
-        return INTEL_TYPE_KEY;
+        return "Unexplored " + Constants.STELNET_INTEL_TYPE_SUBSTRING_RUINS;
     }
 
     @Override
@@ -171,10 +171,10 @@ public class RuinsIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        if (true) { // TODO
-            tags.add(INTEL_RUINS);
+        if (SettingsUtils.isStelnetEnabled()) {
+            tags.add(Constants.STELNET_FILTERED_INTEL_TAG);
         } else {
-            tags.add(Tags.INTEL_EXPLORATION);
+            tags.add(Constants.RUINS_INTEL_TAG);
         }
         return tags;
     }

@@ -1,5 +1,7 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
@@ -17,7 +19,6 @@ import java.util.Set;
 public class CommRelayIntel extends BaseIntel {
 
     private final SectorEntityToken commRelay;
-    private final String INTEL_TYPE_KEY = "Comm Relay";
 
     public CommRelayIntel(SectorEntityToken commRelay) {
         this.commRelay = commRelay;
@@ -54,7 +55,7 @@ public class CommRelayIntel extends BaseIntel {
     }
 
     public String getSmallDescriptionTitle() {
-        return INTEL_TYPE_KEY;
+        return Constants.STELNET_INTEL_TYPE_SUBSTRING_COMM_RELAY;
     }
 
     private float getBonus() {
@@ -101,12 +102,11 @@ public class CommRelayIntel extends BaseIntel {
 
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
-        String INTEL_TAG = "Comm Relays";
         Set<String> tags = super.getIntelTags(map);
-        if (true) {
-            tags.add(INTEL_TAG);
+        if (SettingsUtils.isStelnetEnabled()) {
+            tags.add(Constants.STELNET_FILTERED_INTEL_TAG);
         } else {
-            tags.add(Tags.INTEL_EXPLORATION);
+            tags.add(Constants.COMM_RELAY_INTEL_TAG);
         }
         return tags;
     }
@@ -127,6 +127,9 @@ public class CommRelayIntel extends BaseIntel {
     }
 
     public static boolean intelShouldNotExist(SectorEntityToken commRelay) {
+        if (SettingsUtils.excludeCommRelays()) {
+            return true;
+        }
         if (commRelay == null || !commRelay.isAlive()) {
             return true; // comm relay destroyed
         }

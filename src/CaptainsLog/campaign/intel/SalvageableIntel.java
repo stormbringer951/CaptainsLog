@@ -1,5 +1,7 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.button.IgnoreSalvage;
 import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
@@ -21,8 +23,7 @@ import org.apache.log4j.Logger;
 
 public class SalvageableIntel extends BaseIntel {
 
-    public static final String INTEL_SALVAGEABLE = "Salvage";
-    private static final String INTEL_TYPE_KEY_SUBSTRING = "Salvageable"; // Used by stelnet for detecting intel types
+
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private final SectorEntityToken salvageObject;
@@ -133,7 +134,7 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     protected String getName() {
-        String name = INTEL_TYPE_KEY_SUBSTRING + " ";
+        String name = Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " ";
         if (isShip()) {
             // Misc.getHullSizeStr(variant.getHullSpec().getHullSize())
             name += variant.getHullSpec().getHullName() + " " + variant.getHullSpec().getDesignation();
@@ -155,10 +156,10 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        if (true) { // TODO
-            tags.add(INTEL_SALVAGEABLE);
+        if (SettingsUtils.isStelnetEnabled()) {
+            tags.add(Constants.STELNET_FILTERED_INTEL_TAG);
         } else {
-            tags.add(Tags.INTEL_EXPLORATION);
+            tags.add(Constants.SALVAGEABLE_INTEL_TAG);
         }
         return tags;
     }
@@ -221,9 +222,9 @@ public class SalvageableIntel extends BaseIntel {
     @Override
     public String getSmallDescriptionTitle() {
         if (isShip()) {
-            return INTEL_TYPE_KEY_SUBSTRING + " Ship";
+            return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " Ship";
         } else {
-            return INTEL_TYPE_KEY_SUBSTRING + " " + salvageObject.getFullName();
+            return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " " + salvageObject.getFullName();
         }
     }
 
@@ -248,6 +249,9 @@ public class SalvageableIntel extends BaseIntel {
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
+        if (!SettingsUtils.excludeSalvageableReports()) {
+            return true;
+        }
         return (
             token == null ||
             !token.hasTag(Tags.SALVAGEABLE) ||

@@ -1,7 +1,9 @@
 package CaptainsLog.scripts;
 
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.*;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
@@ -49,6 +51,9 @@ public final class Utils {
     }
 
     public static int tryCreateCryosleeperReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeMegastructures()) {
+            return 0;
+        }
         int count = 0;
         for (SectorEntityToken token : tokens) {
             if (tryCreateCryosleeperReport(token, log, showMessage)) {
@@ -59,6 +64,9 @@ public final class Utils {
     }
 
     public static boolean tryCreateCryosleeperReport(SectorEntityToken cryosleeper, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeMegastructures()) {
+            return false;
+        }
         if (!cryosleeper.hasTag(Tags.CRYOSLEEPER) || cryosleeper.hasSensorProfile() || cryosleeper.isDiscoverable()) {
             return false; // not a discovered cryosleeper
         }
@@ -75,6 +83,9 @@ public final class Utils {
     }
 
     public static int tryCreateCommRelayReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeCommRelays()) {
+            return 0;
+        }
         int count = 0;
 
         for (SectorEntityToken token : tokens) {
@@ -87,6 +98,9 @@ public final class Utils {
     }
 
     public static boolean tryCreateCommRelayReport(SectorEntityToken token, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeCommRelays()) {
+            return false;
+        }
         if (CommRelayIntel.intelShouldNotExist(token)) {
             return false;
         }
@@ -101,6 +115,10 @@ public final class Utils {
     }
 
     public static int tryCreateSalvageableReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeSalvageableReports()) {
+            // early exit when called on startup or when settings change
+            return 0;
+        }
         int count = 0;
 
         for (SectorEntityToken salvageObject : tokens) {
@@ -113,6 +131,10 @@ public final class Utils {
     }
 
     public static boolean tryCreateSalvageableReport(SectorEntityToken token, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeSalvageableReports()) {
+            // called in loop or singly on discovery
+            return false;
+        }
         if (SalvageableIntel.shouldRemoveIntelEntry(token)) {
             return false;
         }
@@ -131,6 +153,9 @@ public final class Utils {
         Logger log,
         boolean showMessage
     ) {
+        if (SettingsUtils.excludeRuinsReports()) {
+            return 0;
+        }
         int count = 0;
 
         for (SectorEntityToken entity : entities) {
@@ -147,6 +172,9 @@ public final class Utils {
     }
 
     public static boolean tryCreateUnsearchedRuinsReport(SectorEntityToken entity, Logger log, boolean showMessage) {
+        if (SettingsUtils.excludeRuinsReports()) {
+            return false;
+        }
         if (RuinsIntel.doesNotHaveUnexploredRuins(entity)) {
             return false; // not eligible
         }
@@ -165,5 +193,25 @@ public final class Utils {
         intelManager.addIntel(new RuinsIntel(entity), !showMessage);
         log.info("Created intel report for " + entity.getName() + " in " + getSystemNameOrHyperspaceBase(entity));
         return true;
+    }
+
+    public static void tryCreateIntels(SectorAPI sector, Logger log) {
+        int count = Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
+        count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
+        count += Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
+        count += Utils.tryCreateCommRelayReports(sector.getCustomEntitiesWithTag(Tags.COMM_RELAY), log, false);
+
+        if (count > 0) {
+            sector
+                    .getCampaignUI()
+                    .addMessage(
+                            "Captain's Log added " + count + " new intel entries",
+                            Misc.getTextColor(),
+                            Integer.toString(count),
+                            "",
+                            Misc.getHighlightColor(),
+                            Misc.getHighlightColor()
+                    );
+        }
     }
 }
