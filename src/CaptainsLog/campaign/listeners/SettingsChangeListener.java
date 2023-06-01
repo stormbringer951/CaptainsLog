@@ -3,15 +3,15 @@ package CaptainsLog.campaign.listeners;
 import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
+import java.util.Objects;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import org.apache.log4j.Logger;
 
-import java.util.Objects;
-
 public class SettingsChangeListener implements LunaSettingsListener {
 
     private static final Logger log = Global.getLogger(SettingsChangeListener.class);
+
     @Override
     public void settingsChanged(String modId) {
         if (!modId.equals("CaptainsLog")) {

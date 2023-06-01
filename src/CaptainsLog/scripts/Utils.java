@@ -203,15 +203,15 @@ public final class Utils {
 
         if (count > 0) {
             sector
-                    .getCampaignUI()
-                    .addMessage(
-                            "Captain's Log added " + count + " new intel entries",
-                            Misc.getTextColor(),
-                            Integer.toString(count),
-                            "",
-                            Misc.getHighlightColor(),
-                            Misc.getHighlightColor()
-                    );
+                .getCampaignUI()
+                .addMessage(
+                    "Captain's Log added " + count + " new intel entries",
+                    Misc.getTextColor(),
+                    Integer.toString(count),
+                    "",
+                    Misc.getHighlightColor(),
+                    Misc.getHighlightColor()
+                );
         }
     }
 }

@@ -4,6 +4,7 @@ import com.fs.starfarer.api.Global;
 import lunalib.lunaSettings.LunaSettings;
 
 public final class SettingsUtils {
+
     public static boolean excludeCommRelays() {
         return !getBooleanSetting("CaptainsLog_Enable_Comm_Relays");
     }

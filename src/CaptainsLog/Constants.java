@@ -3,6 +3,7 @@ package CaptainsLog;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 
 public final class Constants {
+
     public static final String MOD_ID = "CaptainsLog";
 
     // Keys used by Stelnet to classify intel for exploration visibility board

@@ -72,7 +72,8 @@ public class RuinsIntel extends BaseIntel {
             return false;
         }
         MarketAPI market = token.getMarket();
-        return (market == null ||
+        return (
+            market == null ||
             token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
             !market.isPlanetConditionMarketOnly() ||
             !hasRuins(market) ||

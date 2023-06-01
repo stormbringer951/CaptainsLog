@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 
 public class SalvageableIntel extends BaseIntel {
 
-
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
     private static final Logger log = Global.getLogger(SalvageableIntel.class);
     private final SectorEntityToken salvageObject;
