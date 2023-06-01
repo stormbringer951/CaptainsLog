@@ -248,7 +248,7 @@ public class SalvageableIntel extends BaseIntel {
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
-        if (!SettingsUtils.excludeSalvageableReports()) {
+        if (SettingsUtils.excludeSalvageableReports()) {
             return true;
         }
         return (
