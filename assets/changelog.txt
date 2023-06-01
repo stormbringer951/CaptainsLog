@@ -5,3 +5,4 @@ Version 0.2.0
 - Add version checker changelog support
 - Add support for Comm Relays that are located outside the core worlds
 - Add LunaLib support
+- Add LunaLib toggles to enable/disable each type of automated intel logging
