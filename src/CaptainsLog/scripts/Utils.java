@@ -5,13 +5,12 @@ import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.*;
 import CaptainsLog.campaign.intel.automated.IntelValidityUtils;
 import CaptainsLog.campaign.intel.automated.MegastructureIntel;
+import CaptainsLog.campaign.intel.automated.RuinsIntel;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
-import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
 import java.util.List;
@@ -144,7 +143,7 @@ public final class Utils {
         return true;
     }
 
-    public static int tryCreateUnsearchedRuinsReports(
+    public static int tryCreateUnexploredRuinsReports(
         List<SectorEntityToken> entities,
         Logger log,
         boolean showMessage
@@ -157,7 +156,7 @@ public final class Utils {
         for (SectorEntityToken entity : entities) {
             if (
                 IntelValidityUtils.areRuinsDiscovered(entity) &&
-                tryCreateUnsearchedRuinsReport(entity, log, showMessage)
+                tryCreateUnexploredRuinsReport(entity, log, showMessage)
             ) {
                 ++count;
             }
@@ -166,21 +165,19 @@ public final class Utils {
         return count;
     }
 
-    public static boolean tryCreateUnsearchedRuinsReport(SectorEntityToken entity, Logger log, boolean showMessage) {
-        if (SettingsUtils.excludeRuinsReports()) {
-            return false;
-        }
-        if (RuinsIntel.shouldRemove(entity)) {
-            return false; // not eligible
-        }
-        if (IntelValidityUtils.doesIntelAlreadyExist(entity)) {
+    public static boolean tryCreateUnexploredRuinsReport(SectorEntityToken token, Logger log, boolean showMessage) {
+        if (
+            SettingsUtils.excludeRuinsReports() ||
+            IntelValidityUtils.isRuinsIntelInvalid(token) ||
+            IntelValidityUtils.doesIntelAlreadyExist(token)
+        ) {
             return false;
         }
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        RuinsIntel report = new RuinsIntel(entity);
+        RuinsIntel report = new RuinsIntel(token);
         report.setNew(showMessage);
-        intelManager.addIntel(new RuinsIntel(entity), !showMessage);
-        log.info("Created intel report for " + entity.getName() + " in " + getSystemNameOrHyperspaceBase(entity));
+        intelManager.addIntel(new RuinsIntel(token), !showMessage);
+        log.info("Created intel report for " + token.getName() + " in " + getSystemNameOrHyperspaceBase(token));
         return true;
     }
 
@@ -199,7 +196,7 @@ public final class Utils {
             }
         }
 
-        int count = Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
+        int count = Utils.tryCreateUnexploredRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
         count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
         count += Utils.tryCreateMegastructureReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
         count += Utils.tryCreateCommRelayReports(sector.getCustomEntitiesWithTag(Tags.COMM_RELAY), log, false);

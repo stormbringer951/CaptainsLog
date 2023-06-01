@@ -40,7 +40,7 @@ public class RuinObserver implements EveryFrameScript {
                 log.debug("Skipping " + planet.getName() + " as it is too far away");
                 continue;
             }
-            Utils.tryCreateUnsearchedRuinsReport(planet, log, true);
+            Utils.tryCreateUnexploredRuinsReport(planet, log, true);
         }
     }
 

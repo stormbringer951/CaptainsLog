@@ -18,6 +18,7 @@ public final class Constants {
 
     // SectorEntityToken tags
     public static final String PROXIMITY_SURVEYED_RUINS = "captains_log_proximity_surveyed_ruins";
+    public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
 
     // Intel category tags
     public static String STELNET_FILTERED_INTEL_TAG = Tags.INTEL_EXPLORATION;

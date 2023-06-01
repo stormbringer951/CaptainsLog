@@ -1,10 +1,9 @@
-package CaptainsLog.campaign.intel;
+package CaptainsLog.campaign.intel.automated;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.button.IgnoreRuins;
 import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -16,11 +15,8 @@ import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
 import java.util.Set;
 
-public class RuinsIntel extends BaseIntel {
+public class RuinsIntel extends AutomatedIntel {
 
-    public static final String IGNORE_RUINS_MEM_FLAG = "$captainsLog_ignoreRuins";
-
-    private final SectorEntityToken marketToken;
     private final String ruinsType;
 
     // From Alex: http://fractalsoftworks.com/forum/index.php?topic=15563.msg250898
@@ -33,13 +29,11 @@ public class RuinsIntel extends BaseIntel {
     // making any changes to the market and need them to stick around, call
     // setPlanetConditionMarketOnly(false), otherwise it'll get nuked on save.
 
-    public RuinsIntel(SectorEntityToken marketToken) {
-        this.marketToken = marketToken;
-        this.ruinsType = marketToken.getMarket().getCondition(getRuinType(marketToken.getMarket())).getSpec().getId();
-        getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
-
-        if (marketToken.getMarket().getSurveyLevel() != MarketAPI.SurveyLevel.FULL) {
-            // Survey Level not checked in calls to tryCreateUnsearchedRuinsReport() in calls from RuinsObserver
+    public RuinsIntel(SectorEntityToken token) {
+        super(token);
+        this.ruinsType = token.getMarket().getCondition(getRuinType(token.getMarket())).getSpec().getId();
+        if (token.getMarket().getSurveyLevel() != MarketAPI.SurveyLevel.FULL) {
+            // Survey Level not checked in calls to tryCreateUnexploredRuinsReport() in calls from RuinsObserver
             getMapLocation(null).addTag(Constants.PROXIMITY_SURVEYED_RUINS);
         }
     }
@@ -68,31 +62,9 @@ public class RuinsIntel extends BaseIntel {
         return null;
     }
 
-    public static boolean shouldRemove(SectorEntityToken token) {
-        if (SettingsUtils.excludeRuinsReports() || token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG)) {
-            return true; // user preference to remove
-        }
-        if (Utils.isInUnexploredSystem(token)) {
-            return true; // no map, shouldn't be generating an intel
-        }
-        MarketAPI market = token.getMarket();
-        if (!Misc.hasUnexploredRuins(market)) {
-            return true;
-        }
-        if (!market.isPlanetConditionMarketOnly()) {
-            return true; // inhabited market, can't explore ruins
-        }
-        return market.getName().equals("Praetorium"); // Sylphon world; custom interaction dialogue prevents exploring
-    }
-
     @Override
     public boolean shouldRemoveIntel() {
-        boolean shouldRemove = shouldRemove(marketToken);
-        if (shouldRemove) {
-            setHidden(true);
-            getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
-        }
-        return shouldRemove;
+        return IntelValidityUtils.isRuinsIntelInvalid(token);
     }
 
     @Override
@@ -117,8 +89,8 @@ public class RuinsIntel extends BaseIntel {
         }
 
         String title = getRuinsSpec().getName();
-        String planetName = marketToken.getName();
-        String systemName = marketToken.getStarSystem().getName();
+        String planetName = token.getName();
+        String systemName = token.getStarSystem().getName();
 
         if (isEnding()) {
             title += " - Deleted";
@@ -134,10 +106,10 @@ public class RuinsIntel extends BaseIntel {
             getBulletColorForMode(mode),
             Misc.getHighlightColor(),
             planetName,
-            marketToken.getStarSystem().getNameWithNoType()
+            token.getStarSystem().getNameWithNoType()
         );
 
-        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(marketToken));
+        int distanceLY = Math.round(Misc.getDistanceToPlayerLY(token));
         info.addPara(
             distanceLY + " light years away",
             initPad,
@@ -154,21 +126,20 @@ public class RuinsIntel extends BaseIntel {
         float opad = 10f;
 
         TooltipMakerAPI text = info.beginImageWithText(getIcon(), 48);
-        text.addPara(Misc.getTokenReplaced(getRuinsSpec().getDesc(), marketToken), Misc.getGrayColor(), opad);
+        text.addPara(Misc.getTokenReplaced(getRuinsSpec().getDesc(), token), Misc.getGrayColor(), opad);
         info.addImageWithText(opad);
 
         info.addPara(
-            "Located in the " + marketToken.getStarSystem().getNameWithLowercaseType() + ".",
+            "Located in the " + token.getStarSystem().getNameWithLowercaseType() + ".",
             opad,
             Misc.getHighlightColor(),
-            marketToken.getStarSystem().getBaseName()
+            token.getStarSystem().getBaseName()
         );
 
         if (!isEnding()) {
-            addGenericButton(info, width, new LayInCourse(marketToken));
+            addGenericButton(info, width, new LayInCourse(token));
             addGenericButton(info, width, new IgnoreRuins(this));
         }
-        // addGenericButton(info, width, deleteButtonCaption, IGNORE_ALL);
     }
 
     @Override
@@ -183,22 +154,8 @@ public class RuinsIntel extends BaseIntel {
     }
 
     @Override
-    public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        if (isEnding()) {
-            return null;
-        } else {
-            return getEntity();
-        }
-    }
-
-    @Override
     public String getCommMessageSound() {
         return "ui_discovered_entity";
-    }
-
-    @Override
-    public SectorEntityToken getEntity() {
-        return marketToken;
     }
 
     @Override
@@ -207,11 +164,5 @@ public class RuinsIntel extends BaseIntel {
             return IntelSortTier.TIER_COMPLETED;
         }
         return IntelSortTier.TIER_4;
-    }
-
-    @Override
-    public void endAfterDelay(float days) {
-        getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
-        super.endAfterDelay(days);
     }
 }
