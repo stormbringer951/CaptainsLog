@@ -32,4 +32,8 @@ public final class SettingsUtils {
     public static boolean isStelnetEnabled() {
         return Global.getSettings().getModManager().isModEnabled("stelnet");
     }
+
+    public static boolean markCustomMessagesAsImportant() {
+        return getBooleanSetting("CaptainsLog_Mark_Custom_Messages_Important", true);
+    }
 }

@@ -1,6 +1,7 @@
 package CaptainsLog.campaign.intel;
 
 import CaptainsLog.Constants;
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.button.IgnoreCustom;
 import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.campaign.intel.button.ToggleCustom;
@@ -31,7 +32,7 @@ public class CustomMessageIntel extends BaseIntel {
         this.locationString = "Location: " + getLocation();
         this.message = message;
         this.showOnMap = true;
-        setImportant(true);
+        setImportant(SettingsUtils.markCustomMessagesAsImportant());
     }
 
     private String getLocation() {
