@@ -175,7 +175,7 @@ public final class Utils {
         if (SettingsUtils.excludeRuinsReports()) {
             return false;
         }
-        if (RuinsIntel.doesNotHaveUnexploredRuins(entity)) {
+        if (RuinsIntel.shouldRemove(entity)) {
             return false; // not eligible
         }
 

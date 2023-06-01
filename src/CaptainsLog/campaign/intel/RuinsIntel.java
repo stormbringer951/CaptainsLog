@@ -67,25 +67,26 @@ public class RuinsIntel extends BaseIntel {
         return null;
     }
 
-    public static boolean doesNotHaveUnexploredRuins(SectorEntityToken token) {
-        if (SettingsUtils.excludeRuinsReports()) {
-            return true;
+    public static boolean shouldRemove(SectorEntityToken token) {
+        if (SettingsUtils.excludeRuinsReports() || token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG)) {
+            return true; // user preference to remove
+        }
+        if (Utils.isInUnexploredSystem(token)) {
+            return true; // no map, shouldn't be generating an intel
         }
         MarketAPI market = token.getMarket();
-        return (
-            market == null ||
-            token.getMemoryWithoutUpdate().getBoolean(IGNORE_RUINS_MEM_FLAG) ||
-            !market.isPlanetConditionMarketOnly() ||
-            !hasRuins(market) ||
-            market.getName().equals("Praetorium") || // manually override Sylphon hardcoded world
-            market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored") ||
-            Utils.isInUnexploredSystem(token)
-        );
+        if (!hasRuins(market) || market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored")) {
+            return true;
+        }
+        if (!market.isPlanetConditionMarketOnly()) {
+            return true; // inhabited market, can't explore ruins
+        }
+        return market.getName().equals("Praetorium"); // Sylphon world; custom interaction dialogue prevents exploring
     }
 
     @Override
     public boolean shouldRemoveIntel() {
-        boolean shouldRemove = doesNotHaveUnexploredRuins(marketToken);
+        boolean shouldRemove = shouldRemove(marketToken);
         if (shouldRemove) {
             setHidden(true);
             getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
