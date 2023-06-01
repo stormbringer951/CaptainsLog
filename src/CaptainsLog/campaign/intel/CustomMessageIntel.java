@@ -1,5 +1,6 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
 import CaptainsLog.campaign.intel.button.IgnoreCustom;
 import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.campaign.intel.button.ToggleCustom;
@@ -8,7 +9,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -105,7 +105,7 @@ public class CustomMessageIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(Tags.INTEL_FLEET_LOG);
+        tags.add(Constants.CUSTOM_MESSAGE_INTEL_TAG);
         return tags;
     }
 

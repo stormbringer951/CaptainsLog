@@ -1,5 +1,7 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
@@ -17,11 +19,10 @@ import java.util.Set;
 public class UnremovableIntel extends BaseIntel {
 
     private final SectorEntityToken cryosleeper;
-    private static final String INTEL_TYPE_KEY = "Megastructure"; // Used by stelnet for detecting intel types
 
     public UnremovableIntel(SectorEntityToken cryosleeper) {
         this.cryosleeper = cryosleeper;
-        getMapLocation(null).getMemory().set(CAPTAINS_LOG_MEMORY_KEY, true);
+        getMapLocation(null).getMemoryWithoutUpdate().set(CAPTAINS_LOG_MEMORY_KEY, true);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class UnremovableIntel extends BaseIntel {
     }
 
     public String getSmallDescriptionTitle() {
-        return INTEL_TYPE_KEY;
+        return "Colony " + Constants.MEGASTRUCTURE_STELNET_INTEL_TYPE_SUBSTRING;
     }
 
     @Override
@@ -79,7 +80,7 @@ public class UnremovableIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(Tags.INTEL_EXPLORATION);
+        tags.add(Constants.MEGASTRUCTURE_INTEL_TAG);
         return tags;
     }
 
@@ -100,11 +101,10 @@ public class UnremovableIntel extends BaseIntel {
 
     @Override
     public boolean shouldRemoveIntel() {
-        boolean shouldRemove = cryosleeper == null || !cryosleeper.isAlive();
+        boolean shouldRemove = cryosleeper == null || !cryosleeper.isAlive() || SettingsUtils.excludeMegastructures();
         if (shouldRemove) {
-            // making the assumption that this is being called by the IntelManagerAPI; this will make it unfilterable
-            // by stelnet but the gap between this and removal should be short
-            getMapLocation(null).getMemory().unset(CAPTAINS_LOG_MEMORY_KEY);
+            setHidden(true);
+            getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
         }
         return shouldRemove;
     }

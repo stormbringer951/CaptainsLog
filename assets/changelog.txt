@@ -2,4 +2,7 @@ Version 0.2.0
 
 - Rework intel reports to more closely follow vanilla style
 - Fix bug that allowed players to use "lay in course" button to repeatedly salvage the same object.
-- Add Lunalib version checker changelog support
+- Add version checker changelog support
+- Add support for Comm Relays that are located outside the core worlds
+- Add LunaLib support
+- Add LunaLib toggles to enable/disable each type of automated intel logging
