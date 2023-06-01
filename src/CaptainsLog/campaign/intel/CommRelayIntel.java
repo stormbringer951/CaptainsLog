@@ -153,4 +153,14 @@ public class CommRelayIntel extends BaseIntel {
         }
         return toRemove;
     }
+
+    @Override
+    public IntelSortTier getSortTier() {
+        return IntelSortTier.TIER_6;
+    }
+
+    @Override
+    public String getSortString() {
+        return "zzzCommRelay"; // Put all of these together towards the back of the tier
+    }
 }
