@@ -23,7 +23,7 @@ public class LocationChangeListener implements CurrentLocationChangedListener {
             // leaving systems should add player-built comm relays or comm relays created by other means
             Utils.tryCreateCommRelayReports(prev.getEntitiesWithTag(Tags.COMM_RELAY), log, true);
         }
-        Utils.tryCreateCryosleeperReports(curr.getEntitiesWithTag(Tags.CRYOSLEEPER), log, true);
+        Utils.tryCreateMegastructureReports(curr.getEntitiesWithTag(Tags.CRYOSLEEPER), log, true);
         Utils.tryCreateUnsearchedRuinsReports(curr.getEntitiesWithTag(Tags.PLANET), log, true);
         Utils.tryCreateSalvageableReports(curr.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
     }

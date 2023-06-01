@@ -12,7 +12,7 @@ public class RemovableSalvageListener implements DiscoverEntityListener {
 
     @Override
     public void reportEntityDiscovered(SectorEntityToken entity) {
-        Utils.tryCreateCryosleeperReport(entity, log, false);
+        Utils.tryCreateMegastructureReport(entity, log, false);
         Utils.tryCreateSalvageableReport(entity, log, false);
     }
 }

@@ -22,7 +22,7 @@ public class CommRelayIntel extends BaseIntel {
 
     public CommRelayIntel(SectorEntityToken commRelay) {
         this.commRelay = commRelay;
-        getMapLocation(null).getMemoryWithoutUpdate().set(CAPTAINS_LOG_MEMORY_KEY, true);
+        getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
     }
 
     @Override
@@ -149,8 +149,18 @@ public class CommRelayIntel extends BaseIntel {
         boolean toRemove = intelShouldNotExist(commRelay);
         if (toRemove) {
             setHidden(true);
-            getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
+            getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
         }
         return toRemove;
+    }
+
+    @Override
+    public IntelSortTier getSortTier() {
+        return IntelSortTier.TIER_6;
+    }
+
+    @Override
+    public String getSortString() {
+        return "zzz" + getName() + commRelay.getStarSystem().getBaseName(); // Put all of these together towards the back of the tier
     }
 }

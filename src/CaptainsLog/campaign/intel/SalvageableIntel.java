@@ -44,7 +44,7 @@ public class SalvageableIntel extends BaseIntel {
         float salvageValue = estimateSalvageValue();
         int rating = getValueRating(salvageValue);
 
-        getMapLocation(null).getMemoryWithoutUpdate().set(CAPTAINS_LOG_MEMORY_KEY, true);
+        getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
 
         log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
@@ -242,13 +242,13 @@ public class SalvageableIntel extends BaseIntel {
         boolean shouldRemove = shouldRemoveIntelEntry(salvageObject);
         if (shouldRemove) {
             setHidden(true);
-            getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
+            getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
         }
         return shouldRemove;
     }
 
     public static boolean shouldRemoveIntelEntry(SectorEntityToken token) {
-        if (!SettingsUtils.excludeSalvageableReports()) {
+        if (SettingsUtils.excludeSalvageableReports()) {
             return true;
         }
         return (
@@ -310,7 +310,7 @@ public class SalvageableIntel extends BaseIntel {
 
     @Override
     public void endAfterDelay(float days) {
-        getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
+        getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
         super.endAfterDelay(days);
     }
 }

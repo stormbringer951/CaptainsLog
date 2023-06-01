@@ -2,6 +2,8 @@ package CaptainsLog.scripts;
 
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.*;
+import CaptainsLog.campaign.intel.automated.IntelValidityUtils;
+import CaptainsLog.campaign.intel.automated.MegastructureIntel;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -50,34 +52,32 @@ public final class Utils {
         return "Hyperspace";
     }
 
-    public static int tryCreateCryosleeperReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+    public static int tryCreateMegastructureReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
         if (SettingsUtils.excludeMegastructures()) {
             return 0;
         }
         int count = 0;
         for (SectorEntityToken token : tokens) {
-            if (tryCreateCryosleeperReport(token, log, showMessage)) {
+            if (tryCreateMegastructureReport(token, log, showMessage)) {
                 count++;
             }
         }
         return count;
     }
 
-    public static boolean tryCreateCryosleeperReport(SectorEntityToken cryosleeper, Logger log, boolean showMessage) {
-        if (SettingsUtils.excludeMegastructures()) {
-            return false;
-        }
-        if (!cryosleeper.hasTag(Tags.CRYOSLEEPER) || cryosleeper.hasSensorProfile() || cryosleeper.isDiscoverable()) {
-            return false; // not a discovered cryosleeper
-        }
-        if (cryosleeper.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+    public static boolean tryCreateMegastructureReport(SectorEntityToken token, Logger log, boolean showMessage) {
+        if (
+            SettingsUtils.excludeMegastructures() ||
+            IntelValidityUtils.isMegastructureInvalid(token) ||
+            IntelValidityUtils.doesIntelAlreadyExist(token)
+        ) {
             return false;
         }
 
-        UnremovableIntel report = new UnremovableIntel(cryosleeper);
+        MegastructureIntel report = new MegastructureIntel(token);
         report.setNew(showMessage);
         Global.getSector().getIntelManager().addIntel(report, !showMessage);
-        log.info("Created intel report for cryosleeper in " + cryosleeper.getStarSystem());
+        log.info("Created intel report for " + token.getName() + " in " + token.getStarSystem());
 
         return true;
     }
@@ -104,7 +104,7 @@ public final class Utils {
         if (CommRelayIntel.intelShouldNotExist(token)) {
             return false;
         }
-        if (token.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+        if (IntelValidityUtils.doesIntelAlreadyExist(token)) {
             return false;
         }
         CommRelayIntel report = new CommRelayIntel(token);
@@ -138,7 +138,7 @@ public final class Utils {
         if (SalvageableIntel.shouldRemoveIntelEntry(token)) {
             return false;
         }
-        if (token.getMemoryWithoutUpdate().getBoolean(BaseIntel.CAPTAINS_LOG_MEMORY_KEY)) {
+        if (IntelValidityUtils.doesIntelAlreadyExist(token)) {
             return false;
         }
         SalvageableIntel report = new SalvageableIntel(token);
@@ -198,7 +198,7 @@ public final class Utils {
     public static void tryCreateIntels(SectorAPI sector, Logger log) {
         int count = Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
         count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
-        count += Utils.tryCreateCryosleeperReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
+        count += Utils.tryCreateMegastructureReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
         count += Utils.tryCreateCommRelayReports(sector.getCustomEntitiesWithTag(Tags.COMM_RELAY), log, false);
 
         if (count > 0) {

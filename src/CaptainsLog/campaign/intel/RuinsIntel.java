@@ -36,7 +36,7 @@ public class RuinsIntel extends BaseIntel {
     public RuinsIntel(SectorEntityToken marketToken) {
         this.marketToken = marketToken;
         this.ruinsType = marketToken.getMarket().getCondition(getRuinType(marketToken.getMarket())).getSpec().getId();
-        getMapLocation(null).getMemoryWithoutUpdate().set(CAPTAINS_LOG_MEMORY_KEY, true);
+        getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
     }
 
     private MarketConditionSpecAPI getRuinsSpec() {
@@ -88,7 +88,7 @@ public class RuinsIntel extends BaseIntel {
         boolean shouldRemove = doesNotHaveUnexploredRuins(marketToken);
         if (shouldRemove) {
             setHidden(true);
-            getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
+            getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
         }
         return shouldRemove;
     }
@@ -209,7 +209,7 @@ public class RuinsIntel extends BaseIntel {
 
     @Override
     public void endAfterDelay(float days) {
-        getMapLocation(null).getMemoryWithoutUpdate().unset(CAPTAINS_LOG_MEMORY_KEY);
+        getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
         super.endAfterDelay(days);
     }
 }
