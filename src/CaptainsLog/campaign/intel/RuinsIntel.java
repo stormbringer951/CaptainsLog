@@ -69,7 +69,7 @@ public class RuinsIntel extends BaseIntel {
 
     public static boolean doesNotHaveUnexploredRuins(SectorEntityToken token) {
         if (SettingsUtils.excludeRuinsReports()) {
-            return false;
+            return true;
         }
         MarketAPI market = token.getMarket();
         return (
