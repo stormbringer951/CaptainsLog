@@ -26,7 +26,20 @@ public class IntelValidityUtils {
         return token.hasSensorProfile() || token.isDiscoverable();
     }
 
-    public static boolean isMegastructureInvalid(SectorEntityToken token) {
+    private static boolean isCoreWorld(SectorEntityToken token) {
+        return !token.getStarSystem().isInConstellation(); // assume all systems without constellation are inhabited core worlds;
+    }
+
+    public static boolean isCommRelayIntelInvalid(SectorEntityToken token) {
+        return (
+            SettingsUtils.excludeCommRelays() ||
+            objectDoesntExist(token) ||
+            Utils.isInUnexploredSystem(token) ||
+            isCoreWorld(token)
+        );
+    }
+
+    public static boolean isMegastructureIntelInvalid(SectorEntityToken token) {
         if (SettingsUtils.excludeMegastructures() || objectDoesntExist(token) || objectNotFoundYet(token)) {
             return true;
         }

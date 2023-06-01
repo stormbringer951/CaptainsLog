@@ -69,7 +69,7 @@ public class MegastructureIntel extends AutomatedIntel {
 
     @Override
     public boolean shouldRemoveIntel() {
-        return IntelValidityUtils.isMegastructureInvalid(token);
+        return IntelValidityUtils.isMegastructureIntelInvalid(token);
     }
 
     @Override
@@ -82,11 +82,6 @@ public class MegastructureIntel extends AutomatedIntel {
         Set<String> tags = super.getIntelTags(map);
         tags.add(Constants.MEGASTRUCTURE_INTEL_TAG);
         return tags;
-    }
-
-    @Override
-    protected String getName() {
-        return token.getName();
     }
 
     @Override

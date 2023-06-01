@@ -3,6 +3,7 @@ package CaptainsLog.scripts;
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.*;
+import CaptainsLog.campaign.intel.automated.CommRelayIntel;
 import CaptainsLog.campaign.intel.automated.IntelValidityUtils;
 import CaptainsLog.campaign.intel.automated.MegastructureIntel;
 import CaptainsLog.campaign.intel.automated.RuinsIntel;
@@ -20,11 +21,7 @@ public final class Utils {
 
     // This fixes a possible regression where a SectorEntityToken is not hidden but we don't have access to the map yet
     public static boolean isInUnexploredSystem(SectorEntityToken token) {
-        if (token.getStarSystem() != null) {
-            return !token.getStarSystem().isEnteredByPlayer();
-        } else {
-            return false;
-        }
+        return token.getStarSystem() != null && !token.getStarSystem().isEnteredByPlayer();
     }
 
     public static String getSystemNameOrHyperspaceBase(SectorEntityToken token) {
@@ -68,7 +65,7 @@ public final class Utils {
     public static boolean tryCreateMegastructureReport(SectorEntityToken token, Logger log, boolean showMessage) {
         if (
             SettingsUtils.excludeMegastructures() ||
-            IntelValidityUtils.isMegastructureInvalid(token) ||
+            IntelValidityUtils.isMegastructureIntelInvalid(token) ||
             IntelValidityUtils.doesIntelAlreadyExist(token)
         ) {
             return false;
@@ -100,7 +97,7 @@ public final class Utils {
     public static boolean tryCreateCommRelayReport(SectorEntityToken token, Logger log, boolean showMessage) {
         if (
             SettingsUtils.excludeCommRelays() ||
-            CommRelayIntel.intelShouldNotExist(token) ||
+            IntelValidityUtils.isCommRelayIntelInvalid(token) ||
             IntelValidityUtils.doesIntelAlreadyExist(token)
         ) {
             return false;
