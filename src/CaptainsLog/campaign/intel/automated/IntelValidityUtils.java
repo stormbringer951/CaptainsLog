@@ -3,6 +3,7 @@ package CaptainsLog.campaign.intel.automated;
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 
 public class IntelValidityUtils {
@@ -24,5 +25,16 @@ public class IntelValidityUtils {
             return true;
         }
         return !token.hasTag(Tags.CRYOSLEEPER) && !token.hasTag(Tags.CORONAL_TAP);
+    }
+
+    public static boolean areRuinsDiscovered(SectorEntityToken token) {
+        MarketAPI market = token.getMarket();
+        if (market == null) {
+            return false;
+        }
+        boolean playerActuallySurveyed = market.getSurveyLevel() == MarketAPI.SurveyLevel.FULL;
+        boolean observedFromOrbitalWreckage = token.hasTag(Constants.PROXIMITY_SURVEYED_RUINS); // tagged from Observer
+
+        return playerActuallySurveyed || observedFromOrbitalWreckage;
     }
 }

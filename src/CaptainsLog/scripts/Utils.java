@@ -1,5 +1,6 @@
 package CaptainsLog.scripts;
 
+import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.*;
 import CaptainsLog.campaign.intel.automated.IntelValidityUtils;
@@ -98,13 +99,11 @@ public final class Utils {
     }
 
     public static boolean tryCreateCommRelayReport(SectorEntityToken token, Logger log, boolean showMessage) {
-        if (SettingsUtils.excludeCommRelays()) {
-            return false;
-        }
-        if (CommRelayIntel.intelShouldNotExist(token)) {
-            return false;
-        }
-        if (IntelValidityUtils.doesIntelAlreadyExist(token)) {
+        if (
+            SettingsUtils.excludeCommRelays() ||
+            CommRelayIntel.intelShouldNotExist(token) ||
+            IntelValidityUtils.doesIntelAlreadyExist(token)
+        ) {
             return false;
         }
         CommRelayIntel report = new CommRelayIntel(token);
@@ -131,14 +130,11 @@ public final class Utils {
     }
 
     public static boolean tryCreateSalvageableReport(SectorEntityToken token, Logger log, boolean showMessage) {
-        if (SettingsUtils.excludeSalvageableReports()) {
-            // called in loop or singly on discovery
-            return false;
-        }
-        if (SalvageableIntel.shouldRemoveIntelEntry(token)) {
-            return false;
-        }
-        if (IntelValidityUtils.doesIntelAlreadyExist(token)) {
+        if (
+            SettingsUtils.excludeSalvageableReports() ||
+            SalvageableIntel.shouldRemoveIntelEntry(token) ||
+            IntelValidityUtils.doesIntelAlreadyExist(token)
+        ) {
             return false;
         }
         SalvageableIntel report = new SalvageableIntel(token);
@@ -159,11 +155,10 @@ public final class Utils {
         int count = 0;
 
         for (SectorEntityToken entity : entities) {
-            MarketAPI market = entity.getMarket();
-            if (market == null || market.getSurveyLevel() != MarketAPI.SurveyLevel.FULL) {
-                continue;
-            }
-            if (tryCreateUnsearchedRuinsReport(entity, log, showMessage)) {
+            if (
+                IntelValidityUtils.areRuinsDiscovered(entity) &&
+                tryCreateUnsearchedRuinsReport(entity, log, showMessage)
+            ) {
                 ++count;
             }
         }
@@ -178,16 +173,10 @@ public final class Utils {
         if (RuinsIntel.shouldRemove(entity)) {
             return false; // not eligible
         }
-
-        // TODO: refactor to memory key
-        IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        for (IntelInfoPlugin intel : intelManager.getIntel(RuinsIntel.class)) {
-            RuinsIntel r = (RuinsIntel) intel;
-            if (r.getEntity() == entity) {
-                return false; // report exists
-            }
+        if (IntelValidityUtils.doesIntelAlreadyExist(entity)) {
+            return false;
         }
-
+        IntelManagerAPI intelManager = Global.getSector().getIntelManager();
         RuinsIntel report = new RuinsIntel(entity);
         report.setNew(showMessage);
         intelManager.addIntel(new RuinsIntel(entity), !showMessage);
@@ -196,6 +185,20 @@ public final class Utils {
     }
 
     public static void tryCreateIntels(SectorAPI sector, Logger log) {
+        for (SectorEntityToken token : sector.getEntitiesWithTag(Constants.PROXIMITY_SURVEYED_RUINS)) {
+            if (!Misc.hasUnexploredRuins(token.getMarket())) {
+                // not necessary but neat periodic cleanup check for proximity surveyed ruins that have been surveyed
+                token.removeTag(Constants.PROXIMITY_SURVEYED_RUINS);
+                log.info(
+                    "Removed " +
+                    Constants.PROXIMITY_SURVEYED_RUINS +
+                    " tag from " +
+                    token.getName() +
+                    " because ruins have been marked explored."
+                );
+            }
+        }
+
         int count = Utils.tryCreateUnsearchedRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
         count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
         count += Utils.tryCreateMegastructureReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);

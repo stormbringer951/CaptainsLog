@@ -37,14 +37,15 @@ public class RuinsIntel extends BaseIntel {
         this.marketToken = marketToken;
         this.ruinsType = marketToken.getMarket().getCondition(getRuinType(marketToken.getMarket())).getSpec().getId();
         getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
+
+        if (marketToken.getMarket().getSurveyLevel() != MarketAPI.SurveyLevel.FULL) {
+            // Survey Level not checked in calls to tryCreateUnsearchedRuinsReport() in calls from RuinsObserver
+            getMapLocation(null).addTag(Constants.PROXIMITY_SURVEYED_RUINS);
+        }
     }
 
     private MarketConditionSpecAPI getRuinsSpec() {
         return Global.getSettings().getMarketConditionSpec(ruinsType);
-    }
-
-    private static boolean hasRuins(MarketAPI market) {
-        return market != null && getRuinType(market) != null;
     }
 
     private static String getRuinType(MarketAPI market) {
@@ -75,7 +76,7 @@ public class RuinsIntel extends BaseIntel {
             return true; // no map, shouldn't be generating an intel
         }
         MarketAPI market = token.getMarket();
-        if (!hasRuins(market) || market.getMemoryWithoutUpdate().getBoolean("$ruinsExplored")) {
+        if (!Misc.hasUnexploredRuins(market)) {
             return true;
         }
         if (!market.isPlanetConditionMarketOnly()) {
