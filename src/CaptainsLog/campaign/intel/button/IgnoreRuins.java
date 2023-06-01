@@ -1,6 +1,7 @@
 package CaptainsLog.campaign.intel.button;
 
-import CaptainsLog.campaign.intel.RuinsIntel;
+import CaptainsLog.Constants;
+import CaptainsLog.campaign.intel.automated.RuinsIntel;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -20,7 +21,7 @@ public class IgnoreRuins implements IntelButton {
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
         MemoryAPI memory = intel.getEntity().getMemory();
-        memory.set(RuinsIntel.IGNORE_RUINS_MEM_FLAG, true);
+        memory.set(Constants.IGNORE_RUINS_MEM_FLAG, true);
         intel.endImmediately();
         ui.recreateIntelUI();
     }

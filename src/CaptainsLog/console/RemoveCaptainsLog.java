@@ -1,9 +1,9 @@
 package CaptainsLog.console;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
-import CaptainsLog.campaign.intel.RuinsIntel;
-import CaptainsLog.campaign.intel.SalvageableIntel;
 import CaptainsLog.campaign.intel.automated.MegastructureIntel;
+import CaptainsLog.campaign.intel.automated.RuinsIntel;
+import CaptainsLog.campaign.intel.automated.SalvageableIntel;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;

@@ -24,7 +24,7 @@ public class LocationChangeListener implements CurrentLocationChangedListener {
             Utils.tryCreateCommRelayReports(prev.getEntitiesWithTag(Tags.COMM_RELAY), log, true);
         }
         Utils.tryCreateMegastructureReports(curr.getEntitiesWithTag(Tags.CRYOSLEEPER), log, true);
-        Utils.tryCreateUnsearchedRuinsReports(curr.getEntitiesWithTag(Tags.PLANET), log, true);
+        Utils.tryCreateUnexploredRuinsReports(curr.getEntitiesWithTag(Tags.PLANET), log, true);
         Utils.tryCreateSalvageableReports(curr.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
     }
 }

@@ -1,12 +1,10 @@
-package CaptainsLog.campaign.intel;
+package CaptainsLog.campaign.intel.automated;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.scripts.Utils;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.impl.campaign.econ.CommRelayCondition;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.Description;
@@ -16,18 +14,10 @@ import com.fs.starfarer.api.util.Misc;
 import java.awt.*;
 import java.util.Set;
 
-public class CommRelayIntel extends BaseIntel {
+public class CommRelayIntel extends AutomatedIntel {
 
-    private final SectorEntityToken commRelay;
-
-    public CommRelayIntel(SectorEntityToken commRelay) {
-        this.commRelay = commRelay;
-        getMapLocation(null).getMemoryWithoutUpdate().set(Constants.CAPTAINS_LOG_MEMORY_KEY, true);
-    }
-
-    @Override
-    public SectorEntityToken getEntity() {
-        return commRelay;
+    public CommRelayIntel(SectorEntityToken token) {
+        super(token);
     }
 
     @Override
@@ -45,11 +35,11 @@ public class CommRelayIntel extends BaseIntel {
         bullet(info);
 
         info.addPara(
-            commRelay.getStarSystem().getName(),
+            token.getStarSystem().getName(),
             initPad,
             getBulletColorForMode(mode),
             Misc.getHighlightColor(),
-            Utils.getSystemNameOrHyperspaceBase(commRelay)
+            Utils.getSystemNameOrHyperspaceBase(token)
         );
         unindent(info);
     }
@@ -59,7 +49,7 @@ public class CommRelayIntel extends BaseIntel {
     }
 
     private float getBonus() {
-        if (commRelay.hasTag(Tags.MAKESHIFT)) {
+        if (token.hasTag(Tags.MAKESHIFT)) {
             return CommRelayCondition.MAKESHIFT_COMM_RELAY_BONUS;
         } else {
             return CommRelayCondition.COMM_RELAY_BONUS;
@@ -70,9 +60,7 @@ public class CommRelayIntel extends BaseIntel {
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
 
-        Description desc = Global
-            .getSettings()
-            .getDescription(commRelay.getCustomDescriptionId(), Description.Type.CUSTOM);
+        Description desc = Global.getSettings().getDescription(token.getCustomDescriptionId(), Description.Type.CUSTOM);
         for (String para : desc.getText1Paras()) {
             info.addPara(para, opad);
         }
@@ -88,16 +76,16 @@ public class CommRelayIntel extends BaseIntel {
         unindent(info);
 
         info.addPara(
-            "This comm relay is located in the " + commRelay.getStarSystem().getNameWithLowercaseType() + ".",
+            "This comm relay is located in the " + token.getStarSystem().getNameWithLowercaseType() + ".",
             opad,
             Misc.getHighlightColor(),
-            commRelay.getStarSystem().getBaseName()
+            token.getStarSystem().getBaseName()
         );
     }
 
     @Override
     public String getIcon() {
-        return commRelay.getCustomEntitySpec().getIconName();
+        return token.getCustomEntitySpec().getIconName();
     }
 
     @Override
@@ -112,46 +100,8 @@ public class CommRelayIntel extends BaseIntel {
     }
 
     @Override
-    public FactionAPI getFactionForUIColors() {
-        return super.getFactionForUIColors();
-    }
-
-    @Override
-    protected String getName() {
-        return commRelay.getName();
-    }
-
-    @Override
-    public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        return getEntity();
-    }
-
-    public static boolean intelShouldNotExist(SectorEntityToken commRelay) {
-        if (SettingsUtils.excludeCommRelays()) {
-            return true;
-        }
-        if (commRelay == null || !commRelay.isAlive()) {
-            return true; // comm relay destroyed
-        }
-        StarSystemAPI system = commRelay.getStarSystem();
-        if (system == null) {
-            return true; // safety check but comm relays should not be in hyperspace
-        }
-        if (!system.isInConstellation()) {
-            return true; // assume all systems without constellation are inhabited core worlds
-        }
-
-        return !system.isEnteredByPlayer();
-    }
-
-    @Override
     public boolean shouldRemoveIntel() {
-        boolean toRemove = intelShouldNotExist(commRelay);
-        if (toRemove) {
-            setHidden(true);
-            getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
-        }
-        return toRemove;
+        return IntelValidityUtils.isCommRelayIntelInvalid(token);
     }
 
     @Override
@@ -161,6 +111,6 @@ public class CommRelayIntel extends BaseIntel {
 
     @Override
     public String getSortString() {
-        return "zzz" + getName() + commRelay.getStarSystem().getBaseName(); // Put all of these together towards the back of the tier
+        return "zzz" + getName() + token.getStarSystem().getBaseName(); // Put all of these together towards the back of the tier
     }
 }
