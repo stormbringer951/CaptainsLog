@@ -12,7 +12,12 @@ public final class Constants {
     public static final String STELNET_INTEL_TYPE_SUBSTRING_RUINS = "Ruins";
 
     public static final String STELNET_INTEL_TYPE_SUBSTRING_COMM_RELAY = "Comm Relay";
-    public static final String CAPTAINS_LOG_MEMORY_KEY = "$captainsLogIntel";
+
+    // Memory Keys
+    public static final String CAPTAINS_LOG_MEMORY_KEY = "$captainsLogIntel"; // checked by Stelnet
+
+    // SectorEntityToken tags
+    public static final String PROXIMITY_SURVEYED_RUINS = "captains_log_proximity_surveyed_ruins";
 
     // Intel category tags
     public static String STELNET_FILTERED_INTEL_TAG = Tags.INTEL_EXPLORATION;
