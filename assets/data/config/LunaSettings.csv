@@ -1,5 +1,6 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
 CaptainsLog_settingsHeader,Options Header,Header,Options,,,,,
+CaptainsLog_Mark_Custom_Messages_Important,Mark Captain's Log Messages Important,Boolean,true,,"Marks Captain's Log custom messages as important by default.",,,
 CaptainsLog_Toggle_Explanation,Toggles Explanation,Text,"These control whether intel tracking is enabled/disabled for categories of automatically generated intel. Stellar Networks can be used to toggle the visibility of intel.",,,,,
 CaptainsLog_Enable_Ruins,Enable Ruins Intel,Boolean,true,,"Enable intel reports for unexplored ruins.
 Displayed in the Unexplored Ruins intel tab, or in Exploration if Stellar Networks is enabled.

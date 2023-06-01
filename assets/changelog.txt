@@ -1,8 +1,10 @@
 Version 0.2.0
 
-- Rework intel reports to more closely follow vanilla style
 - Fix bug that allowed players to use "lay in course" button to repeatedly salvage the same object.
+- Automatically log the location of Comm Relays located outside of the Core Worlds
+- Automatically log the location of Coronal Hypershunts
 - Add version checker changelog support
-- Add support for Comm Relays that are located outside the core worlds
 - Add LunaLib support
-- Add LunaLib toggles to enable/disable each type of automated intel logging
+- Add LunaLib settings to enable/disable each type of automated intel logging
+- Add LunaLib settings to set whether Captain's Log custom log messages should be marked as important by default
+- Rework intel reports to more closely follow vanilla style
