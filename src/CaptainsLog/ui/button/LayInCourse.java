@@ -47,7 +47,7 @@ public class LayInCourse implements Button {
     public boolean shouldCreateButton() {
         // do not allow users to lay in course to entities that are expired/not clickable
         // prevents user from repeatedly salvaging already salvaged content
-        return !target.hasTag(Tags.FADING_OUT_AND_EXPIRING) && target.hasTag(Tags.NON_CLICKABLE);
+        return !target.hasTag(Tags.FADING_OUT_AND_EXPIRING) && !target.hasTag(Tags.NON_CLICKABLE);
     }
 
     @Override
