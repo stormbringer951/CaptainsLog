@@ -1,8 +1,8 @@
 package CaptainsLog.campaign.intel.automated;
 
 import CaptainsLog.Constants;
-import CaptainsLog.campaign.intel.button.LayInCourse;
 import CaptainsLog.scripts.Utils;
+import CaptainsLog.ui.button.LayInCourse;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;

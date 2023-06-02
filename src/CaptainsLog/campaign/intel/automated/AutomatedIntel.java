@@ -37,4 +37,9 @@ public abstract class AutomatedIntel extends BaseIntel {
         getMapLocation(null).getMemoryWithoutUpdate().unset(Constants.CAPTAINS_LOG_MEMORY_KEY);
         super.reportRemovedIntel();
     }
+
+    @Override
+    protected String getName() {
+        return token.getName();
+    }
 }

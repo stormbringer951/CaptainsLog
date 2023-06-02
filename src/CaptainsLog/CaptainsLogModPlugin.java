@@ -1,5 +1,6 @@
 package CaptainsLog;
 
+import CaptainsLog.campaign.intel.FleetLogIntel;
 import CaptainsLog.campaign.listeners.LocationChangeListener;
 import CaptainsLog.campaign.listeners.RemovableSalvageListener;
 import CaptainsLog.campaign.listeners.SettingsChangeListener;
@@ -13,9 +14,8 @@ public class CaptainsLogModPlugin extends BaseModPlugin {
 
     @Override
     public void onGameLoad(boolean newGame) {
-        if (!Global.getSettings().getBoolean("captains_log_enable_automatic_logging")) {
-            return;
-        }
+        FleetLogIntel.getInstance();
+
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
         Global.getSector().addTransientScript(new RuinObserver());
 

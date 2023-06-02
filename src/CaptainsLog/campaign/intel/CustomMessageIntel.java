@@ -2,10 +2,10 @@ package CaptainsLog.campaign.intel;
 
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
-import CaptainsLog.campaign.intel.button.IgnoreCustom;
-import CaptainsLog.campaign.intel.button.LayInCourse;
-import CaptainsLog.campaign.intel.button.ToggleCustom;
 import CaptainsLog.scripts.Utils;
+import CaptainsLog.ui.button.IgnoreCustom;
+import CaptainsLog.ui.button.LayInCourse;
+import CaptainsLog.ui.button.ToggleCustom;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignClockAPI;
 import com.fs.starfarer.api.campaign.LocationAPI;
@@ -18,21 +18,29 @@ import java.util.Set;
 
 public class CustomMessageIntel extends BaseIntel {
 
+    private final String title;
     private final String message;
     private final String locationString;
 
     private boolean showOnMap;
     private final SectorEntityToken locationCreated;
+    private long timeCreated;
 
-    public CustomMessageIntel(String message) {
+    public CustomMessageIntel(String title, String message) {
         // todo: handle newlines
         LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
 
         this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
+        this.timeCreated = Global.getSector().getClock().getTimestamp();
         this.locationString = "Location: " + getLocation();
+        this.title = title;
         this.message = message;
         this.showOnMap = true;
         setImportant(SettingsUtils.markCustomMessagesAsImportant());
+    }
+
+    public CustomMessageIntel(String message) {
+        this(null, message);
     }
 
     private String getLocation() {
@@ -46,9 +54,13 @@ public class CustomMessageIntel extends BaseIntel {
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         Color c = getTitleColor(mode);
-        Color tc = Misc.getTextColor();
+        Color tc = getBulletColorForMode(mode);
 
-        String title = "Captain's Log";
+        String title = this.title;
+        if (title == null) {
+            title = Constants.CUSTOM_MESSAGE_INTEL_TAG;
+        }
+
         if (isEnding()) {
             title += " - Deleted";
         }
@@ -62,11 +74,17 @@ public class CustomMessageIntel extends BaseIntel {
             initPad = 3f;
         }
 
+        float days = Math.max(1, getDaysSincePlayerVisible());
+        String dateOrLegacy = "%s " + getDaysString(days) + " ago";
+        if (timeCreated != 0) {
+            CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
+            dateOrLegacy = "Added " + clock.getDateString() + " (" + dateOrLegacy + ")";
+        }
+
         bullet(info);
-        addDays(info, "ago.", getDaysSincePlayerVisible(), tc, initPad + 10);
-        info.addPara(locationString, initPad, getBulletColorForMode(mode));
+        info.addPara(dateOrLegacy, initPad, tc, Misc.getHighlightColor(), getDays(days));
+        info.addPara(locationString, tc, initPad);
         unindent(info);
-        // TODO: format
         // Captain's Log
         // -- [date] ([number] days ago)
         // -- location
