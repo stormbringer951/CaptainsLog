@@ -34,6 +34,7 @@ public class TextArea {
             plugin.setTextField(field, width, height);
             // multi-lines break cursor display
             field.hideCursor();
+            field.setLimitByStringWidth(false);
         }
         field.setUndoOnEscape(false);
         inner.addUIElement(tooltip);
