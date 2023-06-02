@@ -79,6 +79,11 @@ public class InteractionRadioGroup<T> implements CustomUIPanelPlugin {
         }
     }
 
+    @Override
+    public void buttonPressed(Object o) {
+
+    }
+
     public T getSelected() {
         for (SelectionButton<T> button : buttons) {
             if (button.isChecked()) {

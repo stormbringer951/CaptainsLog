@@ -6,6 +6,8 @@ import CaptainsLog.ui.select.SelectionButton;
 import CaptainsLog.ui.select.VerticalSelectionButton;
 import CaptainsLog.ui.select.types.SelectToken;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.ui.CustomPanelAPI;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,11 @@ public class SectorEntityTokenSelectorDelegate extends SelectorDelegate<SectorEn
             buttons.add(new VerticalSelectionButton<>(new SelectToken(token), selected == token));
         }
         radioGroup = new InteractionRadioGroup<>(buttons);
+    }
+
+    @Override
+    public void createCustomDialog(CustomPanelAPI customPanelAPI, CustomDialogCallback customDialogCallback) {
+
     }
 
     @Override

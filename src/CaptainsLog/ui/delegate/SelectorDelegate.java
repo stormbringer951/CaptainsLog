@@ -11,7 +11,6 @@ public abstract class SelectorDelegate<T> implements CustomDialogDelegate {
     LogCreatorInteractionDialog plugin;
     InteractionRadioGroup<T> radioGroup = null;
 
-    @Override
     public void createCustomDialog(CustomPanelAPI panel) {
         radioGroup.render(panel, true, panel.getPosition().getWidth(), panel.getPosition().getHeight(), 10f, 0, 0);
     }

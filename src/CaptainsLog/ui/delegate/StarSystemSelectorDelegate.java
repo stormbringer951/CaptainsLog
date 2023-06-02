@@ -7,6 +7,8 @@ import CaptainsLog.ui.select.VerticalSelectionButton;
 import CaptainsLog.ui.select.types.SelectStarSystem;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
+import com.fs.starfarer.api.ui.CustomPanelAPI;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,11 @@ public class StarSystemSelectorDelegate extends SelectorDelegate<StarSystemAPI> 
     private boolean isChecked(SectorEntityToken token, StarSystemAPI system) {
         // TODO check this logic
         return token == system.getHyperspaceAnchor();
+    }
+
+    @Override
+    public void createCustomDialog(CustomPanelAPI customPanelAPI, CustomDialogCallback customDialogCallback) {
+
     }
 
     @Override

@@ -86,6 +86,11 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
 
                 @Override
                 public void processInput(List<InputEventAPI> events) {}
+
+                @Override
+                public void buttonPressed(Object o) {
+
+                }
             }
         );
 

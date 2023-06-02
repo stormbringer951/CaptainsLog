@@ -6,8 +6,9 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
+import org.lwjgl.input.Keyboard;
+
 import java.util.List;
-(??)
 
 public class FleetLogPanelPlugin implements FieldAwarePanelPlugin {
 
