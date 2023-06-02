@@ -1,10 +1,12 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
 import CaptainsLog.ui.ButtonRow;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.button.ClearAll;
 import CaptainsLog.ui.button.CreateLogEntry;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
@@ -75,7 +77,7 @@ public class FleetLogIntel extends BaseIntel {
     @Override
     public Set<String> getIntelTags(SectorMapAPI map) {
         Set<String> tags = super.getIntelTags(map);
-        tags.add(CustomMessageIntel.CAPTAIN_LOG_INTEL);
+        tags.add(Constants.CUSTOM_MESSAGE_INTEL_TAG);
         return tags;
     }
 
@@ -92,5 +94,10 @@ public class FleetLogIntel extends BaseIntel {
     @Override
     public boolean hasSmallDescription() {
         return false;
+    }
+
+    @Override
+    public SectorEntityToken getEntity() {
+        return null;
     }
 }

@@ -51,4 +51,9 @@ public class CreateLogEntry implements Button {
     public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {
         thisElement.getPosition().inBL(10, 10);
     }
+
+    @Override
+    public boolean shouldCreateButton() {
+        return true;
+    }
 }

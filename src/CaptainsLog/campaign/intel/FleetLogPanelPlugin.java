@@ -70,4 +70,9 @@ public class FleetLogPanelPlugin implements FieldAwarePanelPlugin {
             }
         }
     }
+
+    @Override
+    public void buttonPressed(Object o) {
+        // TODO nothing
+    }
 }
