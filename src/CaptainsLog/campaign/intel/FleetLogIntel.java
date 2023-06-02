@@ -1,5 +1,6 @@
 package CaptainsLog.campaign.intel;
 
+import CaptainsLog.Constants;
 import CaptainsLog.ui.ButtonRow;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.button.ClearAll;
