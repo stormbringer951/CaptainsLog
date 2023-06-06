@@ -5,6 +5,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 public final class Constants {
 
     public static final String MOD_ID = "CaptainsLog";
+    public static final String CUSTOM_LOG_CREATE_HOTKEY = "CaptainsLog_Create_Custom_Log_Hotkey";
 
     // Keys used by Stelnet to classify intel for exploration visibility board
     public static final String MEGASTRUCTURE_STELNET_INTEL_TYPE_SUBSTRING = "Structure";
