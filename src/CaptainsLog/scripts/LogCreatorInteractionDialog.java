@@ -2,7 +2,7 @@ package CaptainsLog.scripts;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.campaign.intel.FleetLogIntel;
-import CaptainsLog.campaign.intel.FleetLogPanelPlugin;
+import CaptainsLog.ui.TextAreaPanelPlugin;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.delegate.SectorEntityTokenSelectorDelegate;
 import CaptainsLog.ui.delegate.StarSystemSelectorDelegate;
@@ -98,7 +98,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         float bodyHeight = height - titleHeight - pad;
         TextArea title = new TextArea(width, titleHeight, pad);
         title.setInitialText(initialTitle);
-        TextArea body = new TextArea(width, bodyHeight, pad, new FleetLogPanelPlugin());
+        TextArea body = new TextArea(width, bodyHeight, pad, new TextAreaPanelPlugin());
         body.setInitialText(initialBodyText);
         title.setFont(Fonts.ORBITRON_16);
         titleField = title.render(panel, 0, 0);

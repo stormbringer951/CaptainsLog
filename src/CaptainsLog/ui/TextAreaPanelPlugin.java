@@ -1,4 +1,4 @@
-package CaptainsLog.campaign.intel;
+package CaptainsLog.ui;
 
 import CaptainsLog.ui.FieldAwarePanelPlugin;
 import com.fs.starfarer.api.Global;
@@ -9,7 +9,7 @@ import com.fs.starfarer.api.ui.TextFieldAPI;
 import java.util.List;
 import org.lwjgl.input.Keyboard;
 
-public class FleetLogPanelPlugin implements FieldAwarePanelPlugin {
+public class TextAreaPanelPlugin implements FieldAwarePanelPlugin {
 
     private TextFieldAPI field = Global.getSettings().createTextField("", Fonts.DEFAULT_SMALL);
     private float width = 0;
