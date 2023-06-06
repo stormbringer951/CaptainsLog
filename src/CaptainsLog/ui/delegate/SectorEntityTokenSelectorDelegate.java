@@ -7,7 +7,6 @@ import CaptainsLog.ui.select.VerticalSelectionButton;
 import CaptainsLog.ui.select.types.SelectToken;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +26,7 @@ public class SectorEntityTokenSelectorDelegate extends SelectorDelegate<SectorEn
     }
 
     @Override
-    public void createCustomDialog(CustomPanelAPI customPanelAPI, CustomDialogCallback customDialogCallback) {
-
-    }
+    public void createCustomDialog(CustomPanelAPI customPanelAPI, CustomDialogCallback customDialogCallback) {}
 
     @Override
     public void customDialogConfirm() {
