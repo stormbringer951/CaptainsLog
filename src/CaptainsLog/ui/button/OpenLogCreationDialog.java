@@ -34,7 +34,7 @@ public class OpenLogCreationDialog implements Button {
 
     @Override
     public String getName() {
-        return "Create log entry";
+        return "Create new log entry";
     }
 
     @Override

@@ -1,7 +1,7 @@
 package CaptainsLog.scripts;
 
 import CaptainsLog.campaign.intel.CustomMessageIntel;
-import CaptainsLog.campaign.intel.FleetLogIntel;
+import CaptainsLog.campaign.intel.CustomMessageControlPanel;
 import CaptainsLog.ui.TextAreaPanelPlugin;
 import CaptainsLog.ui.TextArea;
 import CaptainsLog.ui.delegate.SectorEntityTokenSelectorDelegate;
@@ -122,7 +122,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
                 if (ui != null) {
                     // TODO: only used when running from intel screen, convert this into a callback
                     ui.recreateIntelUI();
-                    ui.updateUIForItem(FleetLogIntel.getInstance());
+                    ui.updateUIForItem(CustomMessageControlPanel.getInstance());
                 }
                 dialog.dismiss();
                 break;
