@@ -28,7 +28,7 @@ public class CustomMessageControlPanel extends BaseIntel {
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
         int numberOfEntries = Global.getSector().getIntelManager().getIntel(CustomMessageIntel.class).size();
-        info.addTitle("Captain's Logbook", getTitleColor(mode));
+        info.addTitle("Captain's Log", getTitleColor(mode));
         info.addPara(
             MessageFormat.format(
                 "There {0, choice, 0#are 0 entries|1#is 1 entry|1<are {0, number, integer} entries} in your logbook.",
@@ -82,7 +82,7 @@ public class CustomMessageControlPanel extends BaseIntel {
 
     @Override
     public String getSmallDescriptionTitle() {
-        return "Captain's Logbook";
+        return "Captain's Log";
 
     }
 }
