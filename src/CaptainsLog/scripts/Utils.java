@@ -124,7 +124,12 @@ public final class Utils {
         ) {
             return false;
         }
-        SalvageableIntel report = new SalvageableIntel(token);
+        SalvageableIntel report;
+        if (IntelValidityUtils.isDerelictShip(token)) {
+            report = new SalvageableShipIntel(token);
+        } else {
+            report = new SalvageableMiscIntel(token);
+        }
         report.setNew(showMessage);
         Global.getSector().getIntelManager().addIntel(report, !showMessage);
         log.info("Created report for " + token.getFullName() + " in " + getSystemNameOrHyperspace(token));

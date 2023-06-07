@@ -5,42 +5,21 @@ import CaptainsLog.SettingsUtils;
 import CaptainsLog.scripts.Utils;
 import CaptainsLog.ui.button.IgnoreSalvage;
 import CaptainsLog.ui.button.LayInCourse;
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
-import com.fs.starfarer.api.impl.campaign.procgen.SalvageEntityGenDataSpec;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import java.awt.Color;
-import java.util.List;
+import java.awt.*;
 import java.util.Set;
-import org.apache.log4j.Logger;
 
-public class SalvageableIntel extends AutomatedIntel {
-
-    private static final Logger log = Global.getLogger(SalvageableIntel.class);
-    private final ShipVariantAPI variant;
+public abstract class SalvageableIntel extends AutomatedIntel {
 
     public SalvageableIntel(SectorEntityToken token) {
         super(token);
-        // entity.getCustomPlugin() instanceof DerelictShipEntityPlugin ||
-        // Entities.WRECK.equals(type)
-
-        if (token.getCustomPlugin() instanceof DerelictShipEntityPlugin) {
-            DerelictShipEntityPlugin p = (DerelictShipEntityPlugin) token.getCustomPlugin();
-            variant = Global.getSettings().getVariant(p.getData().ship.variantId);
-        } else {
-            variant = null;
-        }
-
-        float salvageValue = estimateSalvageValue();
-        int rating = getValueRating(salvageValue);
-
-        log.info("Adding intel for new " + getName() + ". Sort value: " + salvageValue + " (" + rating + ")");
     }
+
+    protected abstract void addSalvageableSpecificInfo(TooltipMakerAPI info, float pad, ListInfoMode mode);
 
     @Override
     public void createIntelInfo(TooltipMakerAPI info, ListInfoMode mode) {
@@ -61,16 +40,7 @@ public class SalvageableIntel extends AutomatedIntel {
         }
 
         bullet(info);
-        if (isShip()) {
-            String hullSizeString = Misc.getHullSizeStr(variant.getHullSpec().getHullSize());
-            info.addPara(
-                hullSizeString + "-sized vessel",
-                initPad,
-                getBulletColorForMode(mode),
-                Misc.getHighlightColor(),
-                hullSizeString
-            );
-        }
+        addSalvageableSpecificInfo(info, initPad, mode);
 
         info.addPara(
             Utils.getSystemNameOrHyperspace(token),
@@ -99,7 +69,8 @@ public class SalvageableIntel extends AutomatedIntel {
         Description desc = getDesc();
 
         if (hasImage()) {
-            TooltipMakerAPI text = info.beginImageWithText(getImage(), 48);
+            // TooltipMakerAPI text = info.beginImageWithText(getImage(), 48, 48, true);
+            TooltipMakerAPI text = info.beginImageWithText(getImage(), 48, width, true);
             text.addPara(desc.getText1FirstPara(), Misc.getGrayColor(), opad);
             info.addImageWithText(opad);
         } else {
@@ -120,20 +91,7 @@ public class SalvageableIntel extends AutomatedIntel {
     }
 
     @Override
-    protected String getName() {
-        String name = Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " ";
-        if (isShip()) {
-            // Misc.getHullSizeStr(variant.getHullSpec().getHullSize())
-            name += variant.getHullSpec().getHullName() + " " + variant.getHullSpec().getDesignation();
-        } else {
-            name += token.getFullName();
-        }
-        return name;
-    }
-
-    private boolean isShip() {
-        return variant != null;
-    }
+    protected abstract String getName();
 
     @Override
     public String getIcon() {
@@ -151,69 +109,14 @@ public class SalvageableIntel extends AutomatedIntel {
         return tags;
     }
 
-    private float estimateSalvageValue() {
-        float value = 0;
+    protected abstract boolean hasImage();
 
-        SalvageEntityGenDataSpec salvageSpec = (SalvageEntityGenDataSpec) Global
-            .getSettings()
-            .getSpec(SalvageEntityGenDataSpec.class, token.getCustomEntityType(), true);
+    protected abstract String getImage();
 
-        if (salvageSpec != null) {
-            value += salvageToValue(salvageSpec.getDropValue(), salvageSpec.getDropRandom());
-        }
-        value += salvageToValue(token.getDropValue(), token.getDropRandom());
-        if (isShip()) {
-            value += variant.getHullSpec().getBaseValue();
-        }
-        return value;
-    }
-
-    private float salvageToValue(
-        List<SalvageEntityGenDataSpec.DropData> dropValue,
-        List<SalvageEntityGenDataSpec.DropData> dropRandom
-    ) {
-        float value = 0;
-        for (SalvageEntityGenDataSpec.DropData data : dropValue) {
-            value += data.value;
-        }
-        for (SalvageEntityGenDataSpec.DropData data : dropRandom) {
-            if (data.value > 0) {
-                value += data.value;
-            } else {
-                value += 500; // close enough - Alex
-            }
-        }
-        return value;
-    }
-
-    private boolean hasImage() {
-        return getImage() != null && !getImage().equals("");
-    }
-
-    private String getImage() {
-        if (isShip()) {
-            return variant.getHullSpec().getSpriteName();
-        } else {
-            return token.getCustomEntitySpec().getSpriteName();
-        }
-    }
-
-    private Description getDesc() {
-        if (isShip()) {
-            return Global.getSettings().getDescription(variant.getHullSpec().getDescriptionId(), Description.Type.SHIP);
-        } else {
-            return Global.getSettings().getDescription(token.getCustomDescriptionId(), Description.Type.CUSTOM);
-        }
-    }
+    protected abstract Description getDesc();
 
     @Override
-    public String getSmallDescriptionTitle() {
-        if (isShip()) {
-            return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " Ship";
-        } else {
-            return Constants.SALVAGE_STELNET_INTEL_TYPE_SUBSTRING + " " + token.getFullName();
-        }
-    }
+    public abstract String getSmallDescriptionTitle();
 
     @Override
     public boolean shouldRemoveIntel() {
@@ -228,39 +131,6 @@ public class SalvageableIntel extends AutomatedIntel {
     @Override
     public IntelSortTier getSortTier() {
         return IntelSortTier.TIER_5;
-    }
-
-    /**
-     * @param salvageValue estimated value of the salvage (ignored for ships)
-     * @return number between 0 and 4
-     */
-    private int getValueRating(float salvageValue) {
-        if (isShip()) {
-            switch (variant.getHullSize()) {
-                case FRIGATE:
-                    return 1;
-                case DESTROYER:
-                    return 2;
-                case CRUISER:
-                    return 3;
-                case CAPITAL_SHIP:
-                    return 4;
-                default:
-                    return 0;
-            }
-        } else {
-            if (salvageValue < 5000f) {
-                return 1;
-            } else if (salvageValue < 10000f) {
-                return 2;
-            } else if (salvageValue < 15000f) {
-                return 3;
-            } else if (salvageValue < 20000f) {
-                return 4;
-            } else {
-                return 0;
-            }
-        }
     }
 
     @Override

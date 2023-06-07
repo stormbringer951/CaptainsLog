@@ -4,6 +4,7 @@ import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
 
@@ -81,5 +82,10 @@ public class IntelValidityUtils {
     // This fixes a possible regression where a SectorEntityToken is not hidden but we don't have access to the map yet
     private static boolean isInUnexploredSystem(SectorEntityToken token) {
         return token.getStarSystem() != null && !token.getStarSystem().isEnteredByPlayer();
+    }
+
+    public static boolean isDerelictShip(SectorEntityToken token) {
+        // Entities.WRECK.equals(type)
+        return token.getCustomPlugin() instanceof DerelictShipEntityPlugin;
     }
 }
