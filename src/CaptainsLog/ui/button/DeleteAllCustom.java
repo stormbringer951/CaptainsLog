@@ -8,6 +8,7 @@ import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
+import java.util.List;
 
 public class DeleteAllCustom implements Button {
 
@@ -17,7 +18,9 @@ public class DeleteAllCustom implements Button {
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        for (IntelInfoPlugin i : intelManager.getIntel(CustomMessageIntel.class)) {
+        List<IntelInfoPlugin> toRemove = intelManager.getIntel(CustomMessageIntel.class);
+
+        for (IntelInfoPlugin i : toRemove) {
             intelManager.removeIntel(i);
         }
     }
