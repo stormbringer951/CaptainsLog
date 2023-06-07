@@ -1,6 +1,7 @@
 package CaptainsLog.campaign.intel;
 
 import CaptainsLog.Constants;
+import CaptainsLog.ui.button.DeleteAllCustom;
 import CaptainsLog.ui.button.OpenLogCreationDialog;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -56,6 +57,7 @@ public class CustomMessageControlPanel extends BaseIntel {
         );
 
         addGenericButton(info, width, new OpenLogCreationDialog(this));
+        addGenericButton(info, width, new DeleteAllCustom());
     }
 
     @Override
