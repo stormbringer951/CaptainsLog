@@ -61,8 +61,8 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
 
         OptionPanelAPI options = dialog.getOptionPanel();
         options.addOption("Create", OptionId.CREATE);
-        options.addOption("Select object to attach to log", OptionId.PICK_TARGET);
-        options.addOption("Toggle log importance", OptionId.TOGGLE_IMPORTANT);
+        // options.addOption("Select object to attach to log", OptionId.PICK_TARGET);
+        options.addOption(isImportant(), OptionId.TOGGLE_IMPORTANT);
         options.addOption("Cancel", OptionId.CANCEL);
         dialog.setOptionOnEscape(null, OptionId.CANCEL);
 
@@ -244,5 +244,13 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     @Override
     public Map<String, MemoryAPI> getMemoryMap() {
         return null;
+    }
+
+    private String isImportant() {
+        if (isImportant) {
+            return "Set as unimportant";
+        } else {
+            return "Set as important";
+        }
     }
 }
