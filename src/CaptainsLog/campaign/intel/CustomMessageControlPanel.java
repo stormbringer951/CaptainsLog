@@ -45,14 +45,14 @@ public class CustomMessageControlPanel extends BaseIntel {
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         int numberOfEntries = Global.getSector().getIntelManager().getIntel(CustomMessageIntel.class).size();
         info.addPara(
-                MessageFormat.format(
-                        "There {0, choice, 0#are 0 entries|1#is 1 entry|1<are {0, number, integer} entries} in your logbook.",
-                        numberOfEntries
-                ),
-                4,
-                Misc.getTextColor(),
-                Misc.getHighlightColor(),
-                String.valueOf(numberOfEntries)
+            MessageFormat.format(
+                "There {0, choice, 0#are 0 entries|1#is 1 entry|1<are {0, number, integer} entries} in your logbook.",
+                numberOfEntries
+            ),
+            4,
+            Misc.getTextColor(),
+            Misc.getHighlightColor(),
+            String.valueOf(numberOfEntries)
         );
 
         addGenericButton(info, width, new OpenLogCreationDialog(this));
@@ -83,6 +83,5 @@ public class CustomMessageControlPanel extends BaseIntel {
     @Override
     public String getSmallDescriptionTitle() {
         return "Captain's Log";
-
     }
 }

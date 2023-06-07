@@ -6,7 +6,6 @@ import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
@@ -51,7 +50,7 @@ public class TextAreaPanelPlugin implements FieldAwarePanelPlugin {
             java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
             java.awt.datatransfer.Transferable transferable = clipboard.getContents(null);
             if (transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
-                return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+                return (String) transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
             }
         } catch (Exception e) {
             log.error("Exception while getting clipboard.");

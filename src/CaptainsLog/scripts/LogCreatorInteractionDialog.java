@@ -1,10 +1,10 @@
 package CaptainsLog.scripts;
 
 import CaptainsLog.SettingsUtils;
-import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.campaign.intel.CustomMessageControlPanel;
-import CaptainsLog.ui.TextAreaPanelPlugin;
+import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.ui.TextArea;
+import CaptainsLog.ui.TextAreaPanelPlugin;
 import CaptainsLog.ui.delegate.SectorEntityTokenSelectorDelegate;
 import CaptainsLog.ui.delegate.StarSystemSelectorDelegate;
 import com.fs.starfarer.api.Global;
@@ -207,13 +207,13 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         TextPanelAPI panel = dialog.getTextPanel();
         panel.clear();
         panel.addPara("Log metadata");
-//        String selected = "None";
-//        if (selectedObject != null) {
-//            // TODO: this does not work for StarSystemAPI getHyperspaceAnchor - "unknown location"
-//            selected = selectedObject.getName();
-//        }
-//         panel.addPara("Log attached to: " + selected);
-//         panel.highlightInLastPara(selected);
+        //        String selected = "None";
+        //        if (selectedObject != null) {
+        //            // TODO: this does not work for StarSystemAPI getHyperspaceAnchor - "unknown location"
+        //            selected = selectedObject.getName();
+        //        }
+        //         panel.addPara("Log attached to: " + selected);
+        //         panel.highlightInLastPara(selected);
         panel.addPara("Important: " + isImportant);
         Highlights highlights = new Highlights();
         highlights.append(Boolean.toString(true), Misc.getPositiveHighlightColor());
