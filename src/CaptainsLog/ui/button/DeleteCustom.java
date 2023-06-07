@@ -7,11 +7,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import org.lwjgl.input.Keyboard;
 
-public class IgnoreCustom implements Button {
+public class DeleteCustom implements Button {
 
     private final CustomMessageIntel intel;
 
-    public IgnoreCustom(CustomMessageIntel intel) {
+    public DeleteCustom(CustomMessageIntel intel) {
         this.intel = intel;
     }
 

@@ -3,7 +3,7 @@ package CaptainsLog.campaign.intel;
 import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.scripts.Utils;
-import CaptainsLog.ui.button.IgnoreCustom;
+import CaptainsLog.ui.button.DeleteCustom;
 import CaptainsLog.ui.button.LayInCourse;
 import CaptainsLog.ui.button.ToggleCustom;
 import com.fs.starfarer.api.Global;
@@ -102,7 +102,7 @@ public class CustomMessageIntel extends BaseIntel {
         if (!isEnding()) {
             addGenericButton(info, width, new LayInCourse(targetLocation));
             addGenericButton(info, width, new ToggleCustom(showOnMap, this));
-            addGenericButton(info, width, new IgnoreCustom(this));
+            addGenericButton(info, width, new DeleteCustom(this));
         }
     }
 
