@@ -59,6 +59,7 @@ public class IntelValidityUtils {
             objectDoesntExist(token) ||
             objectNotFoundYet(token) ||
             isInUnexploredSystem(token) ||
+            token.hasTag(Tags.CRYOSLEEPER) ||
             !token.hasTag(Tags.SALVAGEABLE) ||
             token.getMemoryWithoutUpdate().getBoolean(Constants.IGNORE_SALVAGEABLE_MEM_FLAG) ||
             token.hasTag("nex_museum_ship") ||

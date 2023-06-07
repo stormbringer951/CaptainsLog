@@ -18,33 +18,46 @@ import java.util.Set;
 
 public class CustomMessageIntel extends BaseIntel {
 
-    private final String title;
-    private final String message;
-    private final String locationString;
-
-    private boolean showOnMap;
     private final SectorEntityToken locationCreated;
-    private long timeCreated;
+    private final long timeCreated;
+
+    private String message;
+    private String title;
+    private SectorEntityToken targetLocation;
+    private long timeModified;
+    private boolean showOnMap;
 
     public CustomMessageIntel(String title, String message) {
-        // todo: handle newlines
-        LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
+        this(title, message, null, SettingsUtils.markCustomMessagesAsImportant());
+    }
 
+    public CustomMessageIntel(String title, String message, SectorEntityToken selected, boolean isImportant) {
+        LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
         this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
+        if (selected != null) {
+            this.targetLocation = selected;
+        } else {
+            this.targetLocation = this.locationCreated;
+        }
         this.timeCreated = Global.getSector().getClock().getTimestamp();
-        this.locationString = "Location: " + getLocation();
+        this.timeModified = this.timeCreated;
         this.title = title;
         this.message = message;
         this.showOnMap = true;
-        setImportant(SettingsUtils.markCustomMessagesAsImportant());
+        setImportant(isImportant);
     }
 
     public CustomMessageIntel(String message) {
-        this(null, message);
+        this("Captain's Log", message);
     }
 
-    private String getLocation() {
-        return Utils.getSystemNameOrHyperspace(locationCreated);
+    private String getLocationString() {
+        String locationString = "Location: ";
+        if (targetLocation != locationCreated) {
+            locationString += targetLocation.getName(); // for locationCreated this is just "Waypoint"
+        }
+        locationString += Utils.getSystemNameOrHyperspace(locationCreated);
+        return locationString;
     }
 
     public void toggleShow() {
@@ -57,9 +70,6 @@ public class CustomMessageIntel extends BaseIntel {
         Color tc = getBulletColorForMode(mode);
 
         String title = this.title;
-        if (title == null) {
-            title = Constants.CUSTOM_MESSAGE_INTEL_TAG;
-        }
 
         if (isEnding()) {
             title += " - Deleted";
@@ -74,46 +84,26 @@ public class CustomMessageIntel extends BaseIntel {
             initPad = 3f;
         }
 
-        float days = Math.max(1, getDaysSincePlayerVisible());
-        String dateOrLegacy = "%s " + getDaysString(days) + " ago";
-        if (timeCreated != 0) {
-            CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
-            dateOrLegacy = "Added " + clock.getDateString() + " (" + dateOrLegacy + ")";
-        }
-
         bullet(info);
-        info.addPara(dateOrLegacy, initPad, tc, Misc.getHighlightColor(), getDays(days));
-        info.addPara(locationString, tc, initPad);
+        addTimeStamp(info, initPad);
+        info.addPara(getLocationString(), tc, initPad);
         unindent(info);
-        // Captain's Log
-        // -- [date] ([number] days ago)
-        // -- location
     }
 
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
-        Color tc = Misc.getTextColor();
 
-        info.addPara("The log entry you composed:", opad);
-
-        info.addPara(message, Misc.getPositiveHighlightColor(), opad);
-
-        float days = getDaysSincePlayerVisible();
-        if (days >= 1) {
-            addDays(info, "ago.", days, tc, opad + 10);
-        }
+        info.addPara(message, Misc.getTextColor(), 0);
 
         addTimeStamp(info, opad);
-        info.addPara(locationString, opad);
+        info.addPara(getLocationString(), Misc.getGrayColor(), opad);
 
         if (!isEnding()) {
-            addGenericButton(info, width, new LayInCourse(locationCreated));
+            addGenericButton(info, width, new LayInCourse(targetLocation));
             addGenericButton(info, width, new ToggleCustom(showOnMap, this));
             addGenericButton(info, width, new IgnoreCustom(this));
         }
-        // TODO: Add generic buttons for other intel classes
-        // (Ignore this/Ignore all of this type)
     }
 
     @Override
@@ -138,17 +128,13 @@ public class CustomMessageIntel extends BaseIntel {
 
     @Override
     public SectorEntityToken getEntity() {
-        return locationCreated;
+        return targetLocation;
     }
 
     private void addTimeStamp(TooltipMakerAPI info, float opad) {
-        if (timestamp == null) {
-            timestamp = Global.getSector().getClock().getTimestamp();
-        }
-
-        CampaignClockAPI clock = Global.getSector().getClock().createClock(timestamp);
-        float days = Math.max(1, getDaysSincePlayerVisible());
-        info.addPara(clock.getDateString() + " (" + (int) days + " " + getDaysString(days) + " ago)", opad);
+        int getDays = Math.round(Global.getSector().getClock().getElapsedDaysSince(timeCreated));
+        CampaignClockAPI clock = Global.getSector().getClock().createClock(timeCreated);
+        info.addPara(clock.getDateString() + " (" + getDays + " days ago)", Misc.getGrayColor(), opad);
     }
 
     @Override

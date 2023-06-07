@@ -1,10 +1,11 @@
 package CaptainsLog;
 
-import CaptainsLog.campaign.intel.FleetLogIntel;
+import CaptainsLog.campaign.intel.CustomMessageControlPanel;
 import CaptainsLog.campaign.listeners.LocationChangeListener;
 import CaptainsLog.campaign.listeners.RemovableSalvageListener;
 import CaptainsLog.campaign.listeners.SettingsChangeListener;
 import CaptainsLog.scripts.CaptainsLogEveryFrame;
+import CaptainsLog.scripts.CaptainsLogKeydownDetector;
 import CaptainsLog.scripts.RuinObserver;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -14,10 +15,11 @@ public class CaptainsLogModPlugin extends BaseModPlugin {
 
     @Override
     public void onGameLoad(boolean newGame) {
-        FleetLogIntel.getInstance();
+        CustomMessageControlPanel.getInstance();
 
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
         Global.getSector().addTransientScript(new RuinObserver());
+        Global.getSector().addTransientScript(new CaptainsLogKeydownDetector());
 
         // Histidine: make sure you don't add a new listener on each game load unless it's transient though
         Global.getSector().getListenerManager().addListener(new RemovableSalvageListener(), true);

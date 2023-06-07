@@ -1,6 +1,8 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
 CaptainsLog_settingsHeader,Options Header,Header,Captain's Log Options,,,,,
-CaptainsLog_Mark_Custom_Messages_Important,Mark Captain's Log Messages Important,Boolean,true,,"Marks Captain's Log custom messages as important by default.",,,
+CaptainsLog_Mark_Custom_Messages_Important,Mark Captain's Log Messages Important,Boolean,true,,Marks Captain's Log custom messages as important by default.,,,
+CaptainsLog_Create_Custom_Log_Hotkey,Hotkey to open custom log interaction dialogue,Keycode,25,,Hotkey to open custom log interaction dialogue.,,,
+,,,,,,,,
 CaptainsLog_automaticIntelSettingsHeader,Options Header,Header,Auto-generated Intel Options,,,,,
 CaptainsLog_Toggle_Explanation,Toggles Explanation,Text,"These control whether intel tracking is enabled/disabled for categories of automatically generated intel and whether intel reports are created or deleted.
 Stellar Networks can be used to toggle the visibility of intel.",,,,,

@@ -36,7 +36,7 @@ public class ToggleCustom implements Button {
 
     @Override
     public String getName() {
-        return showOnMap ? "Hide On Map" : "Show On Map";
+        return showOnMap ? "Hide location" : "Show location";
     }
 
     @Override

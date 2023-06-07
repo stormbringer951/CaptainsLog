@@ -3,6 +3,7 @@ package CaptainsLog.ui.button;
 import CaptainsLog.Constants;
 import CaptainsLog.campaign.intel.automated.RuinsIntel;
 import CaptainsLog.ui.Button;
+import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -49,7 +50,7 @@ public class IgnoreRuins implements Button {
 
     @Override
     public int getShortcut() {
-        return Keyboard.KEY_I;
+        return Keyboard.KEY_G;
     }
 
     @Override
