@@ -1,5 +1,6 @@
 package CaptainsLog.scripts;
 
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.campaign.intel.CustomMessageControlPanel;
 import CaptainsLog.ui.TextAreaPanelPlugin;
@@ -32,7 +33,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     private TextFieldAPI titleField;
     private TextFieldAPI bodyField;
     private SectorEntityToken selectedObject;
-    private boolean isImportant = true;
+    private boolean isImportant;
 
     private final String initialTitle;
     private final String initialBodyText;
@@ -47,6 +48,7 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
         this.initialBodyText = text;
         this.selectedObject = selectedObject;
         this.ui = ui;
+        this.isImportant = SettingsUtils.markCustomMessagesAsImportant();
     }
 
     @Override
