@@ -1,5 +1,6 @@
 package CaptainsLog.ui.button;
 
+import CaptainsLog.Constants;
 import CaptainsLog.scripts.LogCreatorInteractionDialog;
 import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.Global;
@@ -7,6 +8,8 @@ import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
+import lunalib.lunaSettings.LunaSettings;
+import org.lwjgl.input.Keyboard;
 
 public class OpenLogCreationDialog implements Button {
 
@@ -39,7 +42,12 @@ public class OpenLogCreationDialog implements Button {
 
     @Override
     public int getShortcut() {
-        return 0;
+        Integer hotkey = LunaSettings.getInt(Constants.MOD_ID, Constants.CUSTOM_LOG_CREATE_HOTKEY);
+        if (hotkey == null) {
+            return 0;
+        } else {
+            return hotkey;
+        }
     }
 
     @Override
