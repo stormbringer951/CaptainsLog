@@ -1,9 +1,12 @@
 package CaptainsLog.ui;
 
+import CaptainsLog.campaign.intel.automated.SalvageableIntel;
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.TextFieldAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import org.apache.log4j.Logger;
 
 public class TextArea {
 
@@ -32,9 +35,9 @@ public class TextArea {
         TextFieldAPI field = render(tooltip);
         if (plugin != null) {
             plugin.setTextField(field, width, height);
-            // multi-lines break cursor display
-            field.hideCursor();
-            field.setLimitByStringWidth(false);
+            field.hideCursor(); // multi-lines break cursor display
+            field.setLimitByStringWidth(false); // allows us to type past the column width
+            field.setHandleCtrlV(false); // implement clipboard ourselves since it otherwise strips out '\n'
         }
         field.setUndoOnEscape(false);
         inner.addUIElement(tooltip);

@@ -1,15 +1,18 @@
 package CaptainsLog.ui;
 
-import CaptainsLog.ui.FieldAwarePanelPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 public class TextAreaPanelPlugin implements FieldAwarePanelPlugin {
+
+    private static final Logger log = Global.getLogger(TextAreaPanelPlugin.class);
 
     private TextFieldAPI field = Global.getSettings().createTextField("", Fonts.DEFAULT_SMALL);
     private float width = 0;
@@ -42,6 +45,20 @@ public class TextAreaPanelPlugin implements FieldAwarePanelPlugin {
         return !field.getTextLabelAPI().getPosition().containsEvent(event);
     }
 
+    // using this impl from org.lwjgl.J2SESysImplementation to avoid line ending messiness
+    private String getClipboard() {
+        try {
+            java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+            java.awt.datatransfer.Transferable transferable = clipboard.getContents(null);
+            if (transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+                return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+            }
+        } catch (Exception e) {
+            log.error("Exception while getting clipboard.");
+        }
+        return null;
+    }
+
     @Override
     public void processInput(List<InputEventAPI> events) {
         field.getTextLabelAPI().getPosition().setSize(width, height);
@@ -66,6 +83,10 @@ public class TextAreaPanelPlugin implements FieldAwarePanelPlugin {
                 shouldRecaptureFocus = false;
             } else if (event.getEventValue() == Keyboard.KEY_RETURN) {
                 field.setText(field.getText() + "\n");
+                field.grabFocus();
+            } else if (event.getEventValue() == Keyboard.KEY_V && event.isCtrlDown()) {
+                // limitations: is grabbing the key up event so user must hold CTRL down longer until V key up.
+                field.setText(field.getText() + getClipboard());
                 field.grabFocus();
             }
         }
