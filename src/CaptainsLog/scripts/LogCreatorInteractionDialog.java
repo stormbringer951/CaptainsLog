@@ -206,7 +206,13 @@ public class LogCreatorInteractionDialog implements InteractionDialogPlugin {
     public void redrawTextPanel() {
         TextPanelAPI panel = dialog.getTextPanel();
         panel.clear();
-        panel.addPara("Log metadata");
+
+        panel.addPara("Instructions", Misc.getHighlightColor());
+        panel.addPara("Shift-backspace clears the text field.");
+        panel.addPara("Ctrl-backspace deletes the last word.");
+        panel.addPara("To paste text, you must still have Ctrl held down when V is released.");
+
+        panel.addPara("Log metadata", Misc.getHighlightColor());
         //        String selected = "None";
         //        if (selectedObject != null) {
         //            // TODO: this does not work for StarSystemAPI getHyperspaceAnchor - "unknown location"
