@@ -46,7 +46,7 @@ public class IgnoreSalvage implements Button {
 
     @Override
     public int getShortcut() {
-        return Keyboard.KEY_I;
+        return Keyboard.KEY_G;
     }
 
     @Override
