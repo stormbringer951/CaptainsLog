@@ -1,5 +1,6 @@
 package CaptainsLog.ui.button;
 
+import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.Global;
@@ -25,7 +26,10 @@ public class CreateLogEntry implements Button {
     public void buttonPressConfirmed(IntelUIAPI ui) {
         String titleText = title.getText().trim();
         String bodyText = body.getText().trim();
-        Global.getSector().getIntelManager().addIntel(new CustomMessageIntel(titleText, bodyText));
+        Global
+            .getSector()
+            .getIntelManager()
+            .addIntel(new CustomMessageIntel(titleText, bodyText, null, SettingsUtils.markCustomMessagesAsImportant()));
         ui.recreateIntelUI();
     }
 
