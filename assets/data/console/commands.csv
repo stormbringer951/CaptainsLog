@@ -1,3 +1,2 @@
 command,class,tags,syntax,help
 AddStablePoint,CaptainsLog.console.AddStablePoint,+ACI-campaign, captainslog+ACI-,AddStablePoint (no arguments),Adds a new stable point
-RemoveVanillaFleetLog,CaptainsLog.console.RemoveVanillaFleetLog,+ACI-campaign, captainslog+ACI-,RemoveVanillaFleetLog (no arguments),Removes all fleet log intel entries added by the base game.
