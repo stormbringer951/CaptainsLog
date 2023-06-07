@@ -1,7 +1,6 @@
 package CaptainsLog.campaign.intel;
 
 import CaptainsLog.Constants;
-import CaptainsLog.SettingsUtils;
 import CaptainsLog.scripts.Utils;
 import CaptainsLog.ui.button.DeleteCustom;
 import CaptainsLog.ui.button.LayInCourse;
@@ -27,10 +26,6 @@ public class CustomMessageIntel extends BaseIntel {
     private long timeModified;
     private boolean showOnMap;
 
-    public CustomMessageIntel(String title, String message) {
-        this(title, message, null, SettingsUtils.markCustomMessagesAsImportant());
-    }
-
     public CustomMessageIntel(String title, String message, SectorEntityToken selected, boolean isImportant) {
         LocationAPI location = Global.getSector().getPlayerFleet().getContainingLocation();
         this.locationCreated = location.createToken(Global.getSector().getPlayerFleet().getLocation());
@@ -45,10 +40,6 @@ public class CustomMessageIntel extends BaseIntel {
         this.message = message;
         this.showOnMap = true;
         setImportant(isImportant);
-    }
-
-    public CustomMessageIntel(String message) {
-        this("Captain's Log", message);
     }
 
     private String getLocationString() {
