@@ -5,7 +5,7 @@ import com.fs.starfarer.api.campaign.StarSystemAPI;
 
 public class SelectStarSystem implements Selection<StarSystemAPI> {
 
-    private StarSystemAPI system;
+    private final StarSystemAPI system;
 
     public SelectStarSystem(StarSystemAPI system) {
         this.system = system;

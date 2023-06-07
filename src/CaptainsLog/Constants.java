@@ -23,10 +23,10 @@ public final class Constants {
     public static final String IGNORE_SALVAGEABLE_MEM_FLAG = "$captainsLog_ignoreSalvageable";
 
     // Intel category tags
-    public static String STELNET_FILTERED_INTEL_TAG = Tags.INTEL_EXPLORATION;
-    public static String COMM_RELAY_INTEL_TAG = "Comm Relays";
-    public static String CUSTOM_MESSAGE_INTEL_TAG = Tags.INTEL_FLEET_LOG;
-    public static String MEGASTRUCTURE_INTEL_TAG = Tags.INTEL_EXPLORATION;
-    public static String RUINS_INTEL_TAG = "Unexplored Ruins";
-    public static String SALVAGEABLE_INTEL_TAG = "Salvage";
+    public static final String STELNET_FILTERED_INTEL_TAG = Tags.INTEL_EXPLORATION;
+    public static final String COMM_RELAY_INTEL_TAG = "Comm Relays";
+    public static final String CUSTOM_MESSAGE_INTEL_TAG = Tags.INTEL_FLEET_LOG;
+    public static final String MEGASTRUCTURE_INTEL_TAG = Tags.INTEL_EXPLORATION;
+    public static final String RUINS_INTEL_TAG = "Unexplored Ruins";
+    public static final String SALVAGEABLE_INTEL_TAG = "Salvage";
 }
