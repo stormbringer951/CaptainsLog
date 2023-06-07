@@ -10,10 +10,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 
 public class DeleteAllCustom implements Button {
-    @Override
-    public void buttonPressCancelled(IntelUIAPI ui) {
 
-    }
+    @Override
+    public void buttonPressCancelled(IntelUIAPI ui) {}
 
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
@@ -45,9 +44,7 @@ public class DeleteAllCustom implements Button {
     }
 
     @Override
-    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {
-
-    }
+    public void setPosition(UIComponentAPI lastElement, UIComponentAPI thisElement) {}
 
     @Override
     public boolean shouldCreateButton() {
