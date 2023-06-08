@@ -9,11 +9,8 @@ import org.apache.log4j.Logger;
 
 public class SalvageableMiscIntel extends SalvageableIntel {
 
-    private static final Logger log = Global.getLogger(SalvageableMiscIntel.class);
-
     public SalvageableMiscIntel(SectorEntityToken token) {
         super(token);
-        log.info("Adding intel for new " + getName());
     }
 
     @Override

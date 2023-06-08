@@ -4,7 +4,6 @@ import CaptainsLog.Constants;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -12,16 +11,11 @@ import org.apache.log4j.Logger;
 
 public class SalvageableShipIntel extends SalvageableIntel {
 
-    private static final Logger log = Global.getLogger(SalvageableShipIntel.class);
     private final ShipVariantAPI variant;
 
-    public SalvageableShipIntel(SectorEntityToken token) {
+    public SalvageableShipIntel(SectorEntityToken token, ShipVariantAPI variant) {
         super(token);
-        // Entities.WRECK.equals(type)
-        DerelictShipEntityPlugin p = (DerelictShipEntityPlugin) token.getCustomPlugin();
-        variant = Global.getSettings().getVariant(p.getData().ship.variantId);
-
-        log.info("Adding intel for new " + getName());
+        this.variant = variant;
     }
 
     @Override

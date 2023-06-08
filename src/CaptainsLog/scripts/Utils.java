@@ -8,8 +8,11 @@ import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
+import java.awt.*;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -126,7 +129,21 @@ public final class Utils {
         }
         SalvageableIntel report;
         if (IntelValidityUtils.isDerelictShip(token)) {
-            report = new SalvageableShipIntel(token);
+            ShipVariantAPI variant = getVariant((DerelictShipEntityPlugin) token.getCustomPlugin());
+            if (variant != null) {
+                report = new SalvageableShipIntel(token, variant);
+            } else {
+                log.error("Cannot detect derelict ship type; defaulting to salvageable report.");
+                Global
+                    .getSector()
+                    .getCampaignUI()
+                    .addMessage(
+                        "Captain's Log: cannot detect derelict ship type; defaulting to salvageable report. Please make a copy of this save and report this bug on Discord or forums.",
+                        Misc.getNegativeHighlightColor()
+                    );
+                report = new SalvageableMiscIntel(token); // Graceful recovery
+                // Once bug has been fixed, user can disable salvageable intel then re-enable to get the correct intel
+            }
         } else {
             report = new SalvageableMiscIntel(token);
         }
@@ -205,6 +222,16 @@ public final class Utils {
                     Misc.getHighlightColor(),
                     Misc.getHighlightColor()
                 );
+        }
+    }
+
+    public static ShipVariantAPI getVariant(DerelictShipEntityPlugin plugin) {
+        if (plugin.getData().ship.variantId != null) {
+            return Global.getSettings().getVariant(plugin.getData().ship.variantId);
+        } else if (plugin.getData().ship.variant != null) {
+            return plugin.getData().ship.variant;
+        } else {
+            return null;
         }
     }
 }
