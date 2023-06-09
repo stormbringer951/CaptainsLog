@@ -1,10 +1,15 @@
 Version 0.2.0
 
-- Fix bug that allowed players to use "lay in course" button to repeatedly salvage the same object.
-- Automatically log the location of Comm Relays located outside of the Core Worlds
+- Add GUI with multi-line text editing for writing Captain's Log custom messages
+  - Accessible from the control panel in the intel screen or using the shortcut (default P) in the campaign
+- Automatically log the location of Comm Relays located outside the Core Worlds
 - Automatically log the location of Coronal Hypershunts
 - Add version checker changelog support
 - Add LunaLib support
 - Add LunaLib settings to enable/disable each type of automated intel logging
 - Add LunaLib settings to set whether Captain's Log custom log messages should be marked as important by default
 - Rework intel reports to more closely follow vanilla style
+- Removed console command support (most functionality ported to GUI functions)
+- Change ignore hotkeys to use g rather than i
+- Updated salvageable ship intels to use the ship sprite as the icon rather than the map icon
+- Fix bug that allowed players to use "lay in course" button to repeatedly salvage the same object.

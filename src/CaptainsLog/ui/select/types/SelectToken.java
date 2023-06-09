@@ -5,7 +5,7 @@ import com.fs.starfarer.api.campaign.SectorEntityToken;
 
 public class SelectToken implements Selection<SectorEntityToken> {
 
-    SectorEntityToken token;
+    private final SectorEntityToken token;
 
     public SelectToken(SectorEntityToken token) {
         this.token = token;

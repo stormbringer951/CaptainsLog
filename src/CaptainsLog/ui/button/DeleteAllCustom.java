@@ -1,5 +1,6 @@
 package CaptainsLog.ui.button;
 
+import CaptainsLog.campaign.intel.CustomMessageControlPanel;
 import CaptainsLog.campaign.intel.CustomMessageIntel;
 import CaptainsLog.ui.Button;
 import com.fs.starfarer.api.Global;
@@ -8,6 +9,7 @@ import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
 import com.fs.starfarer.api.ui.IntelUIAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
+import java.util.List;
 
 public class DeleteAllCustom implements Button {
 
@@ -17,15 +19,23 @@ public class DeleteAllCustom implements Button {
     @Override
     public void buttonPressConfirmed(IntelUIAPI ui) {
         IntelManagerAPI intelManager = Global.getSector().getIntelManager();
-        for (IntelInfoPlugin i : intelManager.getIntel(CustomMessageIntel.class)) {
-            intelManager.removeIntel(i);
+        ui.updateIntelList();
+        List<IntelInfoPlugin> toRemove = intelManager.getIntel(CustomMessageIntel.class);
+
+        for (IntelInfoPlugin i : toRemove) {
+            if (i instanceof CustomMessageIntel) {
+                CustomMessageIntel c = (CustomMessageIntel) i;
+                c.endImmediately();
+            }
         }
+        ui.updateIntelList();
+        ui.selectItem(intelManager.getFirstIntel(CustomMessageControlPanel.class));
+        // ui.recreateIntelUI();
     }
 
     @Override
     public void createConfirmationPrompt(TooltipMakerAPI tooltip) {
-        int count = Global.getSector().getIntelManager().getIntel(CustomMessageIntel.class).size();
-        tooltip.addPara("Delete all " + count + " entries from your Captain's Log?", 0);
+        tooltip.addPara("Delete all " + getNumberOfEntries() + " entries from your Captain's Log?", 0);
     }
 
     @Override
@@ -38,6 +48,10 @@ public class DeleteAllCustom implements Button {
         return "Delete all entries";
     }
 
+    private int getNumberOfEntries() {
+        return Global.getSector().getIntelManager().getIntel(CustomMessageIntel.class).size();
+    }
+
     @Override
     public int getShortcut() {
         return 0;
@@ -48,6 +62,6 @@ public class DeleteAllCustom implements Button {
 
     @Override
     public boolean shouldCreateButton() {
-        return true;
+        return getNumberOfEntries() > 0;
     }
 }

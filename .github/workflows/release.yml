@@ -27,7 +27,7 @@ jobs:
             - name: Set variables
               run: |
                   echo "VERSION=$(git describe --tags)" >> $GITHUB_ENV
-                  git log --format=%B -n 1 $(git log -1 --pretty=format:"%h") | cat - > changes.txt
+                  awk '/Version/{++i; flag=!flag};i==2{exit} flag {print}' assets/changelog.txt > changes.txt
 
             - name: Create mod zipfile
               run: |
