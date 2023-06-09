@@ -31,6 +31,7 @@ jobs:
 
             - name: Create mod zipfile
               run: |
+                  chmod +x gradlew
                   ./gradlew release
 
             - name: Publish release on GitHub
