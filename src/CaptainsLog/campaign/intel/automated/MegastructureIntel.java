@@ -5,16 +5,22 @@ import CaptainsLog.scripts.Utils;
 import CaptainsLog.ui.button.LayInCourse;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
+import com.fs.starfarer.api.campaign.StarSystemAPI;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.loading.Description.Type;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
+import java.util.List;
 import java.util.Set;
+import com.fs.starfarer.api.impl.campaign.econ.impl.Cryorevival;
+import com.fs.starfarer.api.impl.campaign.econ.impl.Cryorevival.CryosleeperFactor;
 
 public class MegastructureIntel extends AutomatedIntel {
+    private static final float MEGASTRUCTURE_RADIUS = 10;
 
     public MegastructureIntel(SectorEntityToken token) {
         super(token);
@@ -60,6 +66,24 @@ public class MegastructureIntel extends AutomatedIntel {
             Misc.getHighlightColor(),
             token.getStarSystem().getBaseName()
         );
+
+        if (token.getContainingLocation() != null && token.getStarSystem() != null && token.getStarSystem().getHyperspaceAnchor() != null) {
+            info.addPara("Systems within range of this structure:", opad);
+            bullet(info);
+
+            List<StarSystemAPI> systems = Misc.getNearbyStarSystems(token, MEGASTRUCTURE_RADIUS);
+
+            for (StarSystemAPI system : systems) {
+                if (system.hasTag(Tags.THEME_HIDDEN)) {
+                    continue; // Alpha Site
+                }
+                info.addPara(system.getNameWithLowercaseType(), 0, Misc.getHighlightColor(), system.getBaseName());
+            }
+
+            unindent(info);
+        }
+
+
         addGenericButton(info, width, new LayInCourse(token));
     }
 
