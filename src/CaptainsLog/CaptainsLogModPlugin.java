@@ -18,7 +18,7 @@ public class CaptainsLogModPlugin extends BaseModPlugin {
         CustomMessageControlPanel.getInstance();
 
         Global.getSector().addTransientScript(new CaptainsLogEveryFrame());
-        Global.getSector().addTransientScript(new RuinObserver());
+        RuinObserver.register();
         Global.getSector().addTransientScript(new CaptainsLogKeydownDetector());
 
         // Histidine: make sure you don't add a new listener on each game load unless it's transient though

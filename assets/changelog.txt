@@ -1,6 +1,7 @@
 Version 0.2.1
 
 - List all star systems in range in cryosleeper and hypershunt intel
+- Remove Habitable World and Interesting Resource Location vanilla fleet log intel once player has surveyed the world
 
 Version 0.2.0
 
