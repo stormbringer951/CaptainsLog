@@ -1,3 +1,7 @@
+Version 0.2.1
+
+- List all star systems in range in cryosleeper and hypershunt intel
+
 Version 0.2.0
 
 - Add GUI with multi-line text editing for writing Captain's Log custom messages
