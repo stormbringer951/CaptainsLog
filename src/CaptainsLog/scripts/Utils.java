@@ -276,9 +276,6 @@ public final class Utils {
                 continue; // no need to handle intel that hasn't been seen, or which hasn't been handled.
             }
 
-            // TODO: handle SurveyDataSpecial::initPlanetSurveyData()
-            // TODO: handle SurveyDataSpecial::initPreliminarySystemSurvey();
-
             if (isSurveyedInterestingCondition(intel)) {
                 log.info("Removing " + intel.getTitle() + ", completed.");
 
