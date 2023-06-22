@@ -37,5 +37,4 @@ public class CaptainsLogEveryFrame implements EveryFrameScript {
             }
         }
     }
-
 }

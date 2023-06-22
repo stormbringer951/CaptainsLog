@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public final class Utils {
+
     private static final Logger log = Global.getLogger(Utils.class);
 
     public static String getSystemNameOrHyperspaceBase(SectorEntityToken token) {
@@ -165,10 +166,7 @@ public final class Utils {
         int count = 0;
 
         for (SectorEntityToken entity : entities) {
-            if (
-                IntelValidityUtils.areRuinsDiscovered(entity) &&
-                tryCreateUnexploredRuinsReport(entity, showMessage)
-            ) {
+            if (IntelValidityUtils.areRuinsDiscovered(entity) && tryCreateUnexploredRuinsReport(entity, showMessage)) {
                 ++count;
             }
         }
@@ -291,14 +289,17 @@ public final class Utils {
         }
 
         if (summarizeUpdates && removeCount > 0) {
-            Global.getSector().getCampaignUI().addMessage(
+            Global
+                .getSector()
+                .getCampaignUI()
+                .addMessage(
                     "Captain's Log removed " + removeCount + " completed vanilla " + "fleet log entries",
                     Misc.getTextColor(),
                     Integer.toString(toRemove.size()),
                     "",
                     Misc.getHighlightColor(),
                     Misc.getHighlightColor()
-            );
+                );
         }
     }
 }
