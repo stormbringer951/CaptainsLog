@@ -16,10 +16,9 @@ import com.fs.starfarer.api.util.Misc;
 import java.awt.Color;
 import java.util.List;
 import java.util.Set;
-import com.fs.starfarer.api.impl.campaign.econ.impl.Cryorevival;
-import com.fs.starfarer.api.impl.campaign.econ.impl.Cryorevival.CryosleeperFactor;
 
 public class MegastructureIntel extends AutomatedIntel {
+
     private static final float MEGASTRUCTURE_RADIUS = 10;
 
     public MegastructureIntel(SectorEntityToken token) {
@@ -67,7 +66,11 @@ public class MegastructureIntel extends AutomatedIntel {
             token.getStarSystem().getBaseName()
         );
 
-        if (token.getContainingLocation() != null && token.getStarSystem() != null && token.getStarSystem().getHyperspaceAnchor() != null) {
+        if (
+            token.getContainingLocation() != null &&
+            token.getStarSystem() != null &&
+            token.getStarSystem().getHyperspaceAnchor() != null
+        ) {
             info.addPara("Systems within range of this structure:", opad);
             bullet(info);
 
@@ -82,7 +85,6 @@ public class MegastructureIntel extends AutomatedIntel {
 
             unindent(info);
         }
-
 
         addGenericButton(info, width, new LayInCourse(token));
     }
