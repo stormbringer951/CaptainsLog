@@ -4,19 +4,25 @@ import CaptainsLog.Constants;
 import CaptainsLog.SettingsUtils;
 import CaptainsLog.campaign.intel.automated.*;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.PlanetAPI;
 import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.StarSystemAPI;
+import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.DerelictShipEntityPlugin;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.impl.campaign.intel.misc.BreadcrumbIntel;
 import com.fs.starfarer.api.util.Misc;
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 
 public final class Utils {
+
+    private static final Logger log = Global.getLogger(Utils.class);
 
     public static String getSystemNameOrHyperspaceBase(SectorEntityToken token) {
         if (token.getStarSystem() != null) {
@@ -43,20 +49,20 @@ public final class Utils {
         return "Hyperspace";
     }
 
-    public static int tryCreateMegastructureReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+    public static int tryCreateMegastructureReports(List<SectorEntityToken> tokens, boolean showMessage) {
         if (SettingsUtils.excludeMegastructures()) {
             return 0;
         }
         int count = 0;
         for (SectorEntityToken token : tokens) {
-            if (tryCreateMegastructureReport(token, log, showMessage)) {
+            if (tryCreateMegastructureReport(token, showMessage)) {
                 count++;
             }
         }
         return count;
     }
 
-    public static boolean tryCreateMegastructureReport(SectorEntityToken token, Logger log, boolean showMessage) {
+    public static boolean tryCreateMegastructureReport(SectorEntityToken token, boolean showMessage) {
         if (
             SettingsUtils.excludeMegastructures() ||
             IntelValidityUtils.isMegastructureIntelInvalid(token) ||
@@ -73,14 +79,14 @@ public final class Utils {
         return true;
     }
 
-    public static int tryCreateCommRelayReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+    public static int tryCreateCommRelayReports(List<SectorEntityToken> tokens, boolean showMessage) {
         if (SettingsUtils.excludeCommRelays()) {
             return 0;
         }
         int count = 0;
 
         for (SectorEntityToken token : tokens) {
-            if (tryCreateCommRelayReport(token, log, showMessage)) {
+            if (tryCreateCommRelayReport(token, showMessage)) {
                 ++count;
             }
         }
@@ -88,7 +94,7 @@ public final class Utils {
         return count;
     }
 
-    public static boolean tryCreateCommRelayReport(SectorEntityToken token, Logger log, boolean showMessage) {
+    public static boolean tryCreateCommRelayReport(SectorEntityToken token, boolean showMessage) {
         if (
             SettingsUtils.excludeCommRelays() ||
             IntelValidityUtils.isCommRelayIntelInvalid(token) ||
@@ -103,7 +109,7 @@ public final class Utils {
         return true;
     }
 
-    public static int tryCreateSalvageableReports(List<SectorEntityToken> tokens, Logger log, boolean showMessage) {
+    public static int tryCreateSalvageableReports(List<SectorEntityToken> tokens, boolean showMessage) {
         if (SettingsUtils.excludeSalvageableReports()) {
             // early exit when called on startup or when settings change
             return 0;
@@ -111,7 +117,7 @@ public final class Utils {
         int count = 0;
 
         for (SectorEntityToken salvageObject : tokens) {
-            if (Utils.tryCreateSalvageableReport(salvageObject, log, showMessage)) {
+            if (Utils.tryCreateSalvageableReport(salvageObject, showMessage)) {
                 ++count;
             }
         }
@@ -119,7 +125,7 @@ public final class Utils {
         return count;
     }
 
-    public static boolean tryCreateSalvageableReport(SectorEntityToken token, Logger log, boolean showMessage) {
+    public static boolean tryCreateSalvageableReport(SectorEntityToken token, boolean showMessage) {
         if (
             SettingsUtils.excludeSalvageableReports() ||
             IntelValidityUtils.isSalvageableIntelInvalid(token) ||
@@ -153,21 +159,14 @@ public final class Utils {
         return true;
     }
 
-    public static int tryCreateUnexploredRuinsReports(
-        List<SectorEntityToken> entities,
-        Logger log,
-        boolean showMessage
-    ) {
+    public static int tryCreateUnexploredRuinsReports(List<SectorEntityToken> entities, boolean showMessage) {
         if (SettingsUtils.excludeRuinsReports()) {
             return 0;
         }
         int count = 0;
 
         for (SectorEntityToken entity : entities) {
-            if (
-                IntelValidityUtils.areRuinsDiscovered(entity) &&
-                tryCreateUnexploredRuinsReport(entity, log, showMessage)
-            ) {
+            if (IntelValidityUtils.areRuinsDiscovered(entity) && tryCreateUnexploredRuinsReport(entity, showMessage)) {
                 ++count;
             }
         }
@@ -175,7 +174,7 @@ public final class Utils {
         return count;
     }
 
-    public static boolean tryCreateUnexploredRuinsReport(SectorEntityToken token, Logger log, boolean showMessage) {
+    public static boolean tryCreateUnexploredRuinsReport(SectorEntityToken token, boolean showMessage) {
         if (
             SettingsUtils.excludeRuinsReports() ||
             IntelValidityUtils.isRuinsIntelInvalid(token) ||
@@ -191,7 +190,8 @@ public final class Utils {
         return true;
     }
 
-    public static void tryCreateIntels(SectorAPI sector, Logger log) {
+    public static void tryCreateIntels() {
+        SectorAPI sector = Global.getSector();
         for (SectorEntityToken token : sector.getEntitiesWithTag(Constants.PROXIMITY_SURVEYED_RUINS)) {
             if (!Misc.hasUnexploredRuins(token.getMarket())) {
                 // not necessary but neat periodic cleanup check for proximity surveyed ruins that have been surveyed
@@ -206,10 +206,10 @@ public final class Utils {
             }
         }
 
-        int count = Utils.tryCreateUnexploredRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), log, false);
-        count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), log, false);
-        count += Utils.tryCreateMegastructureReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), log, false);
-        count += Utils.tryCreateCommRelayReports(sector.getCustomEntitiesWithTag(Tags.COMM_RELAY), log, false);
+        int count = Utils.tryCreateUnexploredRuinsReports(sector.getEntitiesWithTag(Tags.PLANET), false);
+        count += Utils.tryCreateSalvageableReports(sector.getEntitiesWithTag(Tags.SALVAGEABLE), false);
+        count += Utils.tryCreateMegastructureReports(sector.getEntitiesWithTag(Tags.CRYOSLEEPER), false);
+        count += Utils.tryCreateCommRelayReports(sector.getCustomEntitiesWithTag(Tags.COMM_RELAY), false);
 
         if (count > 0) {
             sector
@@ -232,6 +232,74 @@ public final class Utils {
             return plugin.getData().ship.variant;
         } else {
             return null;
+        }
+    }
+
+    private static boolean isSurveyedInterestingCondition(BreadcrumbIntel intel) {
+        // see impl in SurveyDataSpecial::initInterestingProperty()
+        if (intel.isImportant()) {
+            return false; // don't remove if important
+        }
+        if (intel.getRemoveTrigger() == null) {
+            return false; // this intel has a remove trigger
+        }
+        SectorEntityToken entity = intel.getRemoveTrigger();
+        if (entity.getMarket() == null) {
+            return false; // needs a market
+        }
+        if (!(entity instanceof PlanetAPI)) {
+            return false; // must be a planet
+        }
+        if (!intel.getTitle().endsWith(" Location") && !intel.getTitle().equals("Habitable World")) {
+            return false; // subject detection
+        }
+        if (!intel.getText().contains(", your crews found partially accessible memory banks that")) {
+            return false; // text1ForIntel detection
+        }
+        return entity.getMarket().getSurveyLevel() == MarketAPI.SurveyLevel.FULL;
+    }
+
+    public static void removeFleetLogIntel(boolean summarizeUpdates) {
+        IntelManagerAPI intelManager = Global.getSector().getIntelManager();
+        ArrayList<IntelInfoPlugin> toRemove = new ArrayList<>();
+        int removeCount = 0;
+
+        // Alex now handles most cases in FleetLogIntel.shouldRemoveIntel()
+        // Debris fields are handled
+
+        for (IntelInfoPlugin i : intelManager.getIntel(BreadcrumbIntel.class)) {
+            BreadcrumbIntel intel = (BreadcrumbIntel) i;
+
+            if (intel.isNew() || intel.shouldRemoveIntel()) {
+                continue; // no need to handle intel that hasn't been seen, or which hasn't been handled.
+            }
+
+            if (isSurveyedInterestingCondition(intel)) {
+                log.info("Removing " + intel.getTitle() + ", completed.");
+
+                intel.setTitle(intel.getTitle() + " - Surveyed");
+                intel.endAfterDelay();
+
+                if (summarizeUpdates) {
+                    ++removeCount;
+                } else {
+                    Global.getSector().getCampaignUI().addMessage(intel);
+                }
+            }
+        }
+
+        if (summarizeUpdates && removeCount > 0) {
+            Global
+                .getSector()
+                .getCampaignUI()
+                .addMessage(
+                    "Captain's Log removed " + removeCount + " completed vanilla " + "fleet log entries",
+                    Misc.getTextColor(),
+                    Integer.toString(toRemove.size()),
+                    "",
+                    Misc.getHighlightColor(),
+                    Misc.getHighlightColor()
+                );
         }
     }
 }
